@@ -24,7 +24,6 @@ import { ICustomer, IDebt, IDebtItem } from "../listdebt.type";
 import ImageApi from "../../../services/images";
 import { format, parseISO } from "date-fns";
 import { IOption } from "../../../types/permission";
-import { uuid } from "uuidv4";
 import { colorStatus } from "../ListDebt";
 
 interface ModalAddDebtProps {
@@ -289,7 +288,7 @@ const ModalAddDebt = (props: ModalAddDebtProps) => {
     );
   };
 
-  const handleChangeImage = async (e) => {
+  const handleChangeImage = async (e: any) => {
     setFileList(
       fileList.filter((v: any) => !v.status || v.status !== "removed")
     );

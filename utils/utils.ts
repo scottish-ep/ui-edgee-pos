@@ -55,7 +55,7 @@ export const formatCustomer = (item: any) => ({
   note_bad: item.note_bad || "",
   is_in_app: item.is_in_app || false,
   customer_tags: item.customer_tag_relations
-    ? item.customer_tag_relations.map((v) => {
+    ? item.customer_tag_relations.map((v: any) => {
         return {
           id: v?.tag_info?.id,
           label: v?.tag_info.label,
@@ -130,7 +130,7 @@ export const renderLevelCustomer = (points: number) => {
 
 export const randomId = () => Math.floor(Math.random() * 10000000);
 
-export const calcWithPoints = (points) => {
+export const calcWithPoints = (points: any) => {
   let width = 1;
   if (parseFloat(points) <= 100) {
     console.log(1);
@@ -213,7 +213,7 @@ export const parseItemSkus = (data: any[]) => {
     data.map((item: any) => {
       let nameSku = item.name;
       isArray(item.item_attribute_values) &&
-        item.item_attribute_values.map((attr: any, index) => {
+        item.item_attribute_values.map((attr: any, index: any) => {
           if (index == 0) {
             nameSku += " | " + attr.value;
           } else {
@@ -254,7 +254,7 @@ export const parseItemSkuFromCommandItems = (data: any[]) => {
       console.log("item", item);
       let nameSku = get(item, "item_sku.item.name");
       isArray(get(item, "item_sku.item_attribute_values")) &&
-        get(item, "item_sku.item_attribute_values").map((attr: any, index) => {
+        get(item, "item_sku.item_attribute_values").map((attr: any, index: any) => {
           if (index == 0) {
             nameSku += " | " + attr.value;
           } else {

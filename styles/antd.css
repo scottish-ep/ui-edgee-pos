@@ -155,6 +155,10 @@
     color: #5f5e6b;
 }
 
+.no-mg-inline {
+    margin-inline-start: 0 !important;
+}
+
 .ant-btn.no-outlined {
     background-color: inherit;
     gap: 4px;

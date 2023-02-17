@@ -1,7 +1,7 @@
 import { StatusEnum } from "../../types";
 
 export interface IsProduct {
-  order_id?: string;
+  order_id?: string | number;
   show?: boolean | number;
   delivery_id?: string;
   order_status_id?: number;

@@ -1,0 +1,68 @@
+export const usersList = [
+  {
+    id: "BHV001",
+    isBlock: true,
+    name: "Lê Thế Dương",
+    avatar: "https://via.placeholder.com/150",
+    phone: "0987654321",
+    email: "letheduong@gmail.com",
+    position: "Super admin",
+    gender: 1,
+    isSpecialPermissions: false,
+    positionId: "2",
+    birthday: "2015/01/01",
+    specialPermissionId: "",
+    groupId: "2",
+    warehouseId: ["2"],
+  },
+  {
+    id: "BHV002",
+    isBlock: false,
+    name: "Lê Thế A",
+    avatar: "https://via.placeholder.com/150",
+    phone: "0987654321",
+    email: "letheduong@gmail.com",
+    position: "Cửa hàng trưởng",
+    gender: 1,
+    isSpecialPermissions: true,
+    positionId: "1",
+    birthday: "2015/01/01",
+    specialPermissionId: "1",
+    groupId: "1",
+    warehouseId: ["1", "2"],
+  },
+  {
+    id: "BHV003",
+    isBlock: false,
+    name: "Lê Thế B",
+    avatar: "https://via.placeholder.com/150",
+    phone: "0987654321",
+    email: "letheduong@gmail.com",
+    position: "Nhân viên bán hàng",
+    gender: 1,
+    isSpecialPermissions: true,
+    positionId: "2",
+    birthday: "2015/01/01",
+    specialPermissionId: "2",
+    groupId: "2",
+    warehouseId: ["2"],
+  },
+];
+
+
+export const permissionList = [
+  {
+    id: 1,
+    name: "Super Admin",
+    number_of_member: 1,
+    updated_at: "01/09/2022",
+    note: "",
+  },
+  {
+    id: 2,
+    name: "Nhân viên",
+    number_of_member: 9,
+    updated_at: "07/12/2022",
+    note: "",
+  }
+]

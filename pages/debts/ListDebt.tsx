@@ -190,7 +190,7 @@ const ListDebt = () => {
     },
   ];
 
-  const handleSearchByDate = (value) => {
+  const handleSearchByDate = (value: any) => {
     if (value) {
       const from = value[0];
       const to = value[1];
@@ -451,4 +451,4 @@ const ListDebt = () => {
   );
 };
 
-ReactDOM.render(<ListDebt />, document.getElementById("root"));
+export default ListDebt;
