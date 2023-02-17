@@ -1,0 +1,14 @@
+.h_hide_eles{
+	display: none;
+}
+
+.waitting_layer_for_loading{
+	z-index: 10;
+	display: block;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	left: 0px;
+	top: 0px;
+}
+

@@ -1,0 +1,7 @@
+.container {
+  overflow: auto;
+}
+
+.tabs {
+  min-width: max-content;
+}

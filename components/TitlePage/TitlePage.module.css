@@ -1,0 +1,23 @@
+.title {
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 150%;
+  color: #1d1c2d;
+}
+
+.button {
+  background-color: #4b4b59;
+  width: 36px;
+  height: 36px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.description {
+  font-size: 14;
+  line-height: 150%;
+  font-weight: 400;
+  color: #1d1c2d;
+}

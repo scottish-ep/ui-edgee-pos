@@ -1,0 +1,118 @@
+// .aside-minimize #kt_aside_menu.ps {
+//     overflow: visible !important;
+// }
+
+.aside-minimize #kt_aside_menu .menu-submenu.active-menu{
+    display: block !important;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 300px;
+    background-color: #1e1e2d;
+    left: calc(100% + 15px);
+    padding: 15px 0px;
+    border-radius: 8px;
+}
+
+.aside-minimize #kt_aside_menu .menu-submenu .menu-subnav{
+    list-style: none !important;
+    position: relative;
+    &:after {
+        content: "";
+        width: 12px;
+        height: 12px;
+        position: absolute;
+        left: -6px;
+        background: #1e1e2d;
+        top: 50%;
+        transform: translateY(-50%);
+        transform: rotate(45deg);
+    }
+    .menu-bullet-dot{
+        display: none;
+    }
+    a{
+        padding-left: 20px;
+    }
+}
+
+#menu-nav{
+    height: 100%;
+    position: relative;
+}
+
+.aside-minimize .none-minimize{
+    display: none !important;
+}
+
+
+#kt_aside_menu{
+    max-height: calc(100vh - 150px);
+}
+
+.button-logout{
+    display: block !important;
+    position: absolute; will-change: transform; bottom: 0px !important; left: 0px; transform: translate3d(-116px, -30px, 0px);
+}
+
+
+.set-menu-child{
+    display: none;
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 250px;
+    background-color: #1e1e2d;
+    left: 70px;
+    padding: 20px 0px;
+    min-height: 200px;
+    li:first-child{
+        display: none;
+    }
+    border-left: 3px solid #865FE9;
+    .menu-link {
+        padding-bottom: 12px;
+        .menu-text{
+            color: #9899ac;
+        }
+        &:hover{
+            .menu-text{
+                color: white;
+            }
+        }
+    }
+    
+    .menu-item{
+        padding-bottom: 12px;
+    }
+
+    .menu-item-active{
+        .menu-link {
+            .menu-text{
+                color: white;
+            }
+        }
+    }
+    
+}
+// .set-menu-child::-webkit-scrollbar {
+//     width: 3px;
+// }
+  
+// /* Track */
+// .set-menu-child::-webkit-scrollbar-track {
+// box-shadow: inset 0 0 5px grey; 
+// border-radius: 10px;
+// }
+
+// /* Handle */
+// .set-menu-child::-webkit-scrollbar-thumb {
+//     background: #865FE9; 
+//     border-radius: 10px 20px 20px 10px;
+// }
+
+// /* Handle on hover */
+// .set-menu-child::-webkit-scrollbar-thumb:hover {
+//     background: #865FE9; 
+// }
+

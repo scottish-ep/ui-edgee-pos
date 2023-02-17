@@ -1,0 +1,96 @@
+.actions-button-custom .chevron-svg {
+  transform: rotate(180deg);
+}
+
+.actions-button-custom .chevron-svg path {
+  stroke: #865fe9;
+  transition-duration: 0.1s;
+}
+
+.actions-button-custom .filter-svg path {
+  fill: #865fe9;
+  transition-duration: 0.1s;
+}
+
+.actions-button-custom.collapsed .chevron-svg {
+  transform: unset;
+}
+
+.actions-button-custom.collapsed .chevron-svg path {
+  stroke: #4a5568;
+}
+
+.actions-button-custom.collapsed .filter-svg path {
+  fill: #4a5568;
+}
+
+.actions-button-custom.text-custom.collapsed .button-text {
+  color: #4a5568;
+}
+
+.actions-button-custom.text-custom .button-text {
+  color: #865fe9;
+  transition-duration: 0.1s;
+}
+
+.actions-button-custom.text-custom {
+  background: #f0f0ff !important;
+  border-radius: 4px;
+  transition-duration: 0.1s;
+}
+
+.actions-button-custom.text-custom.collapsed {
+  background: transparent !important;
+  border-radius: 4px;
+}
+
+.actions-button-custom:hover .button-text {
+  color: #865fe9 !important;
+}
+
+.actions-button-custom:hover svg path {
+  fill: #865fe9 !important;
+}
+
+.actions-button-custom:hover svg.chevron-svg path {
+  fill: transparent !important;
+  stroke: #865fe9;
+}
+
+.basic__btn {
+  background: #ff970d !important;
+  border: 1px solid #ff970d !important;
+}
+
+.basic__btn:focus {
+  border: 1px solid transparent !important;
+  outline: none !important;
+  border-radius: none !important;
+}
+
+.basic__btn:active {
+  border: 1px solid transparent !important;
+  outline: none !important;
+  border-radius: none !important;
+}
+
+#pagination-custom {
+  justify-content: center !important;
+  width: 100%;
+}
+
+#pagination-custom
+  .btn.btn-hover-primary:not(:disabled):not(.disabled):active:not(.btn-text),
+#pagination-custom .btn.btn-hover-primary:not(:disabled):not(.disabled).active,
+#pagination-custom .show > .btn.btn-hover-primary.dropdown-toggle,
+#pagination-custom .show .btn.btn-hover-primary.btn-dropdown {
+  color: #ffffff !important;
+  background-color: #865fe9 !important;
+  border-color: #865fe9 !important;
+}
+
+#pagination-custom .btn:hover {
+  color: #ffffff !important;
+  background-color: #865fe9 !important;
+  border-color: #865fe9 !important;
+}

@@ -1,0 +1,149 @@
+.icon__show__password {
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translateY(50%) translateX(-50%);
+    height: 24px;
+    width: 24px;
+}
+
+.login__form {
+    background: #FFFFFF;
+    box-shadow: 0px 4px 15px rgba(55, 54, 53, 0.06);
+    border-radius: 4px;
+    padding: 45px 30px;
+    width: 455px;
+}
+
+.login__page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+    column-gap: 220px;
+    overflow: hidden;
+}
+
+.body__login {
+    overflow: hidden;
+    font-family: 'Inter', sans-serif;
+}
+
+.bhv__login__title {
+    margin-bottom: 53px;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 150%;
+    text-align: center;
+    font-feature-settings: 'salt' on;
+    color: #2E2D3D;
+}
+
+.bhv__input__box .label {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 150%;
+    font-feature-settings: 'salt' on;
+    color: #2E2D3D;
+    margin-bottom: 4px;
+}
+
+.bhv__input__box input {
+    width: calc(100% - 30px);
+    height: 45px;
+    background: #F0F0F1;
+    border-radius: 4px;
+    padding: 0px 12px;
+    border: none;
+    outline: none;
+    box-shadow: none;
+}
+
+.mb-29 {
+    margin-bottom: 29px;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px #F0F0F1 inset !important;
+}
+
+.main-form__forget-link {
+    text-align: right;
+}
+
+.main-form__forget-link a {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 150%;
+    text-align: center;
+    font-feature-settings: 'salt' on;
+    color: #384ADC;
+}
+
+.main-form__submit-btn {
+    background: #2E2D3D;
+    border-radius: 4px;
+    width: 100%;
+    padding: 14px 12px;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 150%;
+    text-align: center;
+    font-feature-settings: 'salt' on;
+    color: #FFFFFF;
+    margin-top: 47px;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    cursor: pointer;
+}
+
+.btn__warning {
+    height: 48px;
+    background: #FF970D;
+    border-radius: 4px;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 150%;
+    text-align: center;
+    font-feature-settings: 'salt' on;
+    color: #FFFFFF;
+    text-transform: uppercase;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    width: 100%;
+    cursor: pointer;
+    padding: 12px;
+}
+
+/* Css mobile */
+
+@media screen and (max-width: 500px) {
+    .login__page {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .login__page .decor-wrapper img {
+        width: 150px;
+    }
+
+    .login__page .login__form {
+        width: 100%;
+        padding: 15px 0px;
+    }
+
+    .login__page .login__form form {
+        padding: 0 10px;
+    }
+}

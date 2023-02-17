@@ -1,0 +1,56 @@
+/*
+    DEMO STYLE
+*/
+#sidebarCollapsePortal {
+    display: none;
+}
+
+#overlay__sidebar #sidebar {
+    width: 40%;
+    position: fixed;
+    top: 0;
+    right: -40%;
+    height: 100vh;
+    z-index: 999;
+    color: #fff;
+    background-color: #F8FAFB;
+    transition: all 0.3s;
+    overflow-y: scroll;
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
+}
+
+#overlay__sidebar #sidebar.active {
+    right: 0;
+}
+
+#overlay__sidebar .wrap__header {
+    background-color: #F55767;
+    padding: 20px;
+}
+
+#overlay__sidebar #sidebar h2 {
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 24px;
+    margin: 0;
+    text-transform: uppercase;
+    display: inline-block;
+}
+
+#full__width-slider {
+    padding: 20px;
+}
+
+#dismiss__btn {
+    display: inline-block;
+    float: right;
+    background: none;
+    border: 2px solid white;
+    color: white;
+    border-radius: 5px;
+}
+
+#dismiss__btn i {
+    color: white;
+}

@@ -1,0 +1,130 @@
+.total__cost__detail {
+    width: 50%;
+    margin-left: 50%;
+    font-size: 1.2rem;
+}
+.total__item {
+    display: flex;
+    justify-content: space-between;
+}
+#product__table, #fee__table {
+    margin-bottom: 0;
+}
+/* #product__table tr:last-child td {
+    border-bottom-color: transparent;
+} */
+#product__table tr td:last-child {
+    display: flex;
+}
+#product__table .btn-delete__product {
+    margin-left: 6px;
+    cursor: pointer;
+    margin: auto;
+}
+#fee__table tr td:last-child {
+    display: flex;
+}
+#fee__table .btn-delete__product {
+    margin-left: 6px;
+    cursor: pointer;
+    margin: auto;
+}
+#kt_wrapper {
+    padding-top: 0;
+}
+#kt_header {
+    display: none;
+}
+#product_detail_tab {
+    display: inline-flex;
+    float: right;
+    margin-bottom: 1.5rem;
+}
+#product__table th,
+#product__table td {
+    font-size: inherit;
+}
+#fee__table th,
+#fee__table td {
+    font-size: inherit;
+}
+.search__phone__icon {
+    cursor: pointer;
+}
+#search__modal .modal-dialog {
+    /* max-width: none; */
+    /* width: 50%; */
+}
+#search__modal table th,
+#search__modal table td {
+    font-size: inherit;
+    vertical-align: middle;
+}
+input[name=prepaid] {
+    border: none;
+    text-align: right;
+    padding-right: 0;
+    width: 100%;
+    background: transparent;
+}
+#add__customer .modal-dialog {
+    max-width: none;
+    width: 80%;
+}
+.div-block-nvcs{
+    position: relative;
+    line-height: 30px;
+    width: 30px;
+    height: 30px;
+    overflow: hidden;
+    border-radius: 50%;
+    border: 1px solid #80808059;
+    background-color: #8080802b;
+    position: relative;
+}
+.div-image-icon-small{
+    width: 30px;
+    height: 30px;
+    overflow: hidden;
+    text-align: center;
+    border-radius: 50%;
+    border: 1px solid #80808059;
+    background-color: #8080801f;
+    position: relative;
+}
+.div-block-nvcs .text-default,
+.div-image-icon-small .text-default {
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+.div-block-nvcs .text-default h6,
+.div-image-icon-small .text-default h6 {
+    font-size: 15px !important;
+    font-weight: bold;
+}
+.hide-option{
+    display: none;
+}
+
+.show-option{
+    display: unset !important;
+}
+.cursor-not-allowed {
+    cursor: not-allowed;
+}
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+.users-list {
+  z-index: 9999;
+}

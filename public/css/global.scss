@@ -1,0 +1,105 @@
+$purple: #865FE9;
+// css for filter
+.actions-button-custom .chevron-svg {
+    transform: rotate(180deg);
+}
+
+.actions-button-custom .chevron-svg path {
+    stroke: $purple;
+    transition-duration: .1s;
+}
+
+.actions-button-custom .filter-svg path {
+    fill: $purple;
+    transition-duration: .1s;
+}
+
+.actions-button-custom.collapsed .chevron-svg {
+    transform: unset;
+}
+
+.actions-button-custom.collapsed .chevron-svg path {
+    stroke: #4A5568;
+}
+
+.actions-button-custom.collapsed .filter-svg path {
+    fill: #4A5568;
+}
+
+.actions-button-custom.text-custom.collapsed .button-text {
+    color: #4A5568;
+}
+
+.actions-button-custom.text-custom .button-text {
+    color: $purple;
+    transition-duration: .1s;
+}
+
+.actions-button-custom.text-custom {
+    background: #F0F0FF !important;
+    border-radius: 4px;
+    transition-duration: .1s;
+}
+
+.actions-button-custom.text-custom.collapsed {
+    background: transparent !important;
+    border-radius: 4px;
+}
+
+.actions-button-custom {
+    &:hover {
+        .button-text {
+            color: $purple !important;
+        }
+        svg {
+            path {
+                fill: $purple !important;
+            }
+        }
+        svg.chevron-svg {
+            path {
+                fill: transparent !important;
+                stroke: $purple;
+            }
+        }
+    }
+}
+
+// end css filter
+// custom button add
+.basic__btn {
+    background: #FF970D !important;
+    border: 1px solid #FF970D !important;
+    &:focus {
+        border: 1px solid transparent !important;
+        outline: none !important;
+        border-radius: none !important;
+    }
+    &:active {
+        border: 1px solid transparent !important;
+        outline: none !important;
+        border-radius: none !important;
+    }
+}
+
+// end css button add
+// custom pagination
+#pagination-custom {
+    justify-content: center !important;
+    width: 100%;
+    .btn.btn-hover-primary:not(:disabled):not(.disabled):active:not(.btn-text),
+    .btn.btn-hover-primary:not(:disabled):not(.disabled).active,
+    .show>.btn.btn-hover-primary.dropdown-toggle,
+    .show .btn.btn-hover-primary.btn-dropdown {
+        color: #FFFFFF !important;
+        background-color: $purple !important;
+        border-color: $purple !important;
+    }
+    .btn {
+        &:hover {
+            color: #FFFFFF !important;
+            background-color: $purple !important;
+            border-color: $purple !important;
+        }
+    }
+}

@@ -1,0 +1,149 @@
+#info-customer .nav-text {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 17px;
+  letter-spacing: 0.01em;
+  color: #2D3748;
+}
+
+#info-customer .nav-link.active {
+  border-bottom: 2px solid #8254F7;
+}
+
+#info-customer .nav-link:hover {
+  border-bottom: 2px solid #8254F7;
+}
+
+#info-customer form h4 span {
+  font-weight: 600;
+  text-transform: capitalize;
+  font-size: 18px;
+}
+
+#info-customer .padding-24 {
+  padding: 24px;
+}
+
+#info-customer .image-input-wrapper {
+  border: none;
+  box-shadow: none;
+}
+
+#info-customer h4 {
+  margin-bottom: 15px;
+}
+
+#info-customer .not-margin {
+  margin-bottom: 0px;
+}
+
+#info-customer .form-group label {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 18px;
+  letter-spacing: 0.01em;
+  color: #2D3748;
+  text-transform: capitalize;
+}
+
+#info-customer .form__panel {
+  background: #FFFFFF;
+  box-shadow: 0px 8px 16px 8px rgba(210, 209, 220, 0.25);
+  border-radius: 12px;
+  border: none;
+}
+
+#info-customer input {
+  width: 100%;
+  border: 1px solid #CBD5E0;
+  box-sizing: border-box;
+  border-radius: 8px;
+  background-color: white;
+}
+
+#info-customer input.select2-search__field {
+  border: none;
+}
+
+#info-customer label {
+  margin-bottom: 4px;
+}
+
+#info-customer .form-group {
+  padding: 15px 0px 0px;
+  margin: 0;
+}
+
+#info-customer .custom-radio .custom-control-input:checked ~ .custom-control-label::before {
+  background-color: white;
+  width: 24px;
+  height: 24px;
+}
+
+#info-customer .custom-control-input:checked ~ .custom-control-label::before {
+  color: #fff;
+  border: 2px solid #8254F6;
+  background-color: white;
+}
+
+#info-customer .custom-radio .custom-control-label::before {
+  width: 24px;
+  height: 24px;
+}
+
+#info-customer .custom-control-label::after {
+  width: 24px;
+  height: 24px;
+}
+
+#info-customer .custom-control-label {
+  display: flex;
+}
+
+#info-customer .text-radio {
+  transform: translate(12px, 6px);
+}
+
+#info-customer .custom-radio .custom-control-input:checked ~ .custom-control-label::after {
+  background-image: url(../images/oval.png);
+}
+
+#info-customer input[type="date"]::-webkit-calendar-picker-indicator {
+  color: transparent;
+  opacity: 1;
+  display: block;
+  background: url(../images/icon-input-calendar.png) no-repeat;
+  border-width: thin;
+  background-size: cover;
+}
+
+#info-customer .btn-cancel {
+  color: #ffffff;
+  background-color: white;
+  border-color: white;
+  border: 1px solid #4A5568;
+  box-sizing: border-box;
+  border-radius: 8px;
+  padding: 14px;
+  color: #4A5568;
+}
+
+#info-customer .btn-padding {
+  padding: 14px;
+}
+
+#info-customer .d-flex-right {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+
+#info-customer .d-flex-right .block {
+  margin-left: auto;
+}
+
+#info-customer .image-input-wrapper {
+  background-color: #865FE9;
+}
