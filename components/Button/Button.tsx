@@ -5,6 +5,7 @@ interface ButtonProps extends ButtonAntdProps {
   width?: number | string;
   height?: number | string;
   children?: ReactNode;
+  prefixIcon?: ReactNode;
   suffixIcon?: ReactNode;
   variant?:
     | "primary"
@@ -30,6 +31,7 @@ const Button = (props: ButtonProps) => {
     variant,
     text,
     style,
+    prefixIcon,
     className,
     ...rest
   } = props;
@@ -44,6 +46,7 @@ const Button = (props: ButtonProps) => {
       }}
       {...rest}
     >
+      {prefixIcon && prefixIcon}
       {children || text}
       {suffixIcon && suffixIcon}
     </ButtonAntd>
