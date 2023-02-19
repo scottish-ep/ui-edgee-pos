@@ -11,6 +11,9 @@ export interface IsProduct {
   total_transfer?: number;
   id?: number | string;
   code?: string;
+  attr_code?: string;
+  attr_name?: string;
+  attr_type?: {label?: string; value?: string}[];
   img?: string;
   name: string;
   image?: string;
@@ -21,6 +24,7 @@ export interface IsProduct {
   price?: number | string;
   totalPrice?: number | string;
   createdAt?: string;
+  updatedAt?: string;
   outOfDate?: string;
   is_show?: boolean;
   status?: StatusEnum;
