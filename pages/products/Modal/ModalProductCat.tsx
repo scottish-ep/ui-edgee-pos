@@ -1,14 +1,14 @@
-import Select from '../../components/Select/Select';
-import Input from '../../components/Input/Input';
-import Modal from '../../components/Modal/Modal/Modal';
-import Button from '../../components/Button/Button';
+import Select from '../../../components/Select/Select';
+import Input from '../../../components/Input/Input';
+import Modal from '../../../components/Modal/Modal/Modal';
+import Button from '../../../components/Button/Button';
 import React, { useEffect, useState, ReactNode } from 'react';
-import TabsVerticle from '../../components/TabsVerticle/Index';
+import TabsVerticle from '../../../components/TabsVerticle/Index';
 import Checkbox from 'antd/lib/checkbox/Checkbox';
 import SelectInput from 'components/SelectInput/SelectInput';
-import CheckboxList from '../../components/CheckboxList/CheckboxList';
-import { isArray } from '../../utils/utils';
-import Tabs from '../../components/Tabs';
+import CheckboxList from '../../../components/CheckboxList/CheckboxList';
+import { isArray } from '../../../utils/utils';
+import Tabs from '../../../components/Tabs';
 
 interface ModalProductCatProps {
   isVisible: boolean;
@@ -222,10 +222,8 @@ const ModalProductCat = (props: ModalProductCatProps) => {
 
   const Footer = () => (
     <div className="flex justify-between w-full items-center">
-      <div className='text-[#EF4444] cursor-pointer'>
-        Xoá bộ lọc (2)
-      </div>
-      <div className='flex justify-between w-[50%]'>
+      <div className="text-[#EF4444] cursor-pointer">Xoá bộ lọc (2)</div>
+      <div className="flex justify-between w-[50%]">
         <Button
           variant="outlined"
           text="HUỶ BỎ"

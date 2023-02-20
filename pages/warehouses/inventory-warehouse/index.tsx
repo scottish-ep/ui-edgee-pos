@@ -1,25 +1,26 @@
-import React, { useEffect, useState } from "react";
-import ReactDOM from "react-dom";
-import { message, Table } from "antd";
-import type { ColumnsType } from "antd/es/table";
+import React, { useEffect, useState } from 'react';
+import ReactDOM from 'react-dom';
+import { message, Table } from 'antd';
+import type { ColumnsType } from 'antd/es/table';
 
-import { warehouses, productList } from "../../../const/constant";
-import { StatusColorEnum, StatusList } from "../../../types";
-import TitlePage from "../../../components/TitlePage/Titlepage";
-import Select from "../../../components/Select/Select";
-import Button from "../../../components/Button/Button";
-import Icon from "../../../components/Icon/Icon";
-import Input from "../../../components/Input/Input";
-import { IInventoryWareHouses } from "../warehouse.type";
-import { isArray, onCoppy } from "../../../utils/utils";
-import TableEmpty from "../../../components/TableEmpty";
-import PaginationCustom from "../../../components/PaginationCustom";
-import { get } from "lodash";
-import WarehouseApi from "../../../services/warehouses";
-import WarehousesInventoryApi from "../../../services/warehouses-inventory";
-import ItemCategoryApi from "../../../services/item-categories";
-import { useDebounce } from "usehooks-ts";
-import { CSVLink } from "react-csv";
+import { warehouses, productList } from '../../../const/constant';
+import { StatusColorEnum, StatusList } from '../../../types';
+import TitlePage from '../../../components/TitlePage/Titlepage';
+import Select from '../../../components/Select/Select';
+import Button from '../../../components/Button/Button';
+import Icon from '../../../components/Icon/Icon';
+import Input from '../../../components/Input/Input';
+import { IInventoryWareHouses } from '../warehouse.type';
+import { isArray, onCoppy } from '../../../utils/utils';
+import TableEmpty from '../../../components/TableEmpty';
+import PaginationCustom from '../../../components/PaginationCustom';
+import { get } from 'lodash';
+import WarehouseApi from '../../../services/warehouses';
+import WarehousesInventoryApi from '../../../services/warehouses-inventory';
+import ItemCategoryApi from '../../../services/item-categories';
+import { useDebounce } from 'usehooks-ts';
+import { CSVLink } from 'react-csv';
+import { Abel } from '@next/font/google';
 
 const InventoryWareHouseList = () => {
   const defaultPagination = {
@@ -51,12 +52,12 @@ const InventoryWareHouseList = () => {
   >([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<any>({});
-  const [searchKey, setSearchKey] = useState("");
+  const [searchKey, setSearchKey] = useState('');
   const debouncedSearchTerm = useDebounce(searchKey, 1000);
   const [selectdWarehouse, setSelectWarehouse] = useState();
 
   useEffect(() => {
-    const element = document.getElementById("loading__animation");
+    const element = document.getElementById('loading__animation');
     if (element) {
       element.remove();
     }
@@ -85,8 +86,8 @@ const InventoryWareHouseList = () => {
     let rawInventory = data.map((item: any) => {
       return {
         ...item,
-        item_code: get(item, "item.code"),
-        category: get(item, "item.item_category.name"),
+        item_code: get(item, 'item.code'),
+        category: get(item, 'item.item_category.name'),
       };
     });
     setInventoryItemExport(rawInventory);
@@ -104,7 +105,7 @@ const InventoryWareHouseList = () => {
       }));
     setWareHouseManagement(listWarehouseManagement);
     setSelectWarehouse(listWarehouseManagement[0].value);
-    setFilter((filter) => ({
+    setFilter((filter: any) => ({
       ...filter,
       warehouse_id: listWarehouseManagement[0].value,
     }));
@@ -116,7 +117,7 @@ const InventoryWareHouseList = () => {
   };
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    console.log("selectedRowKeys changed: ", selectedRowKeys);
+    console.log('selectedRowKeys changed: ', selectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
   };
 
@@ -126,36 +127,45 @@ const InventoryWareHouseList = () => {
   };
 
   const headers = [
-    { label: "Mã sản phẩm", key: "item_code" },
-    { label: "Mã SKU", key: "sku" },
-    { label: "Tên sản phẩm", key: "name" },
-    { label: "Danh mục", key: "category" },
-    { label: "SL tồn kho", key: "quantity" },
+    { label: 'Mã sản phẩm', key: 'item_code' },
+    { label: 'Mã SKU', key: 'sku' },
+    { label: 'Tên sản phẩm', key: 'name' },
+    { label: 'Danh mục', key: 'category' },
+    { label: 'SL tồn kho', key: 'quantity' },
   ];
+
+  const inventoryWareHouseList: IInventoryWareHouses[] = Array(50)
+  .fill({
+    code: "5555",
+    sku: "555501S",
+    name: "Áo thun basic cotton - Trắng - S ",
+
+  })
 
   const columns: ColumnsType<IInventoryWareHouses> = [
     {
-      title: "Mã sản phẩm",
+      title: 'Mã sản phẩm',
       width: 150,
-      dataIndex: "id",
-      key: "id",
-      fixed: "left",
-      align: "center",
+      dataIndex: 'id',
+      key: 'id',
+      fixed: 'left',
+      align: 'center',
       render: (_, record) => (
         <span
           className="text-medium text-[#384ADC] font-semibold"
-          onClick={(e) => onCoppy(e, get(record, "item.code"))}
+          // onClick={(e) => onCoppy(e, get(record, "item.code"))}
         >
-          {get(record, "item.code")}
+          {/* {get(record, 'item.code')} */}
+          5555
         </span>
       ),
     },
     {
-      title: "Mã SKU",
+      title: 'Mã SKU',
       width: 150,
-      dataIndex: "sku",
-      key: "sku",
-      align: "center",
+      dataIndex: 'sku',
+      key: 'sku',
+      align: 'center',
       render: (_, record) => (
         <span className="text-medium text-[#384ADC] font-semibold">
           {record.sku}
@@ -163,11 +173,11 @@ const InventoryWareHouseList = () => {
       ),
     },
     {
-      title: "Tên sản phẩm",
+      title: 'Tên sản phẩm',
       width: 270,
-      dataIndex: "name",
-      key: "name",
-      align: "center",
+      dataIndex: 'name',
+      key: 'name',
+      align: 'center',
       render: (_, record) => (
         <span className="text-medium font-medium text-[#2E2D3D]">
           {record.name}
@@ -175,26 +185,28 @@ const InventoryWareHouseList = () => {
       ),
     },
     {
-      title: "Danh mục",
+      title: 'Danh mục',
       width: 150,
-      dataIndex: "category_id",
-      key: "category_id",
-      align: "center",
+      dataIndex: 'category_id',
+      key: 'category_id',
+      align: 'center',
       render: (_, record) => (
         <span className="text-medium font-medium text-[#2E2D3D]">
-          {get(record, "item.item_category.name")}
+          Áo
+          {/* {get(record, 'item.item_category.name')} */}
         </span>
       ),
     },
     {
-      title: "SL tồn kho",
+      title: 'SL tồn kho',
       width: 150,
-      dataIndex: "quantity",
-      key: "quantity",
-      align: "center",
+      dataIndex: 'quantity',
+      key: 'quantity',
+      align: 'center',
       render: (_, record) => (
         <span className="text-medium font-medium text-[#2E2D3D]">
-          {get(record, "quantity")}
+          {/* {get(record, 'quantity')} */}
+          500
         </span>
       ),
     },
@@ -250,9 +262,9 @@ const InventoryWareHouseList = () => {
           <CSVLink
             headers={headers}
             data={inventoryItemExport}
-            filename={"ton-kho.csv"}
+            filename={'ton-kho.csv'}
             onClick={() => {
-              message.success("Download thành công");
+              message.success('Download thành công');
             }}
           >
             <Button
@@ -316,7 +328,8 @@ const InventoryWareHouseList = () => {
         loading={loading}
         rowSelection={rowSelection}
         columns={columns}
-        dataSource={[...inventoryWareHouses]}
+        // dataSource={[...inventoryWareHouses]}
+        dataSource={inventoryWareHouseList}
         onChange={(e: any) => {
           setPagination({
             ...pagination,
@@ -336,4 +349,4 @@ const InventoryWareHouseList = () => {
   );
 };
 
-ReactDOM.render(<InventoryWareHouseList />, document.getElementById("root"));
+export default InventoryWareHouseList;

@@ -1,9 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from "react";
-import ReactDOM from "react-dom";
-import { notification, Table } from "antd";
-import type { ColumnsType } from "antd/es/table";
-import { format } from "date-fns";
+import React, { useEffect, useState } from 'react';
+import ReactDOM from 'react-dom';
+import { notification, Table } from 'antd';
+import type { ColumnsType } from 'antd/es/table';
+import { format } from 'date-fns';
 
 import {
   wareHouseList,
@@ -11,37 +11,37 @@ import {
   warehouses,
   warehouseStatusOption,
   warehouseBalanceStatusOption,
-} from "../../../const/constant";
+} from '../../../const/constant';
 import {
   StatusColorEnum,
   StatusEnum,
   StatusList,
   warehouseStatusList,
-} from "../../../types";
-import InputRangePicker from "../../../components/DateRangePicker/DateRangePicker";
-import Tabs from "../../../components/Tabs";
-import TitlePage from "../../../components/TitlePage/Titlepage";
-import Select from "../../../components/Select/Select";
-import Button from "../../../components/Button/Button";
-import Icon from "../../../components/Icon/Icon";
-import Input from "../../../components/Input/Input";
-import DropdownStatus from "../../../components/DropdownStatus";
-import { IWareHouseManagement, IWareHouses } from "../warehouse.type";
-import ModalRemove from "../../../components/ModalRemove/ModalRemove";
-import { isArray, onCoppy } from "../../../utils/utils";
-import TableEmpty from "../../../components/TableEmpty";
-import PaginationCustom from "../../../components/PaginationCustom";
-import { useDebounce } from "usehooks-ts";
-import { CustomerType } from "../../customers/CustomerType";
-import UserApi from "../../../services/users";
-import { IUser } from "../../../types/users";
-import styles from "../../../styles/DetailCustomer.module.css";
-import WarehouseApi from "../../../services/warehouses";
-import Item from "antd/lib/list/Item";
-import { get } from "lodash";
-import { CommandStatus, CommandStatusColor } from "../../../enums/enums";
-import WarehouseTransferCommandApi from "../../../services/warehouse-transfer-command";
-import WarehouseBalanceCommandApi from "../../../services/warehouse-balance-command";
+} from '../../../types';
+import InputRangePicker from '../../../components/DateRangePicker/DateRangePicker';
+import Tabs from '../../../components/Tabs';
+import TitlePage from '../../../components/TitlePage/Titlepage';
+import Select from '../../../components/Select/Select';
+import Button from '../../../components/Button/Button';
+import Icon from '../../../components/Icon/Icon';
+import Input from '../../../components/Input/Input';
+import DropdownStatus from '../../../components/DropdownStatus';
+import { IWareHouseManagement, IWareHouses } from '../warehouse.type';
+import ModalRemove from '../../../components/ModalRemove/ModalRemove';
+import { isArray, onCoppy } from '../../../utils/utils';
+import TableEmpty from '../../../components/TableEmpty';
+import PaginationCustom from '../../../components/PaginationCustom';
+import { useDebounce } from 'usehooks-ts';
+import { CustomerType } from '../../customers/CustomerType';
+import UserApi from '../../../services/users';
+import { IUser } from '../../../types/users';
+import styles from '../../../styles/DetailCustomer.module.css';
+import WarehouseApi from '../../../services/warehouses';
+import Item from 'antd/lib/list/Item';
+import { get } from 'lodash';
+import { CommandStatus, CommandStatusColor } from '../../../enums/enums';
+import WarehouseTransferCommandApi from '../../../services/warehouse-transfer-command';
+import WarehouseBalanceCommandApi from '../../../services/warehouse-balance-command';
 
 const TransferWareHouseList = () => {
   const defaultPagination = {
@@ -80,13 +80,13 @@ const TransferWareHouseList = () => {
   const [loading, setLoading] = useState(false);
 
   const [filter, setFilter] = useState<any>({});
-  const [searchKey, setSearchKey] = useState("");
+  const [searchKey, setSearchKey] = useState('');
   const debouncedSearchTerm = useDebounce(searchKey, 1000);
 
   const [isShowModalRemoveExport, setIsShowModalRemoveExport] = useState(false);
 
   useEffect(() => {
-    const element = document.getElementById("loading__animation");
+    const element = document.getElementById('loading__animation');
     if (element) {
       element.remove();
     }
@@ -101,7 +101,7 @@ const TransferWareHouseList = () => {
 
   const getListWarehouse = async () => {
     const result = await WarehouseApi.getWarehouse();
-    const listWarehouse = result.map((item) => ({
+    const listWarehouse = result.map((item: any) => ({
       ...item,
       value: item.id,
       label: item.name,
@@ -143,15 +143,15 @@ const TransferWareHouseList = () => {
       await WarehouseBalanceCommandApi.getTotalNumberBalanceCommands();
     let tabs = [
       {
-        name: "Mới",
+        name: 'Mới',
         count: result.CREATED,
       },
       {
-        name: "Hoàn tất",
+        name: 'Hoàn tất',
         count: result.COMPLETED,
       },
       {
-        name: "Huỷ",
+        name: 'Huỷ',
         count: result.CANCEL,
       },
     ];
@@ -167,14 +167,21 @@ const TransferWareHouseList = () => {
     onChange: onSelectChange,
   };
 
+  const warehouseList: IWareHouses[] = Array(50).fill({
+    code: 'CB0001',
+    note: 'Kiểm kho ngày 29/09',
+    cmdStatus: "CREATED",
+    id: "1"
+  });
+
   const columns: ColumnsType<IWareHouses> = [
     {
-      title: "Mã cân bằng kho",
+      title: 'Mã cân bằng kho',
       width: 150,
-      dataIndex: "code",
-      key: "code",
-      fixed: "left",
-      align: "center",
+      dataIndex: 'code',
+      key: 'code',
+      fixed: 'left',
+      align: 'center',
       render: (_, record: any) => (
         <span
           className="text-medium text-[#384ADC] font-semibold"
@@ -185,97 +192,102 @@ const TransferWareHouseList = () => {
       ),
     },
     {
-      title: "Kho kiểm",
+      title: 'Kho kiểm',
       width: 200,
-      dataIndex: "warehouse_name",
-      key: "warehouse_name",
-      align: "center",
+      dataIndex: 'warehouse_name',
+      key: 'warehouse_name',
+      align: 'center',
       render: (_, record) => (
         <span className="text-medium font-medium text-[#2E2D3D]">
-          {get(record, "warehouse.name")}
+          Tổng kho Linh Dương
+          {/* {get(record, "warehouse.name")} */}
         </span>
       ),
     },
     {
-      title: "Số sản phẩm",
+      title: 'Số sản phẩm',
       width: 158,
-      dataIndex: "number_items",
-      key: "number_items",
-      align: "center",
+      dataIndex: 'number_items',
+      key: 'number_items',
+      align: 'center',
       render: (_, record) => (
         <span className="text-medium font-medium text-[#2E2D3D]">
-          {isArray(get(record, "warehouse_items"))
+          3
+          {/* {isArray(get(record, "warehouse_items"))
             ? get(record, "warehouse_items").length
-            : "--"}
+            : "--"} */}
         </span>
       ),
     },
     {
-      title: "Ghi chú",
+      title: 'Ghi chú',
       width: 387,
-      dataIndex: "note",
-      key: "note",
-      align: "center",
+      dataIndex: 'note',
+      key: 'note',
+      align: 'center',
       render: (_, record) => (
         <span className="text-medium text-[#4B4B59]">{record.note}</span>
       ),
     },
     {
-      title: "NV xử lý / Thời gian",
+      title: 'NV xử lý / Thời gian',
       width: 200,
-      dataIndex: "name",
-      key: "name",
+      dataIndex: 'name',
+      key: 'name',
       render: (_, record) => (
         <div className="flex flex-col gap-y-1">
           <span className="text-medium text-[#384ADC] font-semibold">
-            {get(record, "created_user.name")}
+            {/* {get(record, "created_user.name")} */}
+            Nguyễn Văn A
           </span>
           <span className="text-medium text-[#5F5E6B] font-medium">
-            {get(record, "created_at")
+            09:23 - 21/09/2022
+            {/* {get(record, "created_at")
               ? format(
                   new Date(get(record, "created_at")),
                   "HH:mm - dd/MM/yyyy"
                 )
-              : ""}
+              : ""} */}
           </span>
         </div>
       ),
     },
     {
-      title: "Cập nhật cuối",
+      title: 'Cập nhật cuối',
       width: 185,
-      dataIndex: "updated_at",
-      key: "updated_at",
-      align: "center",
+      dataIndex: 'updated_at',
+      key: 'updated_at',
+      align: 'center',
       render: (_, record) => (
         <div className="flex flex-col gap-y-1 text-medium text-[#1D1C2D]">
-          <span>{format(new Date(record.updated_at), "HH:mm")}</span>
-          <span>{format(new Date(record.updated_at), "dd/MM/yyyy")}</span>
+          08:36 19/09/2022
+          {/* <span>{format(new Date(record.updated_at), "HH:mm")}</span>
+          <span>{format(new Date(record.updated_at), "dd/MM/yyyy")}</span> */}
         </div>
       ),
     },
     {
-      title: "Trạng thái",
+      title: 'Trạng thái',
       width: 185,
-      dataIndex: "status",
-      key: "status",
-      align: "center",
-      fixed: "right",
+      dataIndex: 'status',
+      key: 'status',
+      align: 'center',
+      fixed: 'right',
       render: (_, record) => (
         <span
           className={`text-medium font-semibold text-[${
-            CommandStatusColor[record.status]
+            CommandStatusColor[record.cmdStatus]
           }]`}
         >
-          {CommandStatus[record.status] || ""}
+          {CommandStatus[record.cmdStatus] || ''}
         </span>
       ),
     },
   ];
 
-  const handleChangeTab = (e) => {
+  const handleChangeTab = (e: any) => {
     const value =
-      warehouseStatusList.find((item) => item.name == e)?.value || "";
+      warehouseStatusList.find((item: any) => item.name == e)?.value || '';
     setFilter({
       ...filter,
       status: value,
@@ -295,20 +307,20 @@ const TransferWareHouseList = () => {
     }
   };
 
-  const handleUpdateStatus = async (e) => {
-    console.log("e", e);
-    console.log("selectedRowKeys", selectedRowKeys);
+  const handleUpdateStatus = async (e: any) => {
+    console.log('e', e);
+    console.log('selectedRowKeys', selectedRowKeys);
     selectedRowKeys.map((id) => {
-      const commands = balanceWareHouses.find((item) => item.id === id);
-      if (commands?.status === "CANCEL") {
+      const commands = balanceWareHouses.find((item: any) => item.id === id);
+      if (commands?.status === 'CANCEL') {
         notification.error({
-          message: "Không thể cập nhập phiếu cân bằng đã huỷ",
+          message: 'Không thể cập nhập phiếu cân bằng đã huỷ',
         });
         return;
       }
-      if (commands?.status === "COMPLETED") {
+      if (commands?.status === 'COMPLETED') {
         notification.error({
-          message: "Không thể cập nhập phiếu cân bằng đã hoàn thành",
+          message: 'Không thể cập nhập phiếu cân bằng đã hoàn thành',
         });
         return;
       }
@@ -319,7 +331,7 @@ const TransferWareHouseList = () => {
     });
     if (data) {
       notification.success({
-        message: "Cập nhật thành công!",
+        message: 'Cập nhật thành công!',
       });
     }
   };
@@ -372,7 +384,7 @@ const TransferWareHouseList = () => {
             color="white"
             suffixIcon={<Icon icon="add" size={24} />}
             onClick={() =>
-              (window.location.href = "/warehouse/balance-commands/create")
+              (window.location.href = '/warehouses/balance-warehouse/create')
             }
           >
             Thêm mới
@@ -396,7 +408,7 @@ const TransferWareHouseList = () => {
       <div className="flex items-center flex-wrap gap-[8px] mb-[12px]">
         <Input
           onChange={(e: any) => {
-            console.log("code", e);
+            console.log('code', e);
             setSearchKey(e.target.value);
           }}
           className="flex-1"
@@ -419,21 +431,21 @@ const TransferWareHouseList = () => {
           placeholder="Nhập tên nhân viên"
         />
         <InputRangePicker
-          placeholder={["Ngày bắt đầu", "Ngày kết thúc"]}
+          placeholder={['Ngày bắt đầu', 'Ngày kết thúc']}
           width={306}
           prevIcon={<Icon size={24} icon="calendar" />}
           onChange={(e: any) =>
             setFilter({
               ...filter,
-              from: e[0].format("YYYY-MM-DD"),
-              to: e[1].format("YYYY-MM-DD"),
+              from: e[0].format('YYYY-MM-DD'),
+              to: e[1].format('YYYY-MM-DD'),
             })
           }
         />
       </div>
       {isArray(selectedRowKeys) && (
         <div className="mb-[12px]">
-          Số phiếu cân bằng kho đang chọn:{" "}
+          Số phiếu cân bằng kho đang chọn:{' '}
           <span className="text-[#384ADC] font-semibold">
             {selectedRowKeys.length}
           </span>
@@ -456,14 +468,14 @@ const TransferWareHouseList = () => {
         onRow={(record) => {
           return {
             onClick: () => {
-              window.location.href = `/warehouse/balance-commands/update/${record.id}`;
+              window.location.href = `/warehouses/balance-warehouse/${record.id}`;
             },
           };
         }}
         loading={loading}
         rowSelection={rowSelection}
         columns={columns}
-        dataSource={[...balanceWareHouses]}
+        dataSource={warehouseList}
         pagination={{
           total: pagination.total,
           defaultPageSize: pagination.pageSize,
@@ -493,4 +505,4 @@ const TransferWareHouseList = () => {
   );
 };
 
-ReactDOM.render(<TransferWareHouseList />, document.getElementById("root"));
+export default TransferWareHouseList;
