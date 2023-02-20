@@ -1,49 +1,49 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import moment from 'moment';
-import React, { useState, useEffect } from 'react';
-import Button from '../../../components/Button/Button';
-import Icon from '../../../components/Icon/Icon';
-import Input from '../../../components/Input/Input';
-import ModalConfirm from '../../../components/Modal/ModalConfirm/ModalConfirm';
-import { Popover } from 'antd';
-import Select from '../../../components/Select/Select';
-import TextArea from '../../../components/TextArea';
-import DatePicker from '../../../components/DatePicker/DatePicker';
-import TitlePage from '../../../components/TitlePage/Titlepage';
-import Upload from '../../../components/Upload/Upload';
-import type { ColumnsType } from 'antd/es/table';
-import styles from '../../../styles/DetailCustomer.module.css';
+import moment from "moment";
+import React, { useState, useEffect } from "react";
+import Button from "../../../components/Button/Button";
+import Icon from "../../../components/Icon/Icon";
+import Input from "../../../components/Input/Input";
+import ModalConfirm from "../../../components/Modal/ModalConfirm/ModalConfirm";
+import { Popover } from "antd";
+import Select from "../../../components/Select/Select";
+import TextArea from "../../../components/TextArea";
+import DatePicker from "../../../components/DatePicker/DatePicker";
+import TitlePage from "../../../components/TitlePage/Titlepage";
+import Upload from "../../../components/Upload/Upload";
+import type { ColumnsType } from "antd/es/table";
+import styles from "../../../styles/DetailCustomer.module.css";
 import type {
   ProductAttributeProps,
   ProductDetailProps,
-} from '../product.type';
-import type { CustomTagProps } from 'rc-select/lib/BaseSelect';
-import { Checkbox, Switch, Tag } from 'antd';
-import CheckboxList from '../../../components/CheckboxList/CheckboxList';
-import classNames from 'classnames';
-import { Table, notification } from 'antd';
+} from "../product.type";
+import type { CustomTagProps } from "rc-select/lib/BaseSelect";
+import { Checkbox, Switch, Tag } from "antd";
+import CheckboxList from "../../../components/CheckboxList/CheckboxList";
+import classNames from "classnames";
+import { Table, notification } from "antd";
 interface ProductFormProps {
   detail?: any;
   loading?: boolean;
   type_attr_list?: ProductAttributeProps[];
 }
-import { Form } from 'antd';
-import ItemApi from '../../../services/items';
-import ItemCategoryApi from '../../../services/item-categories';
-import ItemSupplierApi from '../../../services/item-suppliers';
-import ItemAttributeApi from '../../../services/item-attributes';
-import ItemAttributeValueApi from '../../../services/item-attribute-values';
-import WarehouseApi from '../../../services/warehouses';
-import ImageApi from '../../../services/images';
-import { isArray } from '../../../utils/utils';
-import TextEditor from '../../../components/TextEditor/TextEditor';
-import ItemSkuApi from '../../../services/item-skus';
-import WarehouseTransferApi from '../../../services/warehouse-transfer-command';
-import { get } from 'lodash';
-import { format } from 'node:path/win32';
-import WarehouseImportCommandApi from '../../../services/warehouse-import';
-import CurrencyInput from 'react-currency-input-field';
-import InputCurrency from '../../../components/InputCurrency/Input';
+import { Form } from "antd";
+import ItemApi from "../../../services/items";
+import ItemCategoryApi from "../../../services/item-categories";
+import ItemSupplierApi from "../../../services/item-suppliers";
+import ItemAttributeApi from "../../../services/item-attributes";
+import ItemAttributeValueApi from "../../../services/item-attribute-values";
+import WarehouseApi from "../../../services/warehouses";
+import ImageApi from "../../../services/images";
+import { isArray } from "../../../utils/utils";
+import TextEditor from "../../../components/TextEditor/TextEditor";
+import ItemSkuApi from "../../../services/item-skus";
+import WarehouseTransferApi from "../../../services/warehouse-transfer-command";
+import { get } from "lodash";
+import { format } from "node:path/win32";
+import WarehouseImportCommandApi from "../../../services/warehouse-import";
+import CurrencyInput from "react-currency-input-field";
+import InputCurrency from "../../../components/InputCurrency/Input";
 
 declare global {
   interface Window {
@@ -65,24 +65,24 @@ const ProductForms: React.FC<ProductFormProps> = ({
   const [productSuppliers, setProductSuppliers] = useState([]);
   const [warehouses, setWarehouses] = useState([
     {
-      label: 'Tất cả kho',
-      value: '',
+      label: "Tất cả kho",
+      value: "",
     },
   ]);
   const [selectedWarehouse, setSelectedWarehouse] = useState([
     {
-      label: 'Tất cả kho',
-      value: '',
+      label: "Tất cả kho",
+      value: "",
     },
   ]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [itemAttributes, setItemAttributes] = useState<any[]>([]);
   const [selectedItemAttributes, setSelectedItemAttributes] = useState<any[]>(
-    []
+    [],
   );
-  const [newItemAttributeCode, setNewItemAttributeCode] = useState<string>('');
+  const [newItemAttributeCode, setNewItemAttributeCode] = useState<string>("");
   const [newItemAttributeValue, setNewItemAttributeValue] =
-    useState<string>('');
+    useState<string>("");
   const [isShowModalConfirm, setIsShowModalConfirm] = useState(false);
   const [fileList, setFileList] = useState<any[]>([]);
   const [combinations, setCombinations] = useState<any[]>([]);
@@ -90,14 +90,14 @@ const ProductForms: React.FC<ProductFormProps> = ({
   const [saleOnline, setSaleOnline] = useState(false);
   const [saleInApp, setSaleInApp] = useState(false);
   const [disabledTransfer, setDisableTransfer] = useState(false);
-  const [searchAttribute, setSearchAttribute] = useState('');
-  const [searchAttributeValue, setSearchAttributeValue] = useState('');
+  const [searchAttribute, setSearchAttribute] = useState("");
+  const [searchAttributeValue, setSearchAttributeValue] = useState("");
   const [fileTemp, setFileTemp] = useState<any>();
 
   const [form] = Form.useForm();
   const [syncForm] = Form.useForm();
   const [transferForm] = Form.useForm();
-  const channels = Form.useWatch('channels', form);
+  const channels = Form.useWatch("channels", form);
   const [priceChannel, setPriceChannel] = useState<any>({
     ONLINE: 0,
     OFFLINE: 0,
@@ -110,7 +110,7 @@ const ProductForms: React.FC<ProductFormProps> = ({
     getAllProductTypes();
     getAllProductSuppliers();
 
-    window.addEventListener('keydown', (e) => {
+    window.addEventListener("keydown", (e) => {
       var keyCode = e.keyCode || e.which;
       if (keyCode === 123) {
         form.submit();
@@ -133,11 +133,11 @@ const ProductForms: React.FC<ProductFormProps> = ({
         detail.item_warehouse_relations.length
       ) {
         detail.warehouse_id = detail.item_warehouse_relations.map(
-          (v: any) => v.warehouse_id
+          (v: any) => v.warehouse_id,
         );
       }
       if (detail.channels && detail.channels.length) {
-        setIsOnApp(detail.channels.indexOf('IN_APP') == -1 ? false : true);
+        setIsOnApp(detail.channels.indexOf("IN_APP") == -1 ? false : true);
       }
       form.setFieldsValue(detail);
       setIsSamePrice(detail.same_price_channel);
@@ -160,7 +160,7 @@ const ProductForms: React.FC<ProductFormProps> = ({
     const { data } = await ItemCategoryApi.getItemCategory();
     setProductTypeList(data);
     const selected = data.filter(
-      (v: any) => v.value === detail?.item_category_id
+      (v: any) => v.value === detail?.item_category_id,
     );
     setSelectedCategory(selected?.length ? selected[0] : null);
   };
@@ -187,14 +187,14 @@ const ProductForms: React.FC<ProductFormProps> = ({
         data.map((v: any) => ({
           label: v.name,
           value: v.id,
-        }))
-      )
+        })),
+      ),
     );
   };
 
   const getDetailAttributes = async () => {
     const { data } = await ItemAttributeApi.getItemAttributeDetailByItem(
-      detail.id
+      detail.id,
     );
     setItemAttributes(data.attributes);
     if (isArray(data.attributes)) {
@@ -203,7 +203,7 @@ const ProductForms: React.FC<ProductFormProps> = ({
   };
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    console.log('selectedRowKeys changed: ', selectedRowKeys);
+    console.log("selectedRowKeys changed: ", selectedRowKeys);
   };
 
   const handleDeleteProduct = (id: string) => {
@@ -214,14 +214,14 @@ const ProductForms: React.FC<ProductFormProps> = ({
       }
     });
     setItemAttributes((prevList) =>
-      prevList.filter((product: any) => product.id !== id)
+      prevList.filter((product: any) => product.id !== id),
     );
     setSelectedItemAttributes(newSelectItemAttributes);
     handleAddVariant(true, newSelectItemAttributes);
   };
 
   const handleChange = (value: string) => {
-    if (value.indexOf('IN_APP') != -1) {
+    if (value.indexOf("IN_APP") != -1) {
       setIsOnApp(true);
     } else {
       setIsOnApp(false);
@@ -237,16 +237,16 @@ const ProductForms: React.FC<ProductFormProps> = ({
     setIsShowModalConfirm(false);
     const { data } = await ItemApi.deleteManyItems(
       [detail.id],
-      window.loggedInUser
+      window.loggedInUser,
     );
     if (data) {
       notification.success({
-        message: 'Thành công',
+        message: "Thành công",
         description: data,
-        placement: 'top',
-        icon: <Icon icon={'checked-approved'} size={24} />,
+        placement: "top",
+        icon: <Icon icon={"checked-approved"} size={24} />,
       });
-      window.location.href = '/product/items';
+      window.location.href = "/product/items";
     }
   };
 
@@ -258,10 +258,10 @@ const ProductForms: React.FC<ProductFormProps> = ({
     });
     if (data) {
       notification.success({
-        message: 'Thành công',
-        description: 'Thêm thuộc tính thành công!',
-        placement: 'top',
-        icon: <Icon icon={'checked-approved'} size={24} />,
+        message: "Thành công",
+        description: "Thêm thuộc tính thành công!",
+        placement: "top",
+        icon: <Icon icon={"checked-approved"} size={24} />,
       });
       let currentItemAttribute: any = selectedItemAttributes;
       currentItemAttribute[attribute_id] = currentItemAttribute[
@@ -272,15 +272,15 @@ const ProductForms: React.FC<ProductFormProps> = ({
       });
       let newItemAttributes: any[] = itemAttributes;
       const id = itemAttributes.findIndex(
-        (item: any) => item.id == attribute_id
+        (item: any) => item.id == attribute_id,
       );
       if (id !== -1) {
-        newItemAttributes[id]['typeAttribute'] =
+        newItemAttributes[id]["typeAttribute"] =
           currentItemAttribute[attribute_id];
       }
       setItemAttributes((itemAttributes) => newItemAttributes);
       setSelectedItemAttributes(
-        (selectedItemAttributes) => currentItemAttribute
+        (selectedItemAttributes) => currentItemAttribute,
       );
       detail && getDetailAttributes();
       handleAddVariant();
@@ -289,16 +289,16 @@ const ProductForms: React.FC<ProductFormProps> = ({
 
   const handleOnChangeItemAttribute = async (
     value: any,
-    newProductAttributes = productAttributes
+    newProductAttributes = productAttributes,
   ) => {
     const isSelected = itemAttributes?.length
       ? itemAttributes.filter((v: any) => v.id == value)
       : [];
     if (isSelected.length) {
       notification.error({
-        message: 'Có lỗi xảy ra',
-        description: 'Thuộc tính đã tồn tại',
-        placement: 'top',
+        message: "Có lỗi xảy ra",
+        description: "Thuộc tính đã tồn tại",
+        placement: "top",
       });
       return;
     }
@@ -342,19 +342,19 @@ const ProductForms: React.FC<ProductFormProps> = ({
 
   const handleAddVariant = async (
     isDelete?: boolean,
-    newSelectItemAttributes?: any
+    newSelectItemAttributes?: any,
   ) => {
     if (selectedItemAttributes.length == 0) {
       notification.error({
-        message: 'Chưa chọn giá trị thuộc tính',
+        message: "Chưa chọn giá trị thuộc tính",
       });
     }
     const noAttribute = selectedItemAttributes.filter(
-      (v: any) => v && v.length == 0
+      (v: any) => v && v.length == 0,
     );
     if (noAttribute.length) {
       notification.error({
-        message: 'Chưa chọn giá trị thuộc tính',
+        message: "Chưa chọn giá trị thuộc tính",
       });
     }
     let combinations;
@@ -381,7 +381,7 @@ const ProductForms: React.FC<ProductFormProps> = ({
       }));
       result.push({
         id: i,
-        sku_code: '',
+        sku_code: "",
         price: 0,
         import_price: 0,
         weight: 0,
@@ -433,32 +433,32 @@ const ProductForms: React.FC<ProductFormProps> = ({
         if (isOnApp) {
           if (fileList.length == 0) {
             notification.error({
-              message: 'Có lỗi xảy ra',
-              description: 'Hình ảnh sản phẩm là bắt buộc với Kênh bán là App',
-              placement: 'top',
+              message: "Có lỗi xảy ra",
+              description: "Hình ảnh sản phẩm là bắt buộc với Kênh bán là App",
+              placement: "top",
             });
             return;
           }
           if (
             !formValue.description ||
-            formValue.description == '<p><br></p>'
+            formValue.description == "<p><br></p>"
           ) {
             notification.error({
-              message: 'Có lỗi xảy ra',
-              description: 'Mô tả/Nội dung là bắt buộc với Kênh bán là App',
-              placement: 'top',
+              message: "Có lỗi xảy ra",
+              description: "Mô tả/Nội dung là bắt buộc với Kênh bán là App",
+              placement: "top",
             });
             return;
           }
         }
         if (!isArray(formValue.channels)) {
           notification.error({
-            message: 'Vui lòng chọn kênh bán!',
+            message: "Vui lòng chọn kênh bán!",
           });
           return;
         }
         if (formValue.warehouse_id) {
-          const valueLabel = get(formValue.warehouse_id, '[0].label');
+          const valueLabel = get(formValue.warehouse_id, "[0].label");
           if (valueLabel) {
             const arrayWarehouseId: any = [];
             warehouses.map((v: any) => {
@@ -481,17 +481,17 @@ const ProductForms: React.FC<ProductFormProps> = ({
           });
           if (data) {
             notification.success({
-              message: 'Thành công',
-              description: 'Lưu thành công',
-              placement: 'top',
-              icon: <Icon icon={'checked-approved'} size={24} />,
+              message: "Thành công",
+              description: "Lưu thành công",
+              placement: "top",
+              icon: <Icon icon={"checked-approved"} size={24} />,
             });
           }
         } else {
           if (selectedItemAttributes.length && combinations.length) {
             const { data } = await ItemApi.addItem({
               ...formValue,
-              management_type: 'normal',
+              management_type: "normal",
               images: fileList,
               item_attribute_ids: Object.keys(selectedItemAttributes),
               itemAttributes: combinations,
@@ -504,17 +504,17 @@ const ProductForms: React.FC<ProductFormProps> = ({
 
             if (data) {
               notification.success({
-                message: 'Thành công',
-                description: 'Tạo thành công',
-                placement: 'top',
-                icon: <Icon icon={'checked-approved'} size={24} />,
+                message: "Thành công",
+                description: "Tạo thành công",
+                placement: "top",
+                icon: <Icon icon={"checked-approved"} size={24} />,
               });
               window.location.href = `/product/items/edit/${data.id}`;
             }
           } else {
             const { data } = await ItemApi.addItem({
               ...formValue,
-              management_type: 'normal',
+              management_type: "normal",
               images: fileList,
               item_attribute_ids: Object.keys(selectedItemAttributes),
               itemAttributes: combinations,
@@ -523,7 +523,7 @@ const ProductForms: React.FC<ProductFormProps> = ({
             });
             if (data) {
               notification.success({
-                message: 'Tạo sản phẩm thành công!',
+                message: "Tạo sản phẩm thành công!",
               });
               window.location.href = `/product/items/edit/${data.id}`;
             }
@@ -537,7 +537,7 @@ const ProductForms: React.FC<ProductFormProps> = ({
 
   const handleChangeImage = async (e: any) => {
     setFileList(
-      fileList.filter((v: any) => !v.status || v.status !== 'removed')
+      fileList.filter((v: any) => !v.status || v.status !== "removed"),
     );
   };
 
@@ -552,8 +552,8 @@ const ProductForms: React.FC<ProductFormProps> = ({
       const data = await ImageApi.upload(file);
       setFileTemp(data.url);
     } catch (err) {
-      console.log('Error: ', err);
-      const error = new Error('Some error');
+      console.log("Error: ", err);
+      const error = new Error("Some error");
       onError({ err });
     }
   };
@@ -590,9 +590,9 @@ const ProductForms: React.FC<ProductFormProps> = ({
           const formValue = transferForm.getFieldsValue();
           if (formValue.from_warehouse_id == formValue.to_warehouse_id) {
             notification.error({
-              message: 'Có lỗi xảy ra',
-              description: 'Kho nhập và kho chuyển không được giống nhau',
-              placement: 'top',
+              message: "Có lỗi xảy ra",
+              description: "Kho nhập và kho chuyển không được giống nhau",
+              placement: "top",
             });
             return;
           }
@@ -602,7 +602,7 @@ const ProductForms: React.FC<ProductFormProps> = ({
               from_warehouse_id: formValue.from_warehouse_id,
               to_warehouse_id: formValue.to_warehouse_id,
               created_user_id: window.loggedInUser,
-              status: 'Mới',
+              status: "Mới",
             },
             transferCommandItems: combinations.map((v: any) => ({
               item_id: v.item_id,
@@ -612,7 +612,7 @@ const ProductForms: React.FC<ProductFormProps> = ({
             })),
           });
           if (data) {
-            window.open('/warehouse/transfer-commands/update/' + data.id);
+            window.open("/warehouse/transfer-commands/update/" + data.id);
           }
           setDisableTransfer(false);
         })
@@ -655,14 +655,14 @@ const ProductForms: React.FC<ProductFormProps> = ({
   }, [isSamePrice]);
 
   const handleChangeItemSku = (e: any, record: any, keyName: any) => {
-    if (keyName === 'is_minus_sell') {
+    if (keyName === "is_minus_sell") {
       const exsitMinusSaleItem = combinations.find(
-        (item) => item.is_minus_sell === true && item.id !== record.id
+        (item) => item.is_minus_sell === true && item.id !== record.id,
       );
       if (exsitMinusSaleItem || e === true) {
-        form.setFieldValue('is_minus_sell', true);
+        form.setFieldValue("is_minus_sell", true);
       } else {
-        form.setFieldValue('is_minus_sell', false);
+        form.setFieldValue("is_minus_sell", false);
       }
     }
 
@@ -670,23 +670,23 @@ const ProductForms: React.FC<ProductFormProps> = ({
       if (v.id === record.id) {
         let newValue = record;
         newValue[keyName] =
-          keyName == 'is_show' ||
-          keyName == 'is_minus_sell' ||
-          keyName == 'price_in_app' ||
-          keyName == 'price_online' ||
-          keyName == 'price_offline'
+          keyName == "is_show" ||
+          keyName == "is_minus_sell" ||
+          keyName == "price_in_app" ||
+          keyName == "price_online" ||
+          keyName == "price_offline"
             ? e
             : e.target.value;
         if (isSamePrice) {
-          if (keyName === 'price_offline') {
-            newValue['price_online'] = e;
-            newValue['price_in_app'] = e;
-          } else if (keyName === 'price_online') {
-            newValue['price_offline'] = e;
-            newValue['price_in_app'] = e;
-          } else if (keyName === 'price_in_app') {
-            newValue['price_online'] = e;
-            newValue['price_offline'] = e;
+          if (keyName === "price_offline") {
+            newValue["price_online"] = e;
+            newValue["price_in_app"] = e;
+          } else if (keyName === "price_online") {
+            newValue["price_offline"] = e;
+            newValue["price_in_app"] = e;
+          } else if (keyName === "price_in_app") {
+            newValue["price_online"] = e;
+            newValue["price_offline"] = e;
           }
         }
         return newValue;
@@ -697,13 +697,13 @@ const ProductForms: React.FC<ProductFormProps> = ({
 
   const handleCheckAllSaleNegative = (value: any) => {
     combinations.map((item) => {
-      handleChangeItemSku(value, item, 'is_minus_sell');
+      handleChangeItemSku(value, item, "is_minus_sell");
     });
   };
 
   const handleChangeWarehouse = (value: any) => {
-    if (value.length > 1 && value.includes('')) {
-      const selected: any[] = value.filter((v: any) => v !== '');
+    if (value.length > 1 && value.includes("")) {
+      const selected: any[] = value.filter((v: any) => v !== "");
       setSelectedWarehouse(selected);
       form.setFieldsValue({
         ...form.getFieldsValue(),
@@ -713,8 +713,8 @@ const ProductForms: React.FC<ProductFormProps> = ({
       if (value.length == 0) {
         const selected: any[] = [
           {
-            label: 'Tất cả kho',
-            value: '',
+            label: "Tất cả kho",
+            value: "",
           },
         ];
         setSelectedWarehouse(selected);
@@ -772,7 +772,7 @@ const ProductForms: React.FC<ProductFormProps> = ({
             width={154}
             placeholder="Nhập giá bán"
             onValueChange={(e: any) => {
-              syncForm.setFieldValue('price', e);
+              syncForm.setFieldValue("price", e);
             }}
             defaultValue={0}
             inputMode="decimal"
@@ -786,7 +786,7 @@ const ProductForms: React.FC<ProductFormProps> = ({
             rules={[
               {
                 pattern: new RegExp(/[+-]?([0-9]*[.])?[0-9]+/),
-                message: 'Trọng lượng SP không hợp lệ',
+                message: "Trọng lượng SP không hợp lệ",
               },
             ]}
           >
@@ -822,7 +822,7 @@ const ProductForms: React.FC<ProductFormProps> = ({
           rules={[
             {
               required: true,
-              message: 'Kho chuyển là bắt buộc!',
+              message: "Kho chuyển là bắt buộc!",
             },
           ]}
         >
@@ -839,7 +839,7 @@ const ProductForms: React.FC<ProductFormProps> = ({
           rules={[
             {
               required: true,
-              message: 'Kho nhập là bắt buộc!',
+              message: "Kho nhập là bắt buộc!",
             },
           ]}
         >
@@ -881,10 +881,10 @@ const ProductForms: React.FC<ProductFormProps> = ({
 
   const columnAttributes: ColumnsType<ProductAttributeProps> = [
     {
-      title: 'Thuộc tính',
+      title: "Thuộc tính",
       width: 148,
-      dataIndex: 'attribute',
-      align: 'center',
+      dataIndex: "attribute",
+      align: "center",
       render: (_, record) => (
         <div className="flex justify-left w-48">
           {!detail && (
@@ -903,10 +903,10 @@ const ProductForms: React.FC<ProductFormProps> = ({
       ),
     },
     {
-      title: 'Giá trị',
+      title: "Giá trị",
       width: 551,
-      dataIndex: 'typeAttribute',
-      align: 'left',
+      dataIndex: "typeAttribute",
+      align: "left",
       render: (_, record: any) => {
         return (
           <span className="w-full flex items-center justify-between text-sm text-[#4B4B59] font-medium pd-[9px]">
@@ -915,7 +915,7 @@ const ProductForms: React.FC<ProductFormProps> = ({
                 mode="multiple"
                 maxTagCount="responsive"
                 showArrow
-                style={{ width: '100%' }}
+                style={{ width: "100%" }}
                 disabled={detail ?? false}
                 value={
                   !detail
@@ -962,7 +962,7 @@ const ProductForms: React.FC<ProductFormProps> = ({
                 title="Thêm kiểu thuộc tính mới"
                 trigger="click"
                 overlayStyle={{
-                  width: '309px',
+                  width: "309px",
                 }}
               >
                 <Button width={24} height={24} className="p-0">
@@ -977,71 +977,71 @@ const ProductForms: React.FC<ProductFormProps> = ({
   ];
 
   const arrayColumnItemSkuShow = [
-    'show',
-    'sku',
-    'import_price',
-    'price',
-    'weight',
-    'negative',
-    'action',
+    "show",
+    "sku",
+    "import_price",
+    "price",
+    "weight",
+    "negative",
+    "action",
   ]
     .concat(
-      isArray(itemAttributes) && itemAttributes.length > 0 ? 'attributes' : ''
+      isArray(itemAttributes) && itemAttributes.length > 0 ? "attributes" : "",
     )
     .concat(channels)
-    .concat(detail ? 'inventory' : '');
+    .concat(detail ? "inventory" : "");
   const columnSkusCreate: ColumnsType<ProductDetailProps> = [
     {
-      title: 'Hiện',
+      title: "Hiện",
       width: 82,
-      key: 'id',
-      dataIndex: 'show',
-      fixed: 'left',
-      align: 'center',
+      key: "id",
+      dataIndex: "show",
+      fixed: "left",
+      align: "center",
       render: (_, record: any) => {
         return (
           <Switch
             checked={record.is_show}
             className="button-switch"
             onChange={(e) => {
-              handleChangeItemSku(e, record, 'is_show');
+              handleChangeItemSku(e, record, "is_show");
             }}
           />
         );
       },
     },
     {
-      title: 'Mã SKU',
-      fixed: 'left',
+      title: "Mã SKU",
+      fixed: "left",
       width: 145,
-      dataIndex: 'sku',
-      align: 'center',
+      dataIndex: "sku",
+      align: "center",
       render: (_, record) => (
         <span className="text-medium text-[#1D1C2D] font-medium">
-          {record?.sku_code || '--'}
+          {record?.sku_code || "--"}
         </span>
       ),
     },
     {
-      title: 'Mẫu mã',
+      title: "Mẫu mã",
       width: 350,
-      dataIndex: 'attributes',
-      align: 'center',
+      dataIndex: "attributes",
+      align: "center",
       render: (_, record) => {
         return (
           <div
             className="flex justify-center items-center px-[12px] py-[7px] rounded-lg"
-            style={{ border: '1px solid #DADADD' }}
+            style={{ border: "1px solid #DADADD" }}
           >
             {!detail ? (
               <div className="text-medium font-medium text-[#4B4B59]">
-                {record?.attributes?.map((v: any) => v.label).join(' - ')}
+                {record?.attributes?.map((v: any) => v.label).join(" - ")}
               </div>
             ) : (
               <div>
                 {record?.item_attribute_values
                   ?.map((v: any) => v.value)
-                  .join(' - ')}
+                  .join(" - ")}
               </div>
             )}
           </div>
@@ -1049,10 +1049,10 @@ const ProductForms: React.FC<ProductFormProps> = ({
       },
     },
     {
-      title: 'Giá bán tại quầy',
+      title: "Giá bán tại quầy",
       width: 200,
-      dataIndex: 'OFFLINE',
-      align: 'center',
+      dataIndex: "OFFLINE",
+      align: "center",
       render: (_, record) => {
         return (
           <div className="flex items-center justify-between px-[12px] py-[7px] rounded-lg">
@@ -1061,7 +1061,7 @@ const ProductForms: React.FC<ProductFormProps> = ({
               value={record?.price_offline}
               decimalsLimit={3}
               onValueChange={(e) =>
-                handleChangeItemSku(e, record, 'price_offline')
+                handleChangeItemSku(e, record, "price_offline")
               }
               suffixInput="đ"
             />
@@ -1070,10 +1070,10 @@ const ProductForms: React.FC<ProductFormProps> = ({
       },
     },
     {
-      title: 'Giá bán online',
+      title: "Giá bán online",
       width: 200,
-      dataIndex: 'ONLINE',
-      align: 'center',
+      dataIndex: "ONLINE",
+      align: "center",
       render: (_, record) => {
         return (
           <div className="flex items-center justify-between px-[12px] py-[7px] rounded-lg">
@@ -1082,7 +1082,7 @@ const ProductForms: React.FC<ProductFormProps> = ({
               value={record?.price_online}
               decimalsLimit={3}
               onValueChange={(e) =>
-                handleChangeItemSku(e, record, 'price_online')
+                handleChangeItemSku(e, record, "price_online")
               }
               suffixInput="đ"
             />
@@ -1091,10 +1091,10 @@ const ProductForms: React.FC<ProductFormProps> = ({
       },
     },
     {
-      title: 'Giá bán tại app',
+      title: "Giá bán tại app",
       width: 200,
-      dataIndex: 'IN_APP',
-      align: 'center',
+      dataIndex: "IN_APP",
+      align: "center",
       render: (_, record) => {
         return (
           <div className="flex items-center justify-between px-[12px] py-[7px] rounded-lg">
@@ -1103,7 +1103,7 @@ const ProductForms: React.FC<ProductFormProps> = ({
               value={record?.price_in_app}
               decimalsLimit={3}
               onValueChange={(e) =>
-                handleChangeItemSku(e, record, 'price_in_app')
+                handleChangeItemSku(e, record, "price_in_app")
               }
               suffixInput="đ"
             />
@@ -1112,17 +1112,17 @@ const ProductForms: React.FC<ProductFormProps> = ({
       },
     },
     {
-      title: 'Trọng lượng SP',
+      title: "Trọng lượng SP",
       width: 170,
-      dataIndex: 'weight',
-      align: 'center',
+      dataIndex: "weight",
+      align: "center",
       render: (_, record) => {
         return (
           <div className="flex items-center justify-between px-[12px] py-[7px] rounded-lg">
             <Input
               placeholder="Nhập trọng lượng"
               value={record?.weight}
-              onChange={(e) => handleChangeItemSku(e, record, 'weight')}
+              onChange={(e) => handleChangeItemSku(e, record, "weight")}
               suffix={<span>kg</span>}
             />
           </div>
@@ -1130,40 +1130,40 @@ const ProductForms: React.FC<ProductFormProps> = ({
       },
     },
     {
-      title: 'Bán âm',
+      title: "Bán âm",
       width: 100,
-      dataIndex: 'negative',
-      align: 'center',
+      dataIndex: "negative",
+      align: "center",
       render: (_, record) => {
         return (
           <Checkbox
             checked={record.is_minus_sell}
             onChange={(e) => {
-              handleChangeItemSku(e.target.checked, record, 'is_minus_sell');
+              handleChangeItemSku(e.target.checked, record, "is_minus_sell");
             }}
           />
         );
       },
     },
     {
-      title: 'Tồn kho',
+      title: "Tồn kho",
       width: 100,
-      dataIndex: 'inventory',
-      align: 'center',
+      dataIndex: "inventory",
+      align: "center",
       render: (_, record: any) => {
         let inventory = 0;
-        isArray(get(record, 'warehouse_items')) &&
-          get(record, 'warehouse_items').map((item: any) => {
+        isArray(get(record, "warehouse_items")) &&
+          get(record, "warehouse_items").map((item: any) => {
             inventory += item.quantity;
           });
         return <div>{inventory}</div>;
       },
     },
     {
-      title: 'Action',
+      title: "Action",
       width: 100,
-      dataIndex: 'action',
-      align: 'center',
+      dataIndex: "action",
+      align: "center",
       render: (_, record) => {
         return (
           !detail && (
@@ -1181,16 +1181,16 @@ const ProductForms: React.FC<ProductFormProps> = ({
 
   const checkboxSettings = [
     {
-      label: 'Tại quầy',
-      value: 'OFFLINE',
+      label: "Tại quầy",
+      value: "OFFLINE",
     },
     {
-      label: 'Online',
-      value: 'ONLINE',
+      label: "Online",
+      value: "ONLINE",
     },
     {
-      label: 'App',
-      value: 'IN_APP',
+      label: "App",
+      value: "IN_APP",
     },
   ];
 
@@ -1201,10 +1201,10 @@ const ProductForms: React.FC<ProductFormProps> = ({
       channels: formValue.channels ? formValue.channels : [],
     });
     notification.success({
-      message: 'Thành công',
-      description: 'Lưu SKU thành công!',
-      placement: 'top',
-      icon: <Icon icon={'checked-approved'} size={24} />,
+      message: "Thành công",
+      description: "Lưu SKU thành công!",
+      placement: "top",
+      icon: <Icon icon={"checked-approved"} size={24} />,
     });
   };
 
@@ -1232,7 +1232,7 @@ const ProductForms: React.FC<ProductFormProps> = ({
 
   const handleImportWarehouse = async () => {
     const body = {
-      status: 'CREATED',
+      status: "CREATED",
       expired_date: [null],
       import_price: combinations.map((item) => 0),
       manufactured_date: [null],
@@ -1247,13 +1247,13 @@ const ProductForms: React.FC<ProductFormProps> = ({
     const data = await WarehouseImportCommandApi.createImportCommand(body);
     if (data.success) {
       notification.success({
-        message: 'Tạo phiếu nhập kho thành công!',
+        message: "Tạo phiếu nhập kho thành công!",
         duration: 600,
       });
       window.location.href = `/warehouse/import-commands/update/${data.data.id}`;
     } else {
       notification.error({
-        message: 'Tạo phiếu nhập kho thất bại!',
+        message: "Tạo phiếu nhập kho thất bại!",
         duration: 600,
       });
     }
@@ -1261,9 +1261,9 @@ const ProductForms: React.FC<ProductFormProps> = ({
 
   const handleSamePrice = (value: any) => {
     if (isSamePrice) {
-      form.setFieldValue('price_offline', value);
-      form.setFieldValue('price_online', value);
-      form.setFieldValue('price_in_app', value);
+      form.setFieldValue("price_offline", value);
+      form.setFieldValue("price_online", value);
+      form.setFieldValue("price_in_app", value);
       const newPriceChannel = {
         ONLINE: value,
         OFFLINE: value,
@@ -1275,11 +1275,10 @@ const ProductForms: React.FC<ProductFormProps> = ({
 
   return (
     <div className="w-full">
-      {/* Header */}
       <div className="flex justify-between mb-5">
         <TitlePage
           href="/product/items"
-          title={detail ? 'Chi tiết sản phẩm' : 'Tạo sản phẩm'}
+          title={detail ? "Chi tiết sản phẩm" : "Tạo sản phẩm"}
         />
         <div className="flex gap-x-2">
           {detail && (
@@ -1296,19 +1295,18 @@ const ProductForms: React.FC<ProductFormProps> = ({
           <Button
             variant="secondary"
             width={148}
-            style={{ fontWeight: 'bold' }}
+            style={{ fontWeight: "bold" }}
             onClick={handleSaveProduct}
           >
             LƯU (F12)
           </Button>
         </div>
       </div>
-      {/* Info */}
       <Form form={form} onFinish={handleSaveProduct} className="w-full">
         <div className="flex gap-x-3">
           <div
             className="flex flex-col justify-between gap-[4px]"
-            style={{ minWidth: '50%', maxWidth: '50%' }}
+            style={{ minWidth: "50%", maxWidth: "50%" }}
           >
             <div className="w-full bg-white rounded p-3">
               <div className={styles.row}>
@@ -1321,7 +1319,7 @@ const ProductForms: React.FC<ProductFormProps> = ({
                   rules={[
                     {
                       required: true,
-                      message: 'Tên sản phẩm là bắt buộc!',
+                      message: "Tên sản phẩm là bắt buộc!",
                     },
                   ]}
                 >
@@ -1334,7 +1332,7 @@ const ProductForms: React.FC<ProductFormProps> = ({
                 </div>
                 <Form.Item name="description">
                   <TextEditor
-                    onChange={(e) => console.log('editor', e)}
+                    onChange={(e) => console.log("editor", e)}
                     placeholder="Nhập nội dung"
                   />
                 </Form.Item>
@@ -1349,7 +1347,7 @@ const ProductForms: React.FC<ProductFormProps> = ({
                   rules={[
                     {
                       required: true,
-                      message: 'Danh mục là bắt buộc!',
+                      message: "Danh mục là bắt buộc!",
                     },
                   ]}
                 >
@@ -1363,7 +1361,7 @@ const ProductForms: React.FC<ProductFormProps> = ({
                   />
                 </Form.Item>
               </div>
-              <div className={classNames(styles.row, 'd-none')}>
+              <div className={classNames(styles.row, "d-none")}>
                 <div className={styles.row_left_table}>Kho thao tác</div>
                 <Form.Item className="flex flex-1" name="warehouse_id">
                   <Select
@@ -1398,9 +1396,6 @@ const ProductForms: React.FC<ProductFormProps> = ({
                             ? detail?.same_price_channel
                             : false
                         }
-                        // defaultChecked={
-                        //   !detail ? false : detail.same_price_channel
-                        // }
                         onChange={(e) => handleChangeSamePrice(e)}
                       />
                     </Form.Item>
@@ -1412,7 +1407,7 @@ const ProductForms: React.FC<ProductFormProps> = ({
                 <div>
                   {channels &&
                     isArray(channels) &&
-                    channels.includes('OFFLINE') &&
+                    channels.includes("OFFLINE") &&
                     combinations.length == 0 && (
                       <div className={styles.row}>
                         <div className={styles.row_left_table}>
@@ -1427,7 +1422,7 @@ const ProductForms: React.FC<ProductFormProps> = ({
                         <InputCurrency
                           placeholder="Nhập giá"
                           onValueChange={(e) => {
-                            form.setFieldValue('price_offline', e);
+                            form.setFieldValue("price_offline", e);
                             isSamePrice
                               ? handleSamePrice(e)
                               : setPriceChannel({
@@ -1443,7 +1438,7 @@ const ProductForms: React.FC<ProductFormProps> = ({
                     )}
                   {channels &&
                     isArray(channels) &&
-                    channels.includes('ONLINE') &&
+                    channels.includes("ONLINE") &&
                     combinations.length == 0 && (
                       <div className={styles.row}>
                         <div className={styles.row_left_table}>
@@ -1458,7 +1453,7 @@ const ProductForms: React.FC<ProductFormProps> = ({
                         <InputCurrency
                           placeholder="Nhập giá"
                           onValueChange={(e) => {
-                            form.setFieldValue('price_online', e);
+                            form.setFieldValue("price_online", e);
                             isSamePrice
                               ? handleSamePrice(e)
                               : setPriceChannel({
@@ -1474,7 +1469,7 @@ const ProductForms: React.FC<ProductFormProps> = ({
                     )}
                   {channels &&
                     isArray(channels) &&
-                    channels.includes('IN_APP') &&
+                    channels.includes("IN_APP") &&
                     combinations.length == 0 && (
                       <div className={styles.row}>
                         <div className={styles.row_left_table}>
@@ -1489,7 +1484,7 @@ const ProductForms: React.FC<ProductFormProps> = ({
                         <InputCurrency
                           placeholder="Nhập giá"
                           onValueChange={(e) => {
-                            form.setFieldValue('price_in_app', e);
+                            form.setFieldValue("price_in_app", e);
                             isSamePrice
                               ? handleSamePrice(e)
                               : setPriceChannel({
@@ -1528,19 +1523,9 @@ const ProductForms: React.FC<ProductFormProps> = ({
                     Thời điểm tạo
                   </div>
                   <div className={styles.row_left_table}>
-                    {detail?.createdAt ? detail?.createdAt : ''}
+                    {detail?.createdAt ? detail?.createdAt : ""}
                   </div>
                 </div>
-                {/*<div className="text-medium font-medium mb-[4px] mt-[16px]">
-                  Nguồn hàng
-                </div>
-                <Form.Item name="item_supplier_id">
-                  <Select
-                    width={200}
-                    placeholder="Chọn nguồn hàng"
-                    options={productSuppliers}
-                  />
-                </Form.Item>*/}
               </div>
               <div className="w-1/2">
                 <Form.Item name="note">
@@ -1578,7 +1563,7 @@ const ProductForms: React.FC<ProductFormProps> = ({
                   rules={[
                     {
                       pattern: new RegExp(/^[0-9]+$/),
-                      message: 'Số lượng không hợp lệ',
+                      message: "Số lượng không hợp lệ",
                     },
                   ]}
                 >
@@ -1633,22 +1618,10 @@ const ProductForms: React.FC<ProductFormProps> = ({
                 dataSource={[...itemAttributes]}
                 pagination={false}
               />
-              {/* {!detail && (
-                <div className="w-full flex justify-end mt-[16px]">
-                  <Button
-                    variant="secondary"
-                    text="Lưu"
-                    width={155}
-                    height={44}
-                    onClick={handleAddVariant}
-                  />
-                </div>
-              )} */}
             </div>
           </div>
         </div>
       </Form>
-      {/* Filter */}
       <div className="w-full flex-col flex gap-[16px] bg-white rounded p-3 my-[12px]">
         <div className="flex flex-row items-center justify-between">
           <div className="text-[#384ADC] font-semibold text-medium min-w-[150px]">
@@ -1659,7 +1632,7 @@ const ProductForms: React.FC<ProductFormProps> = ({
               placement="bottomRight"
               content={PopoverAsync}
               trigger="click"
-              overlayStyle={{ width: '354px' }}
+              overlayStyle={{ width: "354px" }}
               className="relative"
             >
               <Button width={195} height={45} className="p-0">
@@ -1673,23 +1646,6 @@ const ProductForms: React.FC<ProductFormProps> = ({
               </Button>
             </Popover>
             {detail && (
-              // <Popover
-              //   placement="bottomRight"
-              //   content={PopoverTranserWarehouse}
-              //   trigger="click"
-              //   overlayStyle={{ width: "354px" }}
-              //   className="relative"
-              // >
-              //   <Button width={195} height={45} className="p-0">
-              //     <div className="w-[200px] flex justify-between p-[10px] items-center">
-              //       <div className="flex justify-left">
-              //         <Icon icon="arrow-swap" size={24} className="mr-[10px]" />
-              //         Chuyển kho nhanh
-              //       </div>
-              //       <Icon icon="arrow-down-1" size={14} />
-              //     </div>
-              //   </Button>
-              // </Popover>
               <Button
                 width={195}
                 height={45}
@@ -1708,7 +1664,7 @@ const ProductForms: React.FC<ProductFormProps> = ({
               <Button
                 variant="secondary"
                 width={148}
-                style={{ fontWeight: 'bold' }}
+                style={{ fontWeight: "bold" }}
                 onClick={handleSaveItemSkus}
               >
                 Lưu
@@ -1720,7 +1676,7 @@ const ProductForms: React.FC<ProductFormProps> = ({
           <Table
             loading={loading}
             columns={columnSkusCreate.filter((item: any) =>
-              arrayColumnItemSkuShow.includes(item.dataIndex)
+              arrayColumnItemSkuShow.includes(item.dataIndex),
             )}
             dataSource={[...combinations]}
             pagination={false}

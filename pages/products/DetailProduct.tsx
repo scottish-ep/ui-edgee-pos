@@ -9,19 +9,19 @@ import { get } from "lodash";
 const ProductDetails: React.FC = () => {
   const [detail, setDetail] = useState(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const pathNameArr = window.location.pathname.split("/");
-  const id = pathNameArr[pathNameArr.length - 1];
+  // const pathNameArr = window.location.pathname.split("/");
+  // const id = pathNameArr[pathNameArr.length - 1];
 
   useEffect(() => {
-    if (Number.isInteger(parseInt(id))) {
+    if (Number.isInteger(parseInt("463"))) {
       getProductDetail();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
+  }, [463]);
 
   const getProductDetail = async () => {
     setLoading(true);
-    const data = await ItemApi.getItemDetail(id, {
+    const data = await ItemApi.getItemDetail(463, {
       populate: [
         // 'warehouse',
         "item_channel_relations:item_id,item_sku_id,price,channel_code",
@@ -35,20 +35,20 @@ const ProductDetails: React.FC = () => {
     });
     let formatData = data;
     formatData["channels"] = get(data, "item_channel_relations").map(
-      (item: any) => item.channel_code
+      (item: any) => item.channel_code,
     );
     let formatItemSkus = get(data, "item_skus").map((itemSku: any) => {
       const priceOffline = get(data, "item_channel_relations").find(
         (item: any) =>
-          item.channel_code === "OFFLINE" && item.item_sku_id == itemSku.id
+          item.channel_code === "OFFLINE" && item.item_sku_id == itemSku.id,
       );
       const priceOnline = get(data, "item_channel_relations").find(
         (item: any) =>
-          item.channel_code === "ONLINE" && item.item_sku_id == itemSku.id
+          item.channel_code === "ONLINE" && item.item_sku_id == itemSku.id,
       );
       const priceInApp = get(data, "item_channel_relations").find(
         (item: any) =>
-          item.channel_code === "IN_APP" && item.item_sku_id == itemSku.id
+          item.channel_code === "IN_APP" && item.item_sku_id == itemSku.id,
       );
       return {
         ...itemSku,
