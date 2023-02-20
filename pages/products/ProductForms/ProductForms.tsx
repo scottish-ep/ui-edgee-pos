@@ -1326,7 +1326,7 @@ const ProductForms: React.FC<ProductFormProps> = ({
                   <Input placeholder="Nhập tên sản phẩm" required={true} />
                 </Form.Item>
               </div>
-              <div className="mb-[16px]">
+              {/* <div className="mb-[16px]">
                 <div className="text-medium font-medium mb-[12px]">
                   Mô tả/Nội dung
                 </div>
@@ -1336,7 +1336,7 @@ const ProductForms: React.FC<ProductFormProps> = ({
                     placeholder="Nhập nội dung"
                   />
                 </Form.Item>
-              </div>
+              </div> */}
               <div className={styles.row}>
                 <div className={styles.row_left_table}>
                   Danh mục <span className="text-[#EF4444]">*</span>
