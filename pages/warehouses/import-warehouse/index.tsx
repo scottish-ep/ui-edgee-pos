@@ -97,8 +97,8 @@ const ImportWareHouseList = () => {
       name: StatusEnum.CANCELED,
       count: totalCommand.CANCELED,
     },
-  ];
-
+  ];  
+  
   const content = () => {
     let data: any = [];
     switch (currenStatus) {

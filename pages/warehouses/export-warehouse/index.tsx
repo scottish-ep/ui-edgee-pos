@@ -60,6 +60,20 @@ const ExportWareHouseList = () => {
     onChange: onSelectChange,
   };
 
+  const exportWareHousesList: IWareHouses[] =Array(50)
+  .fill({
+    id: "KH0001",
+    name: "Nguyễn Văn A",
+    createdAt: Date.now(),
+    export_name: "Kho tổng Linh Dương",
+    note: "Đơn hàng #009NHG",
+    quantity: 11,
+    weight: 12,
+    totalMoney: 130000,
+    updated_at: Date.now(),
+    status: "COMPLETED",
+  })
+
   const columns: ColumnsType<IWareHouses> = [
     {
       title: "Mã xuất hàng",
@@ -224,7 +238,7 @@ const ExportWareHouseList = () => {
             color="white"
             suffixIcon={<Icon icon="add" size={24} />}
             onClick={() =>
-              (window.location.href = "/warehouse/export-commands/create")
+              (window.location.href = "/warehouses/export-warehouse/create")
             }
           >
             Thêm mới
@@ -272,20 +286,21 @@ const ExportWareHouseList = () => {
         locale={{
           emptyText: <TableEmpty />,
         }}
-        onRow={() => {
+        onRow={(record) => {
           return {
             onClick: () => {
-              window.location.href = "/warehouse/export-commands/update/1";
+              window.location.href = `/warehouses/export-warehouse/${record.id}`;
             },
           };
         }}
         loading={loading}
         rowSelection={rowSelection}
         columns={columns}
-        dataSource={exportWareHouses.slice(
-          pagination.page * pagination.pageSize - pagination.pageSize,
-          pagination.page * pagination.pageSize
-        )}
+        dataSource={exportWareHousesList}
+        // dataSource={exportWareHouses.slice(
+        //   pagination.page * pagination.pageSize - pagination.pageSize,
+        //   pagination.page * pagination.pageSize
+        // )}
         pagination={false}
         scroll={{ x: 50 }}
       />
@@ -311,4 +326,5 @@ const ExportWareHouseList = () => {
   );
 };
 
-ReactDOM.render(<ExportWareHouseList />, document.getElementById("root"));
+export default ExportWareHouseList;
+

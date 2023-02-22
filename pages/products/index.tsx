@@ -32,7 +32,7 @@ import { useDebounce } from 'usehooks-ts';
 import ModalConfirm from '../../components/Modal/ModalConfirm/ModalConfirm';
 import { CSVLink } from 'react-csv';
 import { isArray, onCoppy } from '../../utils/utils';
-import ModalProductCat from './ModalProductCat';
+import ModalProductCat from './Modal/ModalProductCat';
 
 const ListProduct = (props: any) => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<any[]>([]);
@@ -167,6 +167,19 @@ const ListProduct = (props: any) => {
     setProductTypeList(rawProductCategory);
   };
 
+  const typeList = [
+    { 
+      label: "Chon",
+      value: "select",
+    },
+    { 
+      label: "Thoi trang",
+      value: "fashion",
+    },{ 
+      label: "Suc khoe",
+      value: "health",
+    },
+  ]
   const getProductMetrics = async () => {
     const { totalCanSell, totalAlreadySell, totalRemain } =
       await ItemApi.getProductMetrics();
@@ -207,6 +220,23 @@ const ListProduct = (props: any) => {
     { label: 'Ngày tạo', key: 'createdAt' },
     { label: 'Trạng thái', key: 'status_show' },
   ];
+
+  const listProduct: IsProduct[] = Array(50)
+    .fill({
+      is_show: 'true',
+      code: '1676455402',
+      image: require('../../public/t-shirt.svg'),
+      name: 'Áo thun basic cotton ',
+      category: 'Thời trang',
+      numberSale: 500,
+      models: 3,
+      createdAt: '15/02/2023',
+      status: "CAN_SALES",
+    })
+    .map((item: any, index: any) => ({
+      ...item,
+      id: index + 1,
+    }));
 
   const columns: ColumnsType<IsProduct> = [
     {
@@ -257,10 +287,10 @@ const ListProduct = (props: any) => {
         <div
           className="flex justify-start items-center"
           onClick={(e) => {
-            window.location.href = `/product/items/edit/${record.id}`;
+            window.location.href = `/products/${record.id}`;
           }}
         >
-          <div className="mr-[8px] max-w-[40px] max-h-[40px] relative">
+          <div className="mr-[8px] w-[40px] h-[40px] max-w-[40px] max-h-[40px] relative">
             {record.image ? (
               <Image
                 className="min-w-[40px] min-h-[40px]"
@@ -287,7 +317,7 @@ const ListProduct = (props: any) => {
         <span
           className="font-medium text-[#1D1C2D]"
           onClick={(e) => {
-            window.location.href = `/product/items/edit/${record.id}`;
+            window.location.href = `/products/${record.id}`;
           }}
         >
           {record.category}
@@ -304,7 +334,7 @@ const ListProduct = (props: any) => {
         <span
           className="font-medium text-[#1D1C2D]"
           onClick={(e) => {
-            window.location.href = `/product/items/edit/${record.id}`;
+            window.location.href = `/products/${record.id}`;
           }}
         >
           {record.numberSale}
@@ -321,7 +351,7 @@ const ListProduct = (props: any) => {
         <span
           className="font-medium text-[#1D1C2D]"
           onClick={(e) => {
-            window.location.href = `/product/items/edit/${record.id}`;
+            window.location.href = `/products/${record.id}`;
           }}
         >
           {record.models}
@@ -338,7 +368,7 @@ const ListProduct = (props: any) => {
         <span
           className="font-medium text-[#1D1C2D]"
           onClick={(e) => {
-            window.location.href = `/product/items/edit/${record.id}`;
+            window.location.href = `/products/${record.id}`;
           }}
         >
           {record.numberSale}
@@ -355,7 +385,7 @@ const ListProduct = (props: any) => {
         <div
           className="font-medium text-[#1D1C2D]"
           onClick={(e) => {
-            window.location.href = `/product/items/edit/${record.id}`;
+            window.location.href = `/products/${record.id}`;
           }}
         >
           {record.createdAt}
@@ -378,7 +408,7 @@ const ListProduct = (props: any) => {
                 : StatusColorEnum[StatusEnum.HIDDEN]
             }]`}
             onClick={(e) => {
-              window.location.href = `/product/items/edit/${record.id}`;
+              window.location.href = `/products/${record.id}`;
               setIsShowModalProductCat(true);
             }}
           >
@@ -498,7 +528,7 @@ const ListProduct = (props: any) => {
             width={151}
             color="white"
             suffixIcon={<Icon icon="add" size={24} />}
-            onClick={() => (window.location.href = '/product/items/create')}
+            onClick={() => (window.location.href = '/products/create')}
           >
             Thêm mới
           </Button>
@@ -559,7 +589,7 @@ const ListProduct = (props: any) => {
             clearIcon={<Icon icon="cancel" size={16} />}
             prefix={<Icon icon="category" size={24} color="#5F5E6B" />}
             placeholder="Tìm theo danh mục sản phẩm"
-            options={productTypeList}
+            options={typeList}
             onChange={(e, option: any) => {
               console.log('e', e);
               console.log('option', option);
@@ -589,7 +619,7 @@ const ListProduct = (props: any) => {
           }}
           rowSelection={rowSelection}
           columns={columns}
-          dataSource={items}
+          dataSource={listProduct}
           pagination={{
             total: pagination.total,
             defaultPageSize: pagination.pageSize,
@@ -603,21 +633,24 @@ const ListProduct = (props: any) => {
             Có thể bán:
             <span className="font-medium text-[#384ADC]">
               {' '}
-              {metrics?.totalCanSell ?? 0}
+              {/* {metrics?.totalCanSell ?? 0}  */}
+              4999 đ
             </span>
           </div>
           <div className={styles.row}>
             Tổng tiền đã bán:
             <span className="font-medium text-[#384ADC]">
               {' '}
-              {metrics?.totalAlreadySell ?? 0} đ
+              {/* {metrics?.totalAlreadySell ?? 0}*/}
+              4999 đ 
             </span>
           </div>
           <div className={styles.row}>
             Tiền hàng còn lại:
             <span className="font-medium text-[#384ADC]">
               {' '}
-              {metrics?.totalRemain ?? 0} đ
+              {/* {metrics?.totalRemain ?? 0}  */}
+              4999 đ
             </span>
           </div>
         </div>

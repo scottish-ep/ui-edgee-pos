@@ -1,3 +1,4 @@
+import { CommandStatus } from "enums/enums";
 import { StatusEnum } from "../../types";
 import { IProduct } from "../products/product.type";
 
@@ -12,6 +13,7 @@ export interface IWareHouses {
   createdAt: Date | number;
   updated_at: Date | number;
   status: StatusEnum;
+  cmdStatus: keyof typeof CommandStatus;
   source: string;
   transport_fee: number;
   transfer_name: string;
