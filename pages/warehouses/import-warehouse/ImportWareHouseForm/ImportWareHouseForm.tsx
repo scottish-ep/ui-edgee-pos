@@ -1,43 +1,35 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Form, notification, Popover } from "antd";
-import Table, { ColumnsType } from "antd/lib/table";
-import classNames from "classnames";
-import { format } from "date-fns";
-import { load } from "dotenv";
-import { get } from "lodash";
-import moment from "moment";
-import React, { useEffect, useState } from "react";
-import { NumberLiteralType } from "typescript/lib/tsserverlibrary";
-import Button from "../../../../components/Button/Button";
-import DatePicker from "../../../../components/DatePicker/DatePicker";
-import Icon from "../../../../components/Icon/Icon";
-import Input from "../../../../components/Input/Input";
-import InputCurrency from "../../../../components/InputCurrency/Input";
-import Select from "../../../../components/Select/Select";
-import TableEmpty from "../../../../components/TableEmpty";
-import TextArea from "../../../../components/TextArea";
-import TitlePage from "../../../../components/TitlePage/Titlepage";
-import {
-  employeeProcess,
-  priceShippingList,
-  shippingUnitList,
-  statusImportWareHouseOptions,
-  supplierList,
-  warehouses,
-} from "../../../../const/constant";
-import ItemSkuApi from "../../../../services/item-skus";
-import ItemApi from "../../../../services/items";
-import WarehouseImportCommandApi from "../../../../services/warehouse-import";
-import WarehouseApi from "../../../../services/warehouses";
-import WarehousesImportApi from "../../../../services/warehouses-import";
-import { StatusEnum } from "../../../../types";
-import { IUser } from "../../../../types/users";
+import { Form, notification, Popover } from 'antd';
+import Table, { ColumnsType } from 'antd/lib/table';
+import classNames from 'classnames';
+import { format } from 'date-fns';
+import dayjs from 'dayjs';
+import { get } from 'lodash';
+import moment from 'moment';
+import React, { useEffect, useState } from 'react';
+import Button from '../../../../components/Button/Button';
+import DatePicker from '../../../../components/DatePicker/DatePicker';
+import Icon from '../../../../components/Icon/Icon';
+import Input from '../../../../components/Input/Input';
+import InputCurrency from '../../../../components/InputCurrency/Input';
+import Select from '../../../../components/Select/Select';
+import TableEmpty from '../../../../components/TableEmpty';
+import TextArea from '../../../../components/TextArea';
+import TitlePage from '../../../../components/TitlePage/Titlepage';
+import { warehouseManagementList } from '../../../../const/constant';
+import { statusImportWareHouseOptions } from '../../../../const/constant';
+import ItemSkuApi from '../../../../services/item-skus';
+import ItemApi from '../../../../services/items';
+import WarehouseImportCommandApi from '../../../../services/warehouse-import';
+import WarehouseApi from '../../../../services/warehouses';
+import WarehousesImportApi from '../../../../services/warehouses-import';
+import { StatusEnum } from '../../../../types';
+import { IUser } from '../../../../types/users';
 import {
   isArray,
   parseItemSkuFromCommandItems,
   parseItemSkus,
-} from "../../../../utils/utils";
-import { IWareHousesDetail } from "../../warehouse.type";
+} from '../../../../utils/utils';
 
 interface ImportWareHouseFormProps {
   // detail?: IWareHousesDetail;
@@ -63,7 +55,7 @@ const ImportWareHouseForm: React.FC<ImportWareHouseFormProps> = ({
     let hasError = false;
     if (!isArray(itemSkus)) {
       notification.error({
-        message: "Vui lòng chọn sản phẩm nhập kho!",
+        message: 'Vui lòng chọn sản phẩm nhập kho!',
       });
       return;
     }
@@ -77,7 +69,7 @@ const ImportWareHouseForm: React.FC<ImportWareHouseFormProps> = ({
     });
     if (hasError) {
       notification.error({
-        message: "Trường khối lượng và số lượng là bắt buộc",
+        message: 'Trường khối lượng và số lượng là bắt buộc',
       });
       return;
     }
@@ -103,10 +95,10 @@ const ImportWareHouseForm: React.FC<ImportWareHouseFormProps> = ({
       if (data.success) {
         window.location.href = `/warehouse/import-commands/update/${get(
           data,
-          "data.id"
+          'data.id'
         )}`;
         notification.success({
-          message: "Tạo phiếu nhập kho thành công!",
+          message: 'Tạo phiếu nhập kho thành công!',
         });
       }
     } else {
@@ -129,7 +121,7 @@ const ImportWareHouseForm: React.FC<ImportWareHouseFormProps> = ({
       const data = await WarehousesImportApi.updateCommand(detail.id, body);
       if (data.success) {
         notification.success({
-          message: "Cập nhật phiếu nhập kho thành công!",
+          message: 'Cập nhật phiếu nhập kho thành công!',
         });
       }
     }
@@ -153,7 +145,7 @@ const ImportWareHouseForm: React.FC<ImportWareHouseFormProps> = ({
         (option: any) => option.value !== StatusEnum.CANCELED
       )
     : statusImportWareHouseOptions;
-  const warehouseId = Form.useWatch("warehouse_id", form);
+  const warehouseId = Form.useWatch('warehouse_id', form);
 
   useEffect(() => {
     getListWarehouse();
@@ -165,7 +157,7 @@ const ImportWareHouseForm: React.FC<ImportWareHouseFormProps> = ({
     if (warehouseId) {
       setWarehouseSelected(
         isArray(warehouseManagement) &&
-          warehouseManagement.find((v) => v.id === warehouseId)
+          warehouseManagement.find((v: any) => v.id === warehouseId)
       );
     }
   }, [warehouseId]);
@@ -179,7 +171,7 @@ const ImportWareHouseForm: React.FC<ImportWareHouseFormProps> = ({
 
   const getListWarehouse = async () => {
     const result = await WarehouseApi.getWarehouse();
-    const listWarehouse = result.map((item) => ({
+    const listWarehouse = result.map((item: any) => ({
       ...item,
       value: item.id,
       label: item.name,
@@ -188,7 +180,7 @@ const ImportWareHouseForm: React.FC<ImportWareHouseFormProps> = ({
   };
 
   const getListStaff = () => {
-    const url = "/api/v2/users/list";
+    const url = '/api/v2/users/list';
     fetch(url)
       .then((res) => res.json())
       .then((res) => {
@@ -209,10 +201,10 @@ const ImportWareHouseForm: React.FC<ImportWareHouseFormProps> = ({
     const { data } = await ItemApi.getItem({
       limit: 10000,
     });
-    const rawData = data.map((item) => ({
-      label: item.code + " | " + item.name,
+    const rawData = data.map((item: any) => ({
+      label: item.code + ' | ' + item.name,
       id: item.id,
-      value: item.code + " " + item.name,
+      value: item.code + ' ' + item.name,
     }));
     setListItem(rawData);
   };
@@ -223,7 +215,7 @@ const ImportWareHouseForm: React.FC<ImportWareHouseFormProps> = ({
       listSelectedItemIds.findIndex((item: any) => item.id == option.id);
     if (checkExist !== -1 && isArray(listSelectedItemIds)) {
       notification.error({
-        message: "Sản phẩm đã được thêm",
+        message: 'Sản phẩm đã được thêm',
       });
     }
     setLoading(true);
@@ -241,14 +233,14 @@ const ImportWareHouseForm: React.FC<ImportWareHouseFormProps> = ({
       if (v.id === id) {
         let newValue = v;
         newValue[key] = value;
-        newValue["money"] =
-          parseFloat(newValue["import_price"]) *
-          parseFloat(newValue["quantity"]);
-        newValue["total_money"] =
-          parseFloat(newValue["import_price"]) *
-            parseFloat(newValue["quantity"]) +
-          parseFloat(newValue["total_package"]) *
-            parseFloat(newValue["total_package_price"]);
+        newValue['money'] =
+          parseFloat(newValue['import_price']) *
+          parseFloat(newValue['quantity']);
+        newValue['total_money'] =
+          parseFloat(newValue['import_price']) *
+            parseFloat(newValue['quantity']) +
+          parseFloat(newValue['total_package']) *
+            parseFloat(newValue['total_package_price']);
         newValue[key] = value;
         return newValue;
       } else return v;
@@ -261,30 +253,61 @@ const ImportWareHouseForm: React.FC<ImportWareHouseFormProps> = ({
     setItemSkus(newItemSkus);
   };
 
+  const data = [
+    {
+      name: 'BHV0021',
+      category: 'Ao',
+      import_price: 13000,
+      quantity: 100,
+      import_quantity: 50,
+      weight: 100,
+      import_weight: 100,
+      manufactured_date: '19-02-2002',
+      expired_date: '19-02-2003',
+      money: 300000,
+      total_package: 1000,
+      total_package_price: 100,
+      total_money: 200000,
+    },
+  ];
+
+  const staffList = [
+    {
+      label: 'Nam',
+      value: '123',
+      id: '123',
+    },
+    {
+      label: 'Nam',
+      value: '123',
+      id: '123',
+    },
+  ];
+
   const columns: ColumnsType<any> = [
     {
-      title: "STT",
+      title: 'STT',
       width: 75,
-      dataIndex: "id",
-      key: "id",
-      align: "center",
-      fixed: "left",
+      dataIndex: 'id',
+      key: 'id',
+      align: 'center',
+      fixed: 'left',
       render: (_, record, index) =>
-        record.id !== "total" && (
+        record.id !== 'total' && (
           <span className="text-medium font-medium text-[#1D1C2D]">
             {index + 1}
           </span>
         ),
     },
     {
-      title: "Tên sản phẩm",
+      title: 'Tên sản phẩm',
       width: 200,
-      dataIndex: "name",
-      fixed: "left",
-      key: "name",
+      dataIndex: 'name',
+      fixed: 'left',
+      key: 'name',
       render: (_, record) => {
         return (
-          record.id !== "total" && (
+          record.id !== 'total' && (
             <span className="text-medium font-medium text-[#1D1C2D]">
               {record.name}
             </span>
@@ -293,32 +316,32 @@ const ImportWareHouseForm: React.FC<ImportWareHouseFormProps> = ({
       },
     },
     {
-      title: "Danh mục",
+      title: 'Danh mục',
       width: 150,
-      dataIndex: "category_id",
-      key: "category_id",
-      fixed: "left",
-      align: "center",
+      dataIndex: 'category_id',
+      key: 'category_id',
+      fixed: 'left',
+      align: 'center',
       render: (_, record) =>
-        record.id !== "total" && (
+        record.id !== 'total' && (
           <span className="text-medium font-medium text-[#1D1C2D]">
             {record.category}
           </span>
         ),
     },
     {
-      title: "Giá nhập",
+      title: 'Giá nhập',
       width: 150,
-      dataIndex: "import_price",
-      key: "import_price",
-      align: "center",
+      dataIndex: 'import_price',
+      key: 'import_price',
+      align: 'center',
       render: (_, record) =>
-        record.id !== "total" ? (
+        record.id !== 'total' ? (
           <InputCurrency
             placeholder="Nhập giá bán"
             onValueChange={(e) => {
-              console.log("e", e);
-              handleChangeValue(record.id, "import_price", e);
+              console.log('e', e);
+              handleChangeValue(record.id, 'import_price', e);
             }}
             value={record.import_price || 0}
             inputMode="decimal"
@@ -331,18 +354,18 @@ const ImportWareHouseForm: React.FC<ImportWareHouseFormProps> = ({
         ),
     },
     {
-      title: "Số lượng",
+      title: 'Số lượng',
       width: 150,
-      dataIndex: "quantity",
-      key: "quantity",
-      align: "center",
+      dataIndex: 'quantity',
+      key: 'quantity',
+      align: 'center',
       render: (_, record) =>
-        record.id !== "total" ? (
+        record.id !== 'total' ? (
           <Input
             type="number"
             value={record.quantity}
             onChange={(e) =>
-              handleChangeValue(record.id, "quantity", e.target.value)
+              handleChangeValue(record.id, 'quantity', e.target.value)
             }
           />
         ) : (
@@ -352,19 +375,19 @@ const ImportWareHouseForm: React.FC<ImportWareHouseFormProps> = ({
         ),
     },
     {
-      title: "Trọng lượng",
+      title: 'Trọng lượng',
       width: 150,
-      dataIndex: "import_weight",
-      key: "import_weight",
-      align: "center",
+      dataIndex: 'import_weight',
+      key: 'import_weight',
+      align: 'center',
       render: (_, record) =>
-        record.id !== "total" ? (
+        record.id !== 'total' ? (
           <Input
             type="number"
             value={record.weight}
             suffix={<p className="text-medium text-[#2E2D3D]">kg</p>}
             onChange={(e) =>
-              handleChangeValue(record.id, "weight", e.target.value)
+              handleChangeValue(record.id, 'weight', e.target.value)
             }
           />
         ) : (
@@ -374,25 +397,26 @@ const ImportWareHouseForm: React.FC<ImportWareHouseFormProps> = ({
         ),
     },
     {
-      title: "Ngày sản xuất",
+      title: 'Ngày sản xuất',
       width: 250,
-      dataIndex: "manufactured_date",
-      key: "manufactured_date",
-      align: "center",
+      dataIndex: 'manufactured_date',
+      key: 'manufactured_date',
+      align: 'center',
       render: (_, record) => {
-        console.log("record", record);
+        console.log('record', record);
         return (
           <div>
-            {record.id !== "total" && (
+            {record.id !== 'total' && (
               <DatePicker
-                value={
-                  record.manufactured_date
-                    ? moment(record.manufactured_date)
-                    : undefined
-                }
+                // value={
+                //   record.manufactured_date
+                //     ? moment(record.manufactured_date)
+                //     : undefined
+                // }
+                value={dayjs(record.manufactured_date, 'DD-MM-YYYY')}
                 onChange={(e: any) => {
-                  console.log("e", e);
-                  handleChangeValue(record.id, "manufactured_date", e);
+                  console.log('e', e);
+                  handleChangeValue(record.id, 'manufactured_date', e);
                 }}
               />
             )}
@@ -401,77 +425,78 @@ const ImportWareHouseForm: React.FC<ImportWareHouseFormProps> = ({
       },
     },
     {
-      title: "Ngày hết hạn",
+      title: 'Ngày hết hạn',
       width: 250,
-      dataIndex: "expired_date",
-      key: "expired_date",
-      align: "center",
+      dataIndex: 'expired_date',
+      key: 'expired_date',
+      align: 'center',
       render: (_, record) =>
-        record.id !== "total" && (
+        record.id !== 'total' && (
           <DatePicker
-            value={
-              record.expired_date ? moment(record.expired_date) : undefined
-            }
+            // value={
+            //   record.expired_date ? moment(record.expired_date) : undefined
+            // }
+            value={dayjs('19-02-2003', 'DD-MM-YYYY')}
             onChange={(e: any) =>
-              handleChangeValue(record.id, "expired_date", e)
+              handleChangeValue(record.id, 'expired_date', e)
             }
           />
         ),
     },
     {
-      title: "Thành tiền",
+      title: 'Thành tiền',
       width: 150,
-      dataIndex: "money",
-      key: "money",
-      align: "center",
+      dataIndex: 'money',
+      key: 'money',
+      align: 'center',
       render: (_, record) =>
-        record.id !== "total" ? (
+        record.id !== 'total' ? (
           <span
-            className={classNames("text-medium font-medium text-[#1D1C2D]", {
-              "font-semibold text-[#384ADC]": record.id === "total",
+            className={classNames('text-medium font-medium text-[#1D1C2D]', {
+              'font-semibold text-[#384ADC]': record.id === 'total',
             })}
           >
-            {Number(get(record, "money")).toLocaleString() || 0} đ
+            {Number(get(record, 'money')).toLocaleString() || 0} đ
           </span>
         ) : (
           <span className="text-[#384ADC] font-semibold text-medium">
-            {parseFloat(get(record, "money")).toLocaleString() || 0} đ
+            {parseFloat(get(record, 'money')).toLocaleString() || 0} đ
           </span>
         ),
     },
     {
-      title: "Số lượng kiện hàng",
+      title: 'Số lượng kiện hàng',
       width: 150,
-      dataIndex: "total_package",
-      key: "total_package",
-      align: "center",
+      dataIndex: 'total_package',
+      key: 'total_package',
+      align: 'center',
       render: (_, record) =>
-        record.id !== "total" ? (
+        record.id !== 'total' ? (
           <Input
             type="number"
             value={record.total_package}
             onChange={(e) =>
-              handleChangeValue(record.id, "total_package", e.target.value)
+              handleChangeValue(record.id, 'total_package', e.target.value)
             }
           />
         ) : (
           <span className="text-[#384ADC] font-semibold text-medium">
-            {get(record, "total_package") || 0}
+            {get(record, 'total_package') || 0}
           </span>
         ),
     },
     {
-      title: "Đơn giá kiện hàng",
+      title: 'Đơn giá kiện hàng',
       width: 150,
-      dataIndex: "total_package_price",
-      key: "total_package_price",
-      align: "center",
+      dataIndex: 'total_package_price',
+      key: 'total_package_price',
+      align: 'center',
       render: (_, record) =>
-        record.id !== "total" ? (
+        record.id !== 'total' ? (
           <InputCurrency
             placeholder="Nhập giá bán"
             onValueChange={(e) => {
-              handleChangeValue(record.id, "total_package_price", e);
+              handleChangeValue(record.id, 'total_package_price', e);
             }}
             value={record.total_package_price}
             inputMode="decimal"
@@ -479,41 +504,41 @@ const ImportWareHouseForm: React.FC<ImportWareHouseFormProps> = ({
           />
         ) : (
           <span className="text-[#384ADC] font-semibold text-medium">
-            {`${get(record, "total_package_price") || 0} đ`}
+            {`${get(record, 'total_package_price') || 0} đ`}
           </span>
         ),
     },
     {
-      title: "Tổng tiền",
+      title: 'Tổng tiền',
       width: 150,
-      dataIndex: "total_money",
-      key: "total_money",
-      align: "center",
+      dataIndex: 'total_money',
+      key: 'total_money',
+      align: 'center',
       render: (_, record) => {
-        return record.id !== "total" ? (
+        return record.id !== 'total' ? (
           <span
             className={`font-semibold text-medium text-[${
-              record.id === "total" ? "#384ADC" : "#1D1C2D"
+              record.id === 'total' ? '#384ADC' : '#1D1C2D'
             }]`}
           >
-            {parseFloat(get(record, "total_money") || 0).toLocaleString() || 0}{" "}
+            {parseFloat(get(record, 'total_money') || 0).toLocaleString() || 0}{' '}
             đ
           </span>
         ) : (
           <span className="text-[#384ADC] font-semibold text-medium">
-            {parseFloat(get(record, "total_money")).toLocaleString() || 0} đ
+            {parseFloat(get(record, 'total_money')).toLocaleString() || 0} đ
           </span>
         );
       },
     },
     {
-      title: "",
+      title: '',
       width: 50,
-      dataIndex: "",
-      key: "",
-      align: "center",
+      dataIndex: '',
+      key: '',
+      align: 'center',
       render: (_, record) =>
-        record.id !== "total" && (
+        record.id !== 'total' && (
           <span
             className="cursor-pointer"
             onClick={() =>
@@ -544,7 +569,7 @@ const ImportWareHouseForm: React.FC<ImportWareHouseFormProps> = ({
             isChangeMoney = true;
           }
         }
-        console.log("formValue", formValue);
+        console.log('formValue', formValue);
         const newItemSkus = itemSkus.map((v: any) => {
           return {
             ...v,
@@ -557,11 +582,11 @@ const ImportWareHouseForm: React.FC<ImportWareHouseFormProps> = ({
             manufactured_date: formValue.manufactured_date
               ? format(
                   new Date(formValue.manufactured_date),
-                  "yyyy-MM-dd HH:mm"
+                  'yyyy-MM-dd HH:mm'
                 )
               : v.manufactured_date,
             expired_date: formValue.expired_date
-              ? format(new Date(formValue.expired_date), "yyyy-MM-dd HH:mm")
+              ? format(new Date(formValue.expired_date), 'yyyy-MM-dd HH:mm')
               : v.expired_date,
             total_package: formValue.total_package
               ? formValue.total_package
@@ -581,7 +606,7 @@ const ImportWareHouseForm: React.FC<ImportWareHouseFormProps> = ({
               : v.total_money,
           };
         });
-        console.log("newItemSkus", newItemSkus);
+        console.log('newItemSkus', newItemSkus);
         setItemSkus([...newItemSkus]);
       })
       .catch((err) => {});
@@ -606,7 +631,7 @@ const ImportWareHouseForm: React.FC<ImportWareHouseFormProps> = ({
             width={154}
             placeholder="Nhập giá nhập"
             onValueChange={(e) => {
-              syncForm.setFieldValue("import_price", e);
+              syncForm.setFieldValue('import_price', e);
             }}
             defaultValue={0}
             inputMode="decimal"
@@ -678,7 +703,7 @@ const ImportWareHouseForm: React.FC<ImportWareHouseFormProps> = ({
             width={154}
             placeholder="Nhập đơn giá kiện hàng"
             onValueChange={(e) => {
-              syncForm.setFieldValue("total_package_price", e);
+              syncForm.setFieldValue('total_package_price', e);
             }}
             defaultValue={0}
             inputMode="decimal"
@@ -701,7 +726,7 @@ const ImportWareHouseForm: React.FC<ImportWareHouseFormProps> = ({
       <div className="flex justify-between mb-5">
         <TitlePage
           href="/warehouse/import-commands"
-          title={detail ? "Chi tiết phiếu nhập kho" : "Tạo phiếu nhập kho"}
+          title={detail ? 'Chi tiết phiếu nhập kho' : 'Tạo phiếu nhập kho'}
         />
         <Form.Item name="items" />
         <div className="flex gap-x-2">
@@ -712,7 +737,7 @@ const ImportWareHouseForm: React.FC<ImportWareHouseFormProps> = ({
                 placeholder="Chọn trạng thái"
                 style={{ width: 162 }}
                 options={dropdownStatus}
-                defaultValue={""}
+                defaultValue={''}
               />
             </Form.Item>
           </div>
@@ -720,7 +745,7 @@ const ImportWareHouseForm: React.FC<ImportWareHouseFormProps> = ({
             htmlType="submit"
             variant="secondary"
             width={148}
-            style={{ fontWeight: "bold" }}
+            style={{ fontWeight: 'bold' }}
           >
             LƯU (F12)
           </Button>
@@ -734,7 +759,7 @@ const ImportWareHouseForm: React.FC<ImportWareHouseFormProps> = ({
               Mã nhập kho:
             </span>
             <span className="text-medium font-medium text-[#2E2D3D]">
-              {detail?.code || "-"}
+              {detail?.code || '-'}
             </span>
           </div>
           <div className="flex items-center justify-between">
@@ -743,8 +768,8 @@ const ImportWareHouseForm: React.FC<ImportWareHouseFormProps> = ({
             </span>
             <span className="text-medium font-medium text-[#2E2D3D]">
               {detail?.created_at
-                ? format(new Date(detail.created_at), "dd/MM/yyyy")
-                : format(new Date(), "dd/MM/yyyy")}
+                ? format(new Date(detail.created_at), 'dd/MM/yyyy')
+                : format(new Date(), 'dd/MM/yyyy')}
             </span>
           </div>
           {detail && (
@@ -752,7 +777,8 @@ const ImportWareHouseForm: React.FC<ImportWareHouseFormProps> = ({
               <Select
                 label="Nhân viên xử lý"
                 placeholder="Chọn nhân viên xử lý"
-                options={listStaff}
+                // options={listStaff}
+                options={staffList}
                 value={parseFloat(selectedUser)}
                 disabled
               />
@@ -779,23 +805,26 @@ const ImportWareHouseForm: React.FC<ImportWareHouseFormProps> = ({
             <div className="flex mt-[20px] flex-col justify-between gap-y-1 p-2 bg-[#F5F5F6] border border-[#DADADD] rounded h-[82px]">
               <div className="flex gap-x-3">
                 <span className="text-[#1D1C2D] text-medium font-semibold">
-                  {warehouseSelected?.name || "--"}
+                  {warehouseSelected?.name || '--'}
+                  Kho Mai Linh
                 </span>
                 <span className="border border-[#DADADD]"></span>
                 <span className="text-[#1D1C2D] text-medium font-semibold">
-                  {warehouseSelected?.phone_number || "--"}
+                  {warehouseSelected?.phone_number || '--'}
+                  099199291
                 </span>
               </div>
               <p className="text-[#4B4B59] text-medium">
-                {warehouseSelected?.address}{" "}
-                {warehouseSelected?.ward_info ? ", " : ""}
-                {warehouseSelected?.ward_info?.prefix}{" "}
+                {warehouseSelected?.address}{' '}
+                {warehouseSelected?.ward_info ? ', ' : ''}
+                {warehouseSelected?.ward_info?.prefix}{' '}
                 {warehouseSelected?.ward_info?.name}
-                {warehouseSelected?.district_info ? ", " : ""}
-                {warehouseSelected?.district_info?.prefix}{" "}
+                {warehouseSelected?.district_info ? ', ' : ''}
+                {warehouseSelected?.district_info?.prefix}{' '}
                 {warehouseSelected?.district_info?.name}
-                {warehouseSelected?.province_info ? ", " : ""}{" "}
+                {warehouseSelected?.province_info ? ', ' : ''}{' '}
                 {warehouseSelected?.province_info?.name}
+                12/39/42 Phuong 11 Binh Thanh  TP.HCM
               </p>
             </div>
           )}
@@ -817,7 +846,7 @@ const ImportWareHouseForm: React.FC<ImportWareHouseFormProps> = ({
           placement="bottomRight"
           content={PopoverAsync}
           trigger="click"
-          overlayStyle={{ width: "354px" }}
+          overlayStyle={{ width: '354px' }}
           className="relative"
         >
           <Button width={195} height={45} className="p-0">
@@ -838,48 +867,49 @@ const ImportWareHouseForm: React.FC<ImportWareHouseFormProps> = ({
           emptyText: <TableEmpty />,
         }}
         columns={columns}
-        dataSource={
-          itemSkus.length > 0
-            ? [
-                ...itemSkus,
-                {
-                  id: "total",
-                  name: "",
-                  category_id: "",
-                  export_price: 0,
-                  import_quantity: itemSkus.reduce(
-                    (init, item) => Number(init) + Number(item.quantity),
-                    0
-                  ),
-                  import_price: itemSkus.reduce(
-                    (init, item) => Number(init) + Number(item.import_price),
-                    0
-                  ),
-                  import_weight: itemSkus.reduce(
-                    (init, item) => Number(init) + Number(item.weight),
-                    0
-                  ),
-                  total_package: itemSkus.reduce(
-                    (init, item) => Number(init) + Number(item.total_package),
-                    0
-                  ),
-                  total_package_price: itemSkus.reduce(
-                    (init, item) =>
-                      Number(init) + Number(item.total_package_price),
-                    0
-                  ),
-                  money: itemSkus.reduce(
-                    (init, item) => Number(init) + Number(item.money),
-                    0
-                  ),
-                  total_money: itemSkus.reduce(
-                    (init, item) => Number(init) + Number(item.total_money),
-                    0
-                  ),
-                },
-              ]
-            : []
-        }
+        dataSource={data}
+        // dataSource={
+        //   itemSkus.length > 0
+        //     ? [
+        //         ...itemSkus,
+        //         {
+        //           id: 'total',
+        //           name: '',
+        //           category_id: '',
+        //           export_price: 0,
+        //           import_quantity: itemSkus.reduce(
+        //             (init, item) => Number(init) + Number(item.quantity),
+        //             0
+        //           ),
+        //           import_price: itemSkus.reduce(
+        //             (init, item) => Number(init) + Number(item.import_price),
+        //             0
+        //           ),
+        //           import_weight: itemSkus.reduce(
+        //             (init, item) => Number(init) + Number(item.weight),
+        //             0
+        //           ),
+        //           total_package: itemSkus.reduce(
+        //             (init, item) => Number(init) + Number(item.total_package),
+        //             0
+        //           ),
+        //           total_package_price: itemSkus.reduce(
+        //             (init, item) =>
+        //               Number(init) + Number(item.total_package_price),
+        //             0
+        //           ),
+        //           money: itemSkus.reduce(
+        //             (init, item) => Number(init) + Number(item.money),
+        //             0
+        //           ),
+        //           total_money: itemSkus.reduce(
+        //             (init, item) => Number(init) + Number(item.total_money),
+        //             0
+        //           ),
+        //         },
+        //       ]
+        //     : []
+        // }
         loading={loading}
         pagination={false}
         scroll={{ x: 50, y: 900 }}

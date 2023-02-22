@@ -7,4 +7,4 @@ const TransferWareHouseCreate: React.FC = () => {
   return <TransferWareHouseForm />;
 };
 
-ReactDOM.render(<TransferWareHouseCreate />, document.getElementById("root"));
+export default TransferWareHouseCreate;

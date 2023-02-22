@@ -7,4 +7,4 @@ const ReturnWareHouseCreate: React.FC = () => {
   return <ReturnWareHouseForm />;
 };
 
-ReactDOM.render(<ReturnWareHouseCreate />, document.getElementById("root"));
+export default ReturnWareHouseCreate;

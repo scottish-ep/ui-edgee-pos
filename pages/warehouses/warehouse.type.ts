@@ -1,6 +1,6 @@
-import { CommandStatus } from "enums/enums";
-import { StatusEnum } from "../../types";
-import { IProduct } from "../products/product.type";
+import { CommandStatus, CommandStatusEnum } from 'enums/enums';
+import { StatusEnum } from '../../types';
+import { IProduct } from '../products/product.type';
 
 export interface IWareHouses {
   id: string;
@@ -13,6 +13,7 @@ export interface IWareHouses {
   createdAt: Date | number;
   updated_at: Date | number;
   status: StatusEnum;
+  cmdEnumStatus: CommandStatusEnum;
   cmdStatus: keyof typeof CommandStatus;
   source: string;
   transport_fee: number;
@@ -40,7 +41,7 @@ export interface IWareHouseManagement {
   description: string;
   createdAt: Date | number;
   updated_at: string;
-  [x: string]: any
+  [x: string]: any;
 }
 
 export interface IWareHouseManagementDetail {
@@ -101,7 +102,7 @@ export interface IReturnWareHouses {
   status: StatusEnum;
 }
 
-export interface IWarehouseList{
+export interface IWarehouseList {
   id: number;
   address?: string;
   company_id?: number | string;

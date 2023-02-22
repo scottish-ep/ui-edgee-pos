@@ -10,4 +10,4 @@ const ReturnWareHouseDetail: React.FC = () => {
   return <ReturnWareHouseForm detail={detail} />;
 };
 
-ReactDOM.render(<ReturnWareHouseDetail />, document.getElementById("root"));
+export default ReturnWareHouseDetail;

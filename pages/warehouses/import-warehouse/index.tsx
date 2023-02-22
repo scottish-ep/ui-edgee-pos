@@ -1,9 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from "react";
-import ReactDOM from "react-dom";
-import { message, notification, Table } from "antd";
-import type { ColumnsType } from "antd/es/table";
-import { format } from "date-fns";
+import React, { useEffect, useState } from 'react';
+import ReactDOM from 'react-dom';
+import { message, notification, Table } from 'antd';
+import type { ColumnsType } from 'antd/es/table';
+import { format } from 'date-fns';
 
 import {
   wareHouseList,
@@ -12,35 +12,35 @@ import {
   provinceList,
   districtList,
   wardList,
-} from "../../../const/constant";
-import { StatusColorEnum, StatusEnum, StatusList } from "../../../types";
-import Tabs from "../../../components/Tabs";
-import TitlePage from "../../../components/TitlePage/Titlepage";
-import Select from "../../../components/Select/Select";
-import Button from "../../../components/Button/Button";
-import Icon from "../../../components/Icon/Icon";
-import Input from "../../../components/Input/Input";
-import InputRangePicker from "../../../components/DateRangePicker/DateRangePicker";
-import DropdownStatus from "../../../components/DropdownStatus";
+} from '../../../const/constant';
+import { StatusColorEnum, StatusEnum, StatusList } from '../../../types';
+import Tabs from '../../../components/Tabs';
+import TitlePage from '../../../components/TitlePage/Titlepage';
+import Select from '../../../components/Select/Select';
+import Button from '../../../components/Button/Button';
+import Icon from '../../../components/Icon/Icon';
+import Input from '../../../components/Input/Input';
+import InputRangePicker from '../../../components/DateRangePicker/DateRangePicker';
+import DropdownStatus from '../../../components/DropdownStatus';
 import {
   IWareHouseManagement,
   IWareHouseManagementDetail,
   IWareHouses,
-} from "../warehouse.type";
-import ModalRemove from "../../../components/ModalRemove/ModalRemove";
-import { isArray, onCoppy } from "../../../utils/utils";
-import TableEmpty from "../../../components/TableEmpty";
-import PaginationCustom from "../../../components/PaginationCustom";
-import { get } from "lodash";
-import { useDebounce } from "usehooks-ts";
-import { IUser } from "../../../types/users";
-import WarehouseApi from "../../../services/warehouses";
-import { CSVLink } from "react-csv";
-import WarehouseImportCommandApi from "../../../services/warehouse-import";
+} from '../warehouse.type';
+import ModalRemove from '../../../components/ModalRemove/ModalRemove';
+import { isArray, onCoppy } from '../../../utils/utils';
+import TableEmpty from '../../../components/TableEmpty';
+import PaginationCustom from '../../../components/PaginationCustom';
+import { get } from 'lodash';
+import { useDebounce } from 'usehooks-ts';
+import { IUser } from '../../../types/users';
+import WarehouseApi from '../../../services/warehouses';
+import { CSVLink } from 'react-csv';
+import WarehouseImportCommandApi from '../../../services/warehouse-import';
 import {
   CommandStatusEnum,
   CommandWarehouseStatusEnum,
-} from "../../../enums/enums";
+} from '../../../enums/enums';
 
 declare global {
   interface Window {
@@ -64,7 +64,7 @@ const ImportWareHouseList = () => {
     }[]
   >([]);
   const [importWareHouses, setImportWareHouses] = useState<any[]>([]);
-  const [currenStatus, setCurrenStatus] = useState("");
+  const [currenStatus, setCurrenStatus] = useState('');
   const [loading, setLoading] = useState(false);
   const [pagination, setPagination] = useState({
     current: 1,
@@ -73,7 +73,7 @@ const ImportWareHouseList = () => {
     pageSize: 10,
   });
   const [isShowModalRemoveExport, setIsShowModalRemoveExport] = useState(false);
-  const [searchKey, setSearchKey] = useState("");
+  const [searchKey, setSearchKey] = useState('');
   const debouncedSearchTerm = useDebounce(searchKey, 1000);
   const [filter, setFilter] = useState<any>({});
   const [dataExport, setDataExport] = useState<Array<IWareHouses>>([]);
@@ -82,7 +82,11 @@ const ImportWareHouseList = () => {
     COMPLETED: 0,
     CANCELED: 0,
   });
-  const selectedUser = window.loggedInUser;
+
+  let selectedUser = '';
+  useEffect(() => {
+    selectedUser = window.loggedInUser;
+  });
 
   const TabStatus = [
     {
@@ -97,10 +101,10 @@ const ImportWareHouseList = () => {
       name: StatusEnum.CANCELED,
       count: totalCommand.CANCELED,
     },
-  ];  
-  
+  ];
+
   const content = () => {
-    let data: any = [];
+    let data: any = [''];
     switch (currenStatus) {
       case StatusEnum.CREATED:
         data = importWareHouses ? importWareHouses[StatusEnum.CREATED] : [];
@@ -112,14 +116,14 @@ const ImportWareHouseList = () => {
         data = importWareHouses ? importWareHouses[StatusEnum.CANCELED] : [];
         break;
       default:
-        data = importWareHouses ? importWareHouses["ALL"] : [];
+        data = importWareHouses ? importWareHouses['ALL'] : [];
         break;
     }
     return data;
   };
 
   useEffect(() => {
-    const element = document.getElementById("loading__animation");
+    const element = document.getElementById('loading__animation');
     if (element) {
       element.remove();
     }
@@ -172,7 +176,7 @@ const ImportWareHouseList = () => {
   };
 
   const getListStaff = () => {
-    const url = "/api/v2/users/list";
+    const url = '/api/v2/users/list';
     fetch(url)
       .then((res) => res.json())
       .then((res) => {
@@ -190,7 +194,7 @@ const ImportWareHouseList = () => {
   };
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    console.log("selectedRowKeys changed: ", selectedRowKeys);
+    console.log('selectedRowKeys changed: ', selectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
   };
 
@@ -199,14 +203,32 @@ const ImportWareHouseList = () => {
     onChange: onSelectChange,
   };
 
+  const data: IWareHouses[] = Array(50)
+    .fill({
+      code: 'KH0001',
+      creadted_user: {
+        name: 'Nguyễn Văn A',
+      },
+      created_at: Date.now(),
+      warehouse: {
+        name: 'Kho tổng Linh Dương',
+      },
+      note: 'Nhập lô hàng mới',
+      items_sum_quantity: 100,
+      items_sum_weight: 13,
+      updated_at: Date.now(),
+      status: 'COMPLETED',
+    })
+    .map((item, index) => ({ ...item, id: `KH${index + 1}` }));
+
   const columns: ColumnsType<IWareHouses> = [
     {
-      title: "ID",
+      title: 'ID',
       width: 100,
-      dataIndex: "db_id",
-      key: "db_id",
-      fixed: "left",
-      align: "center",
+      dataIndex: 'db_id',
+      key: 'db_id',
+      fixed: 'left',
+      align: 'center',
       render: (_, record) => (
         <span className="text-medium text-[#384ADC] font-semibold">
           {record.id}
@@ -214,12 +236,12 @@ const ImportWareHouseList = () => {
       ),
     },
     {
-      title: "Mã nhập hàng",
+      title: 'Mã nhập hàng',
       width: 200,
-      dataIndex: "id",
-      key: "id",
-      fixed: "left",
-      align: "center",
+      dataIndex: 'id',
+      key: 'id',
+      fixed: 'left',
+      align: 'center',
       render: (_, record) => (
         <span
           className="text-medium text-[#384ADC] font-semibold"
@@ -232,44 +254,44 @@ const ImportWareHouseList = () => {
       ),
     },
     {
-      title: "NV xử lý / Thời gian",
+      title: 'NV xử lý / Thời gian',
       width: 200,
-      dataIndex: "name",
-      key: "name",
+      dataIndex: 'name',
+      key: 'name',
       render: (_, record) => (
         <div className="flex flex-col gap-y-1">
           <span className="text-[#384ADC] font-semibold text-medium">
-            {get(record, "created_user.name")}
+            {get(record, 'created_user.name')}
           </span>
           <span className="text-[#5F5E6B] font-medium text-medium">
-            {get(record, "created_at")
+            {/* {get(record, "created_at")
               ? format(
                   new Date(get(record, "created_at")),
                   "HH:mm - dd/MM/yyyy"
                 )
-              : ""}
+              : ""} */}
           </span>
         </div>
       ),
     },
     {
-      title: "Kho nhập",
+      title: 'Kho nhập',
       width: 200,
-      dataIndex: "export_name",
-      key: "export_name",
-      align: "center",
+      dataIndex: 'export_name',
+      key: 'export_name',
+      align: 'center',
       render: (_, record) => (
         <span className="text-medium font-medium text-[#2E2D3D]">
-          {get(record, "warehouse.name")}
+          {get(record, 'warehouse.name')}
         </span>
       ),
     },
     {
-      title: "Ghi chú",
+      title: 'Ghi chú',
       width: 200,
-      dataIndex: "note",
-      key: "note",
-      align: "center",
+      dataIndex: 'note',
+      key: 'note',
+      align: 'center',
       render: (_, record) => (
         <span className="text-medium text-[#4B4B59]">{record.note}</span>
       ),
@@ -285,39 +307,39 @@ const ImportWareHouseList = () => {
     //   ),
     // },
     {
-      title: "Số lượng",
+      title: 'Số lượng',
       width: 100,
-      dataIndex: "quantity",
-      key: "quantity",
-      align: "center",
+      dataIndex: 'quantity',
+      key: 'quantity',
+      align: 'center',
       render: (_, record) => (
         <span className="text-medium font-medium text-[#1D1C2D]">
-          {get(record, "items_sum_quantity")
-            ? get(record, "items_sum_quantity")
-            : "--"}
+          {get(record, 'items_sum_quantity')
+            ? get(record, 'items_sum_quantity')
+            : '--'}
         </span>
       ),
     },
     {
-      title: "Trọng lượng",
+      title: 'Trọng lượng',
       width: 100,
-      dataIndex: "weight",
-      key: "weight",
-      align: "center",
+      dataIndex: 'weight',
+      key: 'weight',
+      align: 'center',
       render: (_, record) => (
         <span className="text-medium font-medium text-[#1D1C2D]">
-          {get(record, "items_sum_weight")
-            ? get(record, "items_sum_weight") + " kg"
-            : "--"}
+          {get(record, 'items_sum_weight')
+            ? get(record, 'items_sum_weight') + ' kg'
+            : '--'}
         </span>
       ),
     },
     {
-      title: "Tổng tiền sản phẩm",
+      title: 'Tổng tiền sản phẩm',
       width: 260,
-      dataIndex: "totalMoney",
-      key: "totalMoney",
-      align: "center",
+      dataIndex: 'totalMoney',
+      key: 'totalMoney',
+      align: 'center',
       render: (_, record: any) => {
         let quantity = parseFloat(record.items_sum_quantity || 0);
         let weight = parseFloat(record.items_sum_weight || 0);
@@ -341,25 +363,25 @@ const ImportWareHouseList = () => {
     //   ),
     // },
     {
-      title: "Cập nhật cuối",
+      title: 'Cập nhật cuối',
       width: 185,
-      dataIndex: "updatedAt",
-      key: "updatedAt",
-      align: "center",
+      dataIndex: 'updatedAt',
+      key: 'updatedAt',
+      align: 'center',
       render: (_, record) => (
         <div className="flex flex-col gap-y-1 text-medium text-[#1D1C2D]">
-          <span>{format(new Date(record.updated_at), "HH:mm")}</span>
-          <span>{format(new Date(record.updated_at), "dd/MM/yyyy")}</span>
+          <span>{format(new Date(record.updated_at), 'HH:mm')}</span>
+          <span>{format(new Date(record.updated_at), 'dd/MM/yyyy')}</span>
         </div>
       ),
     },
     {
-      title: "Trạng thái",
+      title: 'Trạng thái',
       width: 185,
-      dataIndex: "status",
-      key: "status",
-      align: "center",
-      fixed: "right",
+      dataIndex: 'status',
+      key: 'status',
+      align: 'center',
+      fixed: 'right',
       render: (_, record) => (
         <span
           className={`text-medium font-semibold text-[${
@@ -390,23 +412,23 @@ const ImportWareHouseList = () => {
     if (hasErrors) {
       notification.error({
         message:
-          "Không thể cập nhật trạng thái lệnh nhập kho có trạng thái đã huỷ",
+          'Không thể cập nhật trạng thái lệnh nhập kho có trạng thái đã huỷ',
       });
     }
 
     const data = await WarehouseImportCommandApi.updateManyCommand(body);
-    console.log("data", data);
+    console.log('data', data);
     if (data.success) {
       notification.success({
-        message: "Cập nhật trạng thái thành công!",
+        message: 'Cập nhật trạng thái thành công!',
       });
       getData();
       setSelectedRowKeys([]);
     } else {
       notification.error({
-        message: "Cập nhật trạng thái không thành công!",
+        message: 'Cập nhật trạng thái không thành công!',
       });
-      console.log("error");
+      console.log('error');
       setLoading(false);
     }
   };
@@ -418,25 +440,25 @@ const ImportWareHouseList = () => {
     };
 
     const options = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
     };
     fetch(url, options)
       .then((res) => res.json())
       .then((data) => {
-        console.log("data return", data);
+        console.log('data return', data);
         if (data.success) {
           getData();
           setSelectedRowKeys([]);
           notification.success({
-            message: "Xoá thành công!",
+            message: 'Xoá thành công!',
           });
         } else {
           notification.error({
-            message: "Xoá không thành công!",
+            message: 'Xoá không thành công!',
           });
-          console.log("error");
+          console.log('error');
         }
       });
   };
@@ -445,8 +467,8 @@ const ImportWareHouseList = () => {
     if (dates) {
       setFilter({
         ...filter,
-        from: dates[0].format("YYYY-MM-DD"),
-        to: dates[1].format("YYYY-MM-DD"),
+        from: dates[0].format('YYYY-MM-DD'),
+        to: dates[1].format('YYYY-MM-DD'),
       });
     } else {
       setFilter({
@@ -458,15 +480,15 @@ const ImportWareHouseList = () => {
   };
 
   const headers = [
-    { label: "ID", key: "id" },
-    { label: "Mã nhập hàng", key: "code" },
-    { label: "NV xử lý", key: "created_user_name" },
-    { label: "Kho nhập", key: "import_warehouse_name" },
-    { label: "Ghi chú", key: "note" },
-    { label: "Số lượng", key: "quantity" },
-    { label: "Trọng lượng", key: "weight" },
-    { label: "Tổng tiền sản phẩm", key: "total_products" },
-    { label: "Trạng thái", key: "status" },
+    { label: 'ID', key: 'id' },
+    { label: 'Mã nhập hàng', key: 'code' },
+    { label: 'NV xử lý', key: 'created_user_name' },
+    { label: 'Kho nhập', key: 'import_warehouse_name' },
+    { label: 'Ghi chú', key: 'note' },
+    { label: 'Số lượng', key: 'quantity' },
+    { label: 'Trọng lượng', key: 'weight' },
+    { label: 'Tổng tiền sản phẩm', key: 'total_products' },
+    { label: 'Trạng thái', key: 'status' },
   ];
 
   useEffect(() => {
@@ -474,7 +496,7 @@ const ImportWareHouseList = () => {
 
     if (rowSelection?.selectedRowKeys) {
       let data = content();
-      data?.map((item) => {
+      data?.map((item: any) => {
         if (rowSelection.selectedRowKeys.indexOf(item?.id) != -1) {
           arr.push({
             id: item.id,
@@ -483,7 +505,7 @@ const ImportWareHouseList = () => {
             import_warehouse_name: item?.warehouse?.name,
             note: item?.note,
             quantity: item?.quantity,
-            weight: item?.weight + " kg",
+            weight: item?.weight + ' kg',
             total_products: item?.total_import_cost,
             status: item?.status,
           });
@@ -531,9 +553,9 @@ const ImportWareHouseList = () => {
           <CSVLink
             headers={headers}
             data={dataExport}
-            filename={"nhap-kho.csv"}
+            filename={'nhap-kho.csv'}
             onClick={() => {
-              message.success("Download thành công");
+              message.success('Download thành công');
             }}
           >
             <Button
@@ -550,7 +572,7 @@ const ImportWareHouseList = () => {
             color="white"
             suffixIcon={<Icon icon="add" size={24} />}
             onClick={() =>
-              (window.location.href = "/warehouse/import-commands/create")
+              (window.location.href = '/warehouse/import-commands/create')
             }
           >
             Thêm mới
@@ -576,7 +598,7 @@ const ImportWareHouseList = () => {
           width={458}
           prefix={<Icon icon="search" color="#FF970D" size={24} />}
           onChange={(e: any) => {
-            console.log("code", e);
+            console.log('code', e);
             setSearchKey(e.target.value);
           }}
           placeholder="Nhập mã nhập kho"
@@ -598,7 +620,7 @@ const ImportWareHouseList = () => {
           showSearch
         />
         <InputRangePicker
-          placeholder={["Ngày tạo bắt đầu", "Ngày tạo kết thúc"]}
+          placeholder={['Ngày tạo bắt đầu', 'Ngày tạo kết thúc']}
           width={356}
           prevIcon={<Icon size={24} icon="calendar" />}
           onChange={(dates: any) => handleChangeDates(dates)}
@@ -606,7 +628,7 @@ const ImportWareHouseList = () => {
       </div>
       {isArray(selectedRowKeys) && (
         <div className="mb-[12px]">
-          Số phiếu nhập kho đang chọn:{" "}
+          Số phiếu nhập kho đang chọn:{' '}
           <span className="text-[#384ADC] font-semibold">
             {selectedRowKeys.length}
           </span>
@@ -627,14 +649,15 @@ const ImportWareHouseList = () => {
         onRow={(record) => {
           return {
             onClick: () => {
-              window.location.href = `/warehouse/import-commands/update/${record.id}`;
+              window.location.href = `/warehouses/import-warehouse/${record.id}`;
             },
           };
         }}
         loading={loading}
         rowSelection={rowSelection}
         columns={columns}
-        dataSource={[...importWareHouses]}
+        // dataSource={[...importWareHouses]}
+        dataSource={data}
         scroll={{ x: 50 }}
         pagination={{
           current: pagination.current,
@@ -667,4 +690,4 @@ const ImportWareHouseList = () => {
   );
 };
 
-ReactDOM.render(<ImportWareHouseList />, document.getElementById("root"));
+export default ImportWareHouseList;
