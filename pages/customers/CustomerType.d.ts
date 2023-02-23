@@ -19,5 +19,5 @@ export interface CustomerType {
     count_return_order?: number;
     count_partial_return_order?: number;
     avatar?: string;
-    updated_at?: Date | string;
+    updated_at?: Date | number;
   }

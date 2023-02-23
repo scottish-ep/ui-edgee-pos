@@ -1,40 +1,42 @@
-import React, { useEffect } from "react";
-import { useState } from "react";
-import ReactDOM from "react-dom";
-import { Table, Switch, Tag, Form, Upload, message, Tooltip } from "antd";
-import type { ColumnsType } from "antd/es/table";
-import Button from "../../components/Button/Button";
-import Input from "../../components/Input/Input";
-import DatePicker from "../../components/DatePicker/DatePicker";
-import { Radio, notification } from "antd";
-import Select from "../../components/Select/Select";
-import Icon from "../../components/Icon/Icon";
-import TitlePage from "../../components/TitlePage/Titlepage";
-import { Popover } from "antd";
-import TextArea from "../../components/TextArea/TextArea";
-import styles from "../../styles/DetailCustomer.module.css";
-import type { CustomTagProps } from "rc-select/lib/BaseSelect";
-import DefaultAvatar from "../../assets/big-default-avatar.svg";
-import Image from "next/image";
-import ModalUnblockCustomer from "./ModalAddCustomer/ModalUnblockCustomer";
-import ModalUnreportCustomer from "./ModalAddCustomer/ModalUnreportCustomer";
-import ModalAddress from "./ModalAddCustomer/ModalAdress";
-import { get, isArray, isEmpty } from "lodash";
-import { IUser } from "../../types/users";
-import ModalConfirm from "../../components/Modal/ModalConfirm/ModalConfirm";
-import { calcWithPoints, formatCustomer } from "../../utils/utils";
-import { LevelCustomer, OrderEnumId } from "../../enums/enums";
-import { format } from "date-fns";
-import moment from "moment";
-import classNames from "classnames";
-import CustomerApi from "../../services/customers";
-import { usersList } from "../../dummy-data/dummyData";
-import CustomerTagApi from "../../services/customer-tags";
-import ImageApi from "../../services/images";
-import { OrderEnum } from "../../enums/enums";
-import YellowStart from "../../../public/images/yellow-star.svg";
-import TableEmpty from "../../components/TableEmpty";
-import ReviewManagementApi from "../../services/reviews";
+import {
+  Form,
+  message,
+  notification,
+  Popover,
+  Radio,
+  Switch,
+  Table,
+  Tag,
+  Upload,
+} from 'antd';
+import type { ColumnsType } from 'antd/es/table';
+import classNames from 'classnames';
+import { format } from 'date-fns';
+import { get, isArray } from 'lodash';
+import moment from 'moment';
+import Image from 'next/image';
+import type { CustomTagProps } from 'rc-select/lib/BaseSelect';
+import React, { useEffect, useRef, useState } from 'react';
+// import DefaultAvatar from '../../assets/big-default-avatar.svg';
+import Button from '../../components/Button/Button';
+import DatePicker from '../../components/DatePicker/DatePicker';
+import Icon from '../../components/Icon/Icon';
+import Input from '../../components/Input/Input';
+import ModalConfirm from '../../components/Modal/ModalConfirm/ModalConfirm';
+import Select from '../../components/Select/Select';
+import TextArea from '../../components/TextArea/TextArea';
+import TitlePage from '../../components/TitlePage/Titlepage';
+import { OrderEnum } from '../../enums/enums';
+import CustomerTagApi from '../../services/customer-tags';
+import CustomerApi from '../../services/customers';
+import ImageApi from '../../services/images';
+import styles from '../../styles/DetailCustomer.module.css';
+import { IUser } from '../../types/users';
+import { calcWithPoints, formatCustomer } from '../../utils/utils';
+import ModalAddress from './ModalAddCustomer/ModalAdress';
+// import YellowStart from '../../../public/images/yellow-star.svg';
+import TableEmpty from '../../components/TableEmpty';
+import ReviewManagementApi from '../../services/reviews';
 
 interface DataType {
   id?: string | number;
@@ -57,8 +59,8 @@ interface TagProps extends CustomTagProps {
 
 const TagRender = (props: TagProps) => {
   const { label, value, closable, onClose, id } = props;
-  const [itemList, setItemList] = useState([{ id: "10", value: "Nhom 1" }]);
-  const [name, setName] = useState<any>("");
+  const [itemList, setItemList] = useState([{ id: '10', value: 'Nhom 1' }]);
+  const [name, setName] = useState<any>('');
   const onNameChange = (event: any) => {
     setName(event.target.value);
   };
@@ -69,7 +71,7 @@ const TagRender = (props: TagProps) => {
     ]);
   };
   const handleClear = () => {
-    setName("");
+    setName('');
   };
   // const handleDelete = (id: string) => {
   //   setItemList((prevItemList) =>
@@ -98,10 +100,13 @@ const TagRender = (props: TagProps) => {
   );
 };
 
-const DetailsCustomer = (props) => {
+const DetailsCustomer = (props: DataType) => {
   // const urlParams = new URLSearchParams(window.location.search);
   // const id = urlParams.get("id");
-  const pathNameArr = window.location.pathname.split("/");
+  let pathNameArr: any = [''];
+  useRef(() => {
+    pathNameArr = window.location.pathname.split('/');
+  });
   const id = pathNameArr[pathNameArr.length - 1];
 
   const [form] = Form.useForm();
@@ -120,8 +125,8 @@ const DetailsCustomer = (props) => {
   const [listOrder, setListOrder] = useState<any[]>([]);
   const [customer, setCustomer] = useState<any>();
   const [listAddress, setListAddress] = useState<any[]>([]);
-  const [note, setNote] = useState("");
-  const [noteBad, setNoteBad] = useState("");
+  const [note, setNote] = useState('');
+  const [noteBad, setNoteBad] = useState('');
   const [isBad, setIsBad] = useState(false);
   const [isBlock, setIsBlock] = useState(false);
 
@@ -151,7 +156,7 @@ const DetailsCustomer = (props) => {
     RETURN: 0,
   });
   const [widthProgress, setWidthProgress] = useState(0);
-  const [avatar, setAvatar] = useState("");
+  const [avatar, setAvatar] = useState('');
 
   const [reviews, setReviews] = useState<any[]>([]);
   const [currenReviewId, setCurrenReviewId] = useState<any>(-1);
@@ -164,7 +169,7 @@ const DetailsCustomer = (props) => {
   const [loadingReview, setLoadingReview] = useState(false);
 
   useEffect(() => {
-    const element = document.getElementById("loading__animation");
+    const element = document.getElementById('loading__animation');
     if (element) {
       element.remove();
     }
@@ -174,7 +179,7 @@ const DetailsCustomer = (props) => {
     getListOrder();
     getListTag();
 
-    window.addEventListener("keydown", (e) => {
+    window.addEventListener('keydown', (e) => {
       var keyCode = e.keyCode || e.which;
       if (keyCode === 123) {
         form.submit();
@@ -202,13 +207,13 @@ const DetailsCustomer = (props) => {
     let rawData: any[] = [];
     isArray(data) &&
       data.map((item: any) => {
-        let name = get(item, "item_sku.item.name");
-        if (get(item, "item_sku.item.item_category")) {
-          name += " - " + get(item, "item_sku.item.item_category.name");
+        let name = get(item, 'item_sku.item.name');
+        if (get(item, 'item_sku.item.item_category')) {
+          name += ' - ' + get(item, 'item_sku.item.item_category.name');
         }
         isArray(item.item_sku.item_attribute_values) &&
           item.item_sku.item_attribute_values.map((v: any) => {
-            name = name + " - " + v.value;
+            name = name + ' - ' + v.value;
           });
         rawData.push({
           id: item.id,
@@ -231,7 +236,7 @@ const DetailsCustomer = (props) => {
   };
 
   const getListSource = () => {
-    const url = "/api/v2/customer-sources/list";
+    const url = '/api/v2/customer-sources/list';
     fetch(url)
       .then((res) => res.json())
       .then((res) => {
@@ -265,48 +270,50 @@ const DetailsCustomer = (props) => {
   const getListAddress = () => {
     if (id) {
       const url =
-        "/api/v2/customer-addresses/list?" +
+        '/api/v2/customer-addresses/list?' +
         new URLSearchParams({
           customer_id: id,
         });
       fetch(url)
         .then((res) => res.json())
         .then((res) => {
-          const result = get(res, "data.data");
-          const rawProvinces = get(res, "data.provinces").map((item: any) => ({
+          const result = get(res, 'data.data');
+          const rawProvinces = get(res, 'data.provinces').map((item: any) => ({
             ...item,
             label: item.name,
             value: item.id,
           }));
-          const rawDistricts = get(res, "data.districts").map((item: any) => ({
+          const rawDistricts = get(res, 'data.districts').map((item: any) => ({
             ...item,
             label: item.name,
             value: item.id,
           }));
-          const rawWards = get(res, "data.wards").map((item: any) => ({
+          const rawWards = get(res, 'data.wards').map((item: any) => ({
             ...item,
             label: item.name,
             value: item.id,
           }));
-          const rawAddresses = get(res, "data.data").map((item) => {
+          const rawAddresses = get(res, 'data.data').map((item: any) => {
             const itemProvince = rawProvinces.find(
-              (province) => province.id == item.province_id
+              (province: any) => province.id == item.province_id
             );
             const itemDistrict = rawDistricts.find(
-              (district) => district.id == item.district_id
+              (district: any) => district.id == item.district_id
             );
-            const itemWard = rawWards.find((ward) => ward.id == item.ward_id);
+            const itemWard = rawWards.find(
+              (ward: any) => ward.id == item.ward_id
+            );
             const fullAddress =
               item.address +
-              ", " +
+              ', ' +
               itemWard.prefix +
-              " " +
+              ' ' +
               itemWard.name +
-              ", " +
+              ', ' +
               itemDistrict.prefix +
-              " " +
+              ' ' +
               itemDistrict.name +
-              " " +
+              ' ' +
               itemProvince.name;
             return {
               ...item,
@@ -325,7 +332,7 @@ const DetailsCustomer = (props) => {
   const getListOrder = () => {
     if (id) {
       const url =
-        "/api/v2/orders/list?" +
+        '/api/v2/orders/list?' +
         new URLSearchParams({
           customer_id: id,
         });
@@ -395,10 +402,10 @@ const DetailsCustomer = (props) => {
           ? moment(new Date(result.birthday))
           : null;
 
-        console.log("result", result);
+        console.log('result', result);
         form.setFieldsValue(result);
         if (!result?.source_id && result.is_in_app == true) {
-          form.setFieldValue("source_id", 1);
+          form.setFieldValue('source_id', 1);
         }
       })
       .catch((error) => console.log(error));
@@ -439,17 +446,17 @@ const DetailsCustomer = (props) => {
         </div>
       );
     } else {
-      return "";
+      return '';
     }
   };
 
   const columns: ColumnsType<DataType> = [
     {
-      title: "Mã đơn hàng",
+      title: 'Mã đơn hàng',
       width: 150,
-      key: "id",
-      fixed: "left",
-      align: "center",
+      key: 'id',
+      fixed: 'left',
+      align: 'center',
       render: (_, record) => (
         <div className="cursor-pointer text-[#384ADC] font-medium text-medium">
           {record.order_id}
@@ -457,16 +464,16 @@ const DetailsCustomer = (props) => {
       ),
     },
     {
-      title: "Thời gian tạo",
+      title: 'Thời gian tạo',
       width: 190,
-      dataIndex: "time",
-      key: "time",
-      fixed: "left",
-      align: "center",
+      dataIndex: 'time',
+      key: 'time',
+      fixed: 'left',
+      align: 'center',
       render: (_, record) => (
         <div className="font-medium text-medium">
-          <span>{format(new Date(record.created_at), "HH:mm")} - </span>
-          <span>{format(new Date(record.created_at), "dd/MM/yyyy")}</span>
+          <span>{format(new Date(record.created_at), 'HH:mm')} - </span>
+          <span>{format(new Date(record.created_at), 'dd/MM/yyyy')}</span>
         </div>
       ),
     },
@@ -485,11 +492,11 @@ const DetailsCustomer = (props) => {
     //   ),
     // },
     {
-      title: "Giá trị đơn hàng",
+      title: 'Giá trị đơn hàng',
       width: 200,
-      dataIndex: "level",
-      key: "level",
-      align: "center",
+      dataIndex: 'level',
+      key: 'level',
+      align: 'center',
       render: (_, record) => (
         <div className="font-medium text-medium">
           {record.total_cost ? record.total_cost.toLocaleString() : 0} đ
@@ -497,21 +504,21 @@ const DetailsCustomer = (props) => {
       ),
     },
     {
-      title: "Giỏ hàng",
+      title: 'Giỏ hàng',
       width: 110,
-      dataIndex: "items",
-      key: "items",
-      align: "center",
+      dataIndex: 'items',
+      key: 'items',
+      align: 'center',
       render: (_, record) => {
         const ContentItemSku = (
           <div className="td_items_skus">
             {isArray(record.order_item_skus) &&
               record.order_item_skus &&
               record.order_item_skus.map((orderItemSku, index) => {
-                const inforItem = `${get(orderItemSku, "item_sku.item.name")} | 
-                ${get(orderItemSku, "item_sku.sku_code")} x${get(
+                const inforItem = `${get(orderItemSku, 'item_sku.item.name')} | 
+                ${get(orderItemSku, 'item_sku.sku_code')} x${get(
                   orderItemSku,
-                  "quantity"
+                  'quantity'
                 )}`;
                 return <p key={index}>{inforItem}</p>;
               })}
@@ -532,23 +539,23 @@ const DetailsCustomer = (props) => {
       },
     },
     {
-      title: "Kênh bán",
+      title: 'Kênh bán',
       width: 200,
-      dataIndex: "channel",
-      key: "channel",
-      align: "center",
+      dataIndex: 'channel',
+      key: 'channel',
+      align: 'center',
       render: (_, record) => (
         <div className="font-medium text-medium">
-          {record?.order_status?.is_online ? "Online" : "Tại quầy"}
+          {record?.order_status?.is_online ? 'Online' : 'Tại quầy'}
         </div>
       ),
     },
     {
-      title: "Trạng thái",
+      title: 'Trạng thái',
       width: 160,
-      dataIndex: "order",
-      key: "order",
-      align: "center",
+      dataIndex: 'order',
+      key: 'order',
+      align: 'center',
       render: (_, record) => (
         <div className="text-[#8B5CF6] font-medium text-medium">
           {record.order_status?.name}
@@ -586,56 +593,56 @@ const DetailsCustomer = (props) => {
 
   const reviewColumns: ColumnsType<any> = [
     {
-      title: "THỜI GIAN",
+      title: 'THỜI GIAN',
       width: 150,
-      dataIndex: "created_at",
-      key: "created_at",
-      align: "left",
+      dataIndex: 'created_at',
+      key: 'created_at',
+      align: 'left',
       render: (_, record) => (
         <div className="flex flex-col gap-y-1 text-medium text-[#1D1C2D]">
-          <span>{format(new Date(record.created_at), "HH:mm")}</span>
-          <span>{format(new Date(record.created_at), "dd/MM/yyyy")}</span>
+          <span>{format(new Date(record.created_at), 'HH:mm')}</span>
+          <span>{format(new Date(record.created_at), 'dd/MM/yyyy')}</span>
         </div>
       ),
     },
     {
-      title: "SP ĐÁNH GIÁ",
+      title: 'SP ĐÁNH GIÁ',
       width: 200,
-      dataIndex: "user",
-      key: "user",
-      align: "left",
+      dataIndex: 'user',
+      key: 'user',
+      align: 'left',
       render: (_, record: any) => <div>{record.name}</div>,
     },
     {
-      title: "ĐÁNH GIÁ",
+      title: 'ĐÁNH GIÁ',
       width: 100,
-      dataIndex: "start",
-      key: "start",
-      align: "left",
+      dataIndex: 'start',
+      key: 'start',
+      align: 'left',
       render: (_, record: any) => (
         <div className="flex items-center gap-[4px]">
           {record.star}
           <span>
-            <YellowStart />
+            {/* <Image src={'../../public/yellowstart.svg'} fill alt="" /> */}
           </span>
         </div>
       ),
     },
     {
-      title: "CHI TIẾT",
+      title: 'CHI TIẾT',
       width: 210,
-      dataIndex: "description",
-      key: "description",
-      align: "left",
+      dataIndex: 'description',
+      key: 'description',
+      align: 'left',
       render: (_, record: any) => {
         return (
           <div>
             <div className="mb-[8px]">{record.content}</div>
             <div className="flex flex-wrap gap-[8px] mb-[8px]">
               {isArray(record.images) &&
-                record.images.map((item, index) => {
+                record.images.map((item: any, index: any) => {
                   return (
-                    <img
+                    <Image
                       key={index}
                       src={item}
                       alt="image"
@@ -646,7 +653,7 @@ const DetailsCustomer = (props) => {
             </div>
             <div className="flex flex-wrap gap-[8px]">
               {isArray(record.tags) &&
-                record.tags.map((tag, index) => {
+                record.tags.map((tag: any, index: any) => {
                   return (
                     <div className={styles.tag} key={index}>
                       {tag}
@@ -659,28 +666,28 @@ const DetailsCustomer = (props) => {
       },
     },
     {
-      title: "TRẠNG THÁI",
+      title: 'TRẠNG THÁI',
       width: 100,
-      dataIndex: "description",
-      key: "description",
-      align: "left",
+      dataIndex: 'description',
+      key: 'description',
+      align: 'left',
       render: (_, record: any) => (
         <div
           className="font-semibold text-[#384ADC] cursor-pointer"
           onClick={() => {
-            console.log("record", record);
+            console.log('record', record);
           }}
         >
-          {record.is_show == 0 ? "Hiện" : "Ẩn"}
+          {record.is_show == 0 ? 'Hiện' : 'Ẩn'}
         </div>
       ),
     },
     {
-      title: "THAO TÁC",
+      title: 'THAO TÁC',
       width: 170,
-      dataIndex: "action",
-      key: "action",
-      align: "left",
+      dataIndex: 'action',
+      key: 'action',
+      align: 'left',
       render: (_, record) => (
         <div
           className="cursor-pointer w-full flex justify-start"
@@ -702,7 +709,7 @@ const DetailsCustomer = (props) => {
     const data = await ReviewManagementApi.deleteReview(currenReviewId);
     if (data) {
       notification.success({
-        message: "Xoá đánh giá thành công!",
+        message: 'Xoá đánh giá thành công!',
       });
       const newReviews = reviews.filter(
         (review) => review.id != currenReviewId
@@ -710,7 +717,7 @@ const DetailsCustomer = (props) => {
       setReviews(newReviews);
     } else {
       notification.success({
-        message: "Xoá đánh giá thất bại!",
+        message: 'Xoá đánh giá thất bại!',
       });
     }
     setLoadingReview(false);
@@ -731,23 +738,23 @@ const DetailsCustomer = (props) => {
     };
 
     const options = {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
     };
     fetch(url, options)
       .then((res) => res.json())
       .then((data) => {
-        console.log("data return", data);
+        console.log('data return', data);
         if (data.success) {
           notification.success({
-            message: "Cập nhật khách hàng thành công!",
+            message: 'Cập nhật khách hàng thành công!',
           });
         } else {
           notification.error({
             message: data.message,
           });
-          console.log("error");
+          console.log('error');
         }
       })
       .catch((error) => {
@@ -756,46 +763,46 @@ const DetailsCustomer = (props) => {
   };
 
   const handleDeleteCustomer = () => {
-    console.log("delete");
+    console.log('delete');
     const url = `/api/v2/customers/delete/${id}`;
     const options = {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
     };
     fetch(url, options)
       .then((res) => res.json())
       .then((data) => {
-        console.log("data return", data);
+        console.log('data return', data);
         if (data.success) {
           notification.success({
-            message: "Xóa thành công!",
+            message: 'Xóa thành công!',
           });
-          window.location.href = "/customer/customer-list";
+          window.location.href = '/customer/customer-list';
         } else {
           notification.error({
             message: data.message,
           });
-          console.log("error");
+          console.log('error');
         }
       });
     // setIsShowModalNotice(true);
   };
 
-  const handleBlockUser = (checked, event) => {
+  const handleBlockUser = (checked: any, event: any) => {
     console.log(
-      "🚀 ~ file: DetailCustomer.tsx:536 ~ handleBlockUser ~ checked",
+      '🚀 ~ file: DetailCustomer.tsx:536 ~ handleBlockUser ~ checked',
       checked
     );
     if (!checked) {
       if (isBad) {
-        message.error("Bạn phải bỏ báo xấu trước khi bỏ chặn!");
+        message.error('Bạn phải bỏ báo xấu trước khi bỏ chặn!');
         return null;
       }
     }
     setIsShowModalConfirmBlock(true);
   };
 
-  const handleReportUser = (checked, event) => {
+  const handleReportUser = (checked: any, event: any) => {
     setIsShowModalConfirmReport(true);
   };
 
@@ -807,14 +814,14 @@ const DetailsCustomer = (props) => {
     };
 
     const options = {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
     };
     fetch(url, options)
       .then((res) => res.json())
       .then((data) => {
-        console.log("data return", data);
+        console.log('data return', data);
         setIsBlock(!isBlock);
       })
       .catch((error) => {
@@ -838,14 +845,14 @@ const DetailsCustomer = (props) => {
     }
 
     const options = {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
     };
     fetch(url, options)
       .then((res) => res.json())
       .then((data) => {
-        console.log("data return", data);
+        console.log('data return', data);
         setIsBad(!isBad);
       })
       .catch((error) => {
@@ -871,15 +878,15 @@ const DetailsCustomer = (props) => {
       const itemWard = wards.find((ward) => ward.id == data.ward_id);
       const fullAddress =
         data.address +
-        ", " +
+        ', ' +
         itemWard.prefix +
-        " " +
+        ' ' +
         itemWard.name +
-        ", " +
+        ', ' +
         itemDistrict.prefix +
-        " " +
+        ' ' +
         itemDistrict.name +
-        " " +
+        ' ' +
         itemProvince.name;
       setListAddress(
         listAddress.concat({
@@ -901,12 +908,12 @@ const DetailsCustomer = (props) => {
       setSelectedAddress({});
       setIsShowModalDeleteAddress(false);
       notification.success({
-        message: "Xóa địa chỉ thành công !",
+        message: 'Xóa địa chỉ thành công !',
       });
     }
   };
 
-  const updateAddress = async (data) => {
+  const updateAddress = async (data: any) => {
     const result = await CustomerApi.updateAddress(selectedAddress.id, data);
     if (result) {
       let newListAddress = listAddress;
@@ -922,15 +929,15 @@ const DetailsCustomer = (props) => {
       const itemWard = wards.find((ward) => ward.id == data.ward_id);
       const fullAddress =
         data.address +
-        ", " +
+        ', ' +
         itemWard.prefix +
-        " " +
+        ' ' +
         itemWard.name +
-        ", " +
+        ', ' +
         itemDistrict.prefix +
-        " " +
+        ' ' +
         itemDistrict.name +
-        " " +
+        ' ' +
         itemProvince.name;
       newListAddress[indexSelected] = {
         ...data,
@@ -941,26 +948,26 @@ const DetailsCustomer = (props) => {
       setSelectedAddress({});
       setIsShowEditAddress(false);
       notification.success({
-        message: "Cập nhật địa chỉ thành công!",
+        message: 'Cập nhật địa chỉ thành công!',
       });
     }
   };
 
-  const handleUploadImage = async (options) => {
+  const handleUploadImage = async (options: any) => {
     const { file } = options;
 
     try {
       const data = await ImageApi.upload(file);
       setAvatar(data.url);
     } catch (err) {
-      console.log("Error: ", err);
+      console.log('Error: ', err);
     }
   };
 
   return (
     <Form form={form} onFinish={handleSubmit} className="w-full">
       <div className="flex justify-between items-center mb-[32px]">
-        <TitlePage href="/customer/customer-list" title="Khách hàng" />
+        <TitlePage href="/customers" title="Khách hàng" />
         <div className="flex gap-[8px] flex-wrap">
           <Button
             variant="danger-outlined"
@@ -988,7 +995,7 @@ const DetailsCustomer = (props) => {
           <div className="flex flex-col flex-1">
             <div
               className={styles.table}
-              style={{ marginBottom: 0, height: "100%" }}
+              style={{ marginBottom: 0, height: '100%' }}
             >
               <div className={styles.row}>
                 <div className={styles.row_label}>Ảnh đại diện</div>
@@ -999,7 +1006,7 @@ const DetailsCustomer = (props) => {
                     showUploadList={false}
                     accept="image/*"
                     beforeUpload={(file) => {
-                      if (file.type.startsWith("image")) {
+                      if (file.type.startsWith('image')) {
                         return true;
                       }
 
@@ -1007,7 +1014,7 @@ const DetailsCustomer = (props) => {
                     }}
                   >
                     {avatar ? (
-                      <img
+                      <Image
                         src={avatar}
                         alt="avatar"
                         style={{
@@ -1017,7 +1024,15 @@ const DetailsCustomer = (props) => {
                         }}
                       />
                     ) : (
-                      <DefaultAvatar />
+                      // <DefaultAvatar />
+                      <div className='rounded-[50%] overflow-hidden'>
+                        <Image
+                          src={require('../../public/yellow-star.svg')}
+                          width={75}
+                          height={75}
+                          alt=""
+                        />
+                      </div>
                     )}
                   </Upload>
                 </div>
@@ -1032,7 +1047,7 @@ const DetailsCustomer = (props) => {
                   rules={[
                     {
                       required: true,
-                      message: "Họ và tên là bắt buộc!",
+                      message: 'Họ và tên là bắt buộc!',
                     },
                   ]}
                 >
@@ -1049,11 +1064,11 @@ const DetailsCustomer = (props) => {
                   rules={[
                     {
                       required: true,
-                      message: "Số điện thoại là bắt buộc!",
+                      message: 'Số điện thoại là bắt buộc!',
                     },
                     {
                       pattern: new RegExp(/^[0-9]+$/),
-                      message: "Số điện thoại không hợp lệ",
+                      message: 'Số điện thoại không hợp lệ',
                     },
                   ]}
                 >
@@ -1091,7 +1106,7 @@ const DetailsCustomer = (props) => {
                       pattern: new RegExp(
                         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
                       ),
-                      message: "Địa chỉ email không hợp lệ",
+                      message: 'Địa chỉ email không hợp lệ',
                     },
                   ]}
                 >
@@ -1103,32 +1118,32 @@ const DetailsCustomer = (props) => {
                 <Form.Item className="flex flex-1" name="source_id">
                   <Select
                     placeholder="Chọn nguồn"
-                    style={{ width: "100%" }}
+                    style={{ width: '100%' }}
                     options={listSource}
                   />
                 </Form.Item>
               </div>
-              <div className={classNames(styles.row, "mt-[24px]")}>
+              <div className={classNames(styles.row, 'mt-[24px]')}>
                 <div className={styles.row_label}>Người tạo</div>
                 <div className="flex flex-1 flex-row">
                   <div className="text-medium font-medium max-w-max mr-[5px]  ">
-                    {get(customer, "create_user.name")}
+                    {get(customer, 'create_user.name')}
                   </div>
                   <div className="text-medium font-normal">
-                    {get(customer, "created_at") && (
+                    {get(customer, 'created_at') && (
                       <div>
                         {format(
-                          new Date(get(customer, "created_at")),
-                          "dd/MM/yyyy"
+                          new Date(get(customer, 'created_at')),
+                          'dd/MM/yyyy'
                         )}
                         -
                         <span>
                           {format(
                             new Date(
-                              get(customer, "created_at") ||
-                                get(customer, "user.created_at")
+                              get(customer, 'created_at') ||
+                                get(customer, 'user.created_at')
                             ),
-                            "HH:mm"
+                            'HH:mm'
                           )}
                         </span>
                       </div>
@@ -1139,7 +1154,7 @@ const DetailsCustomer = (props) => {
               <div className={styles.row}>
                 <div
                   className={classNames(
-                    "text-[#4B4B59] font-semibold mb-[6px]",
+                    'text-[#4B4B59] font-semibold mb-[6px]',
                     styles.row_label
                   )}
                 >
@@ -1150,7 +1165,7 @@ const DetailsCustomer = (props) => {
                     options={listTag}
                     placeholder="Chọn loại khách hàng"
                     mode="multiple"
-                    style={{ width: "100%" }}
+                    style={{ width: '100%' }}
                     // tokenSeparators={[","]}
                   />
                 </Form.Item>
@@ -1161,14 +1176,14 @@ const DetailsCustomer = (props) => {
             <div className={styles.table}>
               <div
                 className="flex items-center justify-between pt-[17px] mb-[12px] mb-[31px]"
-                style={{ width: "85%" }}
+                style={{ width: '85%' }}
               >
                 <div className="text-medium font-medium">Cấp độ khách hàng</div>
                 <div className="text-medium font-semibold max-w-max text-[#EAB308]">
-                  {renderLevel(get(customer, "points"))}
+                  {renderLevel(get(customer, 'points'))}
                 </div>
                 <div className="text-medium font-semibold">
-                  ({get(customer, "points")} điểm)
+                  ({get(customer, 'points')} điểm)
                 </div>
               </div>
               <div className="mb-[21px]" style={{ height: 41 }}>
@@ -1181,7 +1196,7 @@ const DetailsCustomer = (props) => {
                   />
                   <div
                     className={classNames(
-                      "font-semibold text-[#0EA5E9]",
+                      'font-semibold text-[#0EA5E9]',
                       styles.new_level
                     )}
                   >
@@ -1189,7 +1204,7 @@ const DetailsCustomer = (props) => {
                   </div>
                   <div
                     className={classNames(
-                      "font-semibold text-[#F97316]",
+                      'font-semibold text-[#F97316]',
                       styles.brozen_level
                     )}
                   >
@@ -1197,7 +1212,7 @@ const DetailsCustomer = (props) => {
                   </div>
                   <div
                     className={classNames(
-                      "font-semibold text-[#909098]",
+                      'font-semibold text-[#909098]',
                       styles.silver_level
                     )}
                   >
@@ -1205,7 +1220,7 @@ const DetailsCustomer = (props) => {
                   </div>
                   <div
                     className={classNames(
-                      "font-semibold text-[#EAB308]",
+                      'font-semibold text-[#EAB308]',
                       styles.gold_level
                     )}
                   >
@@ -1213,7 +1228,7 @@ const DetailsCustomer = (props) => {
                   </div>
                   <div
                     className={classNames(
-                      "font-semibold text-[#8B5CF6]",
+                      'font-semibold text-[#8B5CF6]',
                       styles.diomand_level
                     )}
                   >
@@ -1221,7 +1236,7 @@ const DetailsCustomer = (props) => {
                   </div>
                   <div
                     className={classNames(
-                      "font-semibold text-[#5B6B95]",
+                      'font-semibold text-[#5B6B95]',
                       styles.platinum_level
                     )}
                   >
@@ -1232,7 +1247,7 @@ const DetailsCustomer = (props) => {
                       styles.new_level,
                       styles.dots,
                       styles.new_level,
-                      get(customer, "points")
+                      get(customer, 'points')
                         ? styles.active
                         : styles.none_active
                     )}
@@ -1241,7 +1256,7 @@ const DetailsCustomer = (props) => {
                     className={classNames(
                       styles.brozen_level,
                       styles.dots,
-                      get(customer, "points") > 0
+                      get(customer, 'points') > 0
                         ? styles.active
                         : styles.none_active
                     )}
@@ -1250,7 +1265,7 @@ const DetailsCustomer = (props) => {
                     className={classNames(
                       styles.silver_level,
                       styles.dots,
-                      get(customer, "points") > 100
+                      get(customer, 'points') > 100
                         ? styles.active
                         : styles.none_active
                     )}
@@ -1259,7 +1274,7 @@ const DetailsCustomer = (props) => {
                     className={classNames(
                       styles.gold_level,
                       styles.dots,
-                      get(customer, "points") > 500
+                      get(customer, 'points') > 500
                         ? styles.active
                         : styles.none_active
                     )}
@@ -1268,7 +1283,7 @@ const DetailsCustomer = (props) => {
                     className={classNames(
                       styles.diomand_level,
                       styles.dots,
-                      get(customer, "points") > 1000
+                      get(customer, 'points') > 1000
                         ? styles.active
                         : styles.none_active
                     )}
@@ -1277,7 +1292,7 @@ const DetailsCustomer = (props) => {
                     className={classNames(
                       styles.platinum_level,
                       styles.dots,
-                      get(customer, "points") > 2000
+                      get(customer, 'points') > 2000
                         ? styles.active
                         : styles.none_active
                     )}
@@ -1300,41 +1315,41 @@ const DetailsCustomer = (props) => {
               </div>
               <div className="flex flex-row justify-between mb-[20px]">
                 <div className="flex flex-row items-center gap-[8px]">
-                  <div className={classNames(styles.block, "bg-[#6366F1]")} />
+                  <div className={classNames(styles.block, 'bg-[#6366F1]')} />
                   <div>
-                    Đã in{" "}
+                    Đã in{' '}
                     <span className="text-[#6366F1] font-semibold">
-                      {" "}
+                      {' '}
                       {order.PRINTED}
                     </span>
                   </div>
                 </div>
                 <div className="flex flex-row items-center gap-[8px]">
-                  <div className={classNames(styles.block, "bg-[#10B981]")} />
+                  <div className={classNames(styles.block, 'bg-[#10B981]')} />
                   <div>
-                    Đã nhận{" "}
+                    Đã nhận{' '}
                     <span className="text-[#10B981] font-semibold">
-                      {" "}
+                      {' '}
                       {order.SUCCESSRECEIVE}
                     </span>
                   </div>
                 </div>
                 <div className="flex flex-row items-center gap-[8px]">
-                  <div className={classNames(styles.block, "bg-[#F97316]")} />
+                  <div className={classNames(styles.block, 'bg-[#F97316]')} />
                   <div>
-                    Đã hoàn{" "}
+                    Đã hoàn{' '}
                     <span className="text-[#F97316] font-semibold">
-                      {" "}
+                      {' '}
                       {order.RETURNAPARTIAL}
                     </span>
                   </div>
                 </div>
                 <div className="flex flex-row items-center gap-[8px]">
-                  <div className={classNames(styles.block, "bg-[#EAB308]")} />
+                  <div className={classNames(styles.block, 'bg-[#EAB308]')} />
                   <div>
-                    Hoàn 1 phần{" "}
+                    Hoàn 1 phần{' '}
                     <span className="text-[#EAB308] font-semibold">
-                      {" "}
+                      {' '}
                       {order.RETURN}
                     </span>
                   </div>
@@ -1348,11 +1363,11 @@ const DetailsCustomer = (props) => {
                 <div className={styles.row_left_table}>Tiền nợ khách</div>
                 <div className="w-1/2">
                   <div className="font-semibold">
-                    0 đ{" "}
+                    0 đ{' '}
                     <span
                       className="ml-[8px] cursor-pointer text-medium font-medium text-[#384ADC]"
                       onClick={() =>
-                        (window.location.href = "/debts/Modall/ModalDebtDetail")
+                        (window.location.href = '/debts/Modall/ModalDebtDetail')
                       }
                     >
                       Xem chi tiết
@@ -1362,13 +1377,13 @@ const DetailsCustomer = (props) => {
               </div>
             </div>
             <div
-              className={classNames(styles.table, "flex flex-row gap-[12px]")}
+              className={classNames(styles.table, 'flex flex-row gap-[12px]')}
             >
               <div className="w-1/2">
                 <div className="flex justify-between items-center mb-[12px]">
                   <div
                     className="text-medium font-medium "
-                    style={{ width: "80%", maxWidth: 243, height: 30 }}
+                    style={{ width: '80%', maxWidth: 243, height: 30 }}
                   >
                     {!isBlock ? (
                       <span>Chặn khách hàng này?</span>
@@ -1387,19 +1402,20 @@ const DetailsCustomer = (props) => {
                     }
                   />
                 </div>
-                <TextArea
+                {/*bughere*/}
+                {/* <TextArea
                   rows={4}
                   value={note}
                   onChange={(e: any) => setNote(e.target.value)}
                 >
                   Nhập ghi chú
-                </TextArea>
+                </TextArea> */}
               </div>
               <div className="w-1/2">
                 <div className="flex justify-between items-center mb-[12px]">
                   <div
                     className="text-medium font-medium"
-                    style={{ height: 30, width: "70%", maxWidth: 170 }}
+                    style={{ height: 30, width: '70%', maxWidth: 170 }}
                   >
                     {!isBad ? (
                       <span>Báo xấu khách hàng này?</span>
@@ -1417,13 +1433,14 @@ const DetailsCustomer = (props) => {
                     }
                   />
                 </div>
-                <TextArea
+                {/*bughere*/}
+                {/* <TextArea
                   rows={4}
                   value={noteBad}
                   onChange={(e: any) => setNoteBad(e.target.value)}
                 >
                   Nhập ghi chú
-                </TextArea>
+                </TextArea> */}
               </div>
             </div>
           </div>
@@ -1466,8 +1483,8 @@ const DetailsCustomer = (props) => {
                           className="detail-customer"
                           trigger="click"
                           overlayStyle={{
-                            width: "160px",
-                            padding: "0px",
+                            width: '160px',
+                            padding: '0px',
                           }}
                           open={idAddressSelect == item.id}
                         >
@@ -1504,24 +1521,24 @@ const DetailsCustomer = (props) => {
                 showSizeChanger: true,
                 pageSizeOptions: [10],
               }}
-              loading={loading}
+              // loading={loading}
               onRow={(record) => {
                 return {
                   onClick: () => {
                     if (record.order_type === 1) {
                       window.open(
                         `/order-management/edit/order-online/${record.id}`,
-                        "_blank"
+                        '_blank'
                       );
                     } else if (record.order_type === 2) {
                       window.open(
                         `/order-management/edit/order-offline/${record.id}`,
-                        "_blank"
+                        '_blank'
                       );
                     } else if (record.order_type === 3) {
                       window.open(
                         `/order-management/edit/order-in-app/${record.id}`,
-                        "_blank"
+                        '_blank'
                       );
                     }
                   },
@@ -1620,12 +1637,12 @@ const DetailsCustomer = (props) => {
         isVisible={isShowModalDeleteReview}
       />
       <ModalConfirm
-        titleConfirm={isBlock ? "Bỏ chặn" : "Chặn"}
-        titleBody={isBlock ? "Bỏ chặn khách hàng?" : "Chặn khách hàng?"}
+        titleConfirm={isBlock ? 'Bỏ chặn' : 'Chặn'}
+        titleBody={isBlock ? 'Bỏ chặn khách hàng?' : 'Chặn khách hàng?'}
         content={
           <div>
             <div className="text-center mb-[12px]">
-              Bạn có chắc chắn muốn {isBlock ? "bỏ chặn" : "chặn"} khách hàng
+              Bạn có chắc chắn muốn {isBlock ? 'bỏ chặn' : 'chặn'} khách hàng
               này không?
             </div>
             <TextArea
@@ -1642,12 +1659,12 @@ const DetailsCustomer = (props) => {
         isVisible={isShowModalConfirmBlock}
       />
       <ModalConfirm
-        titleConfirm={isBad ? "Bỏ báo xấu" : "Báo xấu"}
-        titleBody={isBad ? "Bỏ báo xấu khách hàng?" : "Báo xấu khách hàng?"}
+        titleConfirm={isBad ? 'Bỏ báo xấu' : 'Báo xấu'}
+        titleBody={isBad ? 'Bỏ báo xấu khách hàng?' : 'Báo xấu khách hàng?'}
         content={
           <div>
             <div className="text-center mb-[12px]">
-              Bạn có chắc chắn muốn {isBad ? "bỏ báo xấu" : "báo xấu"} khách
+              Bạn có chắc chắn muốn {isBad ? 'bỏ báo xấu' : 'báo xấu'} khách
               hàng này không?
             </div>
             <TextArea
@@ -1667,4 +1684,4 @@ const DetailsCustomer = (props) => {
   );
 };
 
-ReactDOM.render(<DetailsCustomer />, document.getElementById("root"));
+export default DetailsCustomer;
