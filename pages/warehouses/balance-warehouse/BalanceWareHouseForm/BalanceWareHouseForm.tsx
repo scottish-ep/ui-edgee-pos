@@ -11,6 +11,7 @@ import Input from '../../../../components/Input/Input';
 import Select from '../../../../components/Select/Select';
 import TextArea from '../../../../components/TextArea';
 import TitlePage from '../../../../components/TitlePage/Titlepage';
+import { itemSkuList } from '../../../../const/constant';
 import {
   warehouseBalanceStatusOption,
   warehouses,
@@ -82,7 +83,7 @@ const BalanceForm: React.FC<BalanceFormProps> = ({ detail, listItemSku }) => {
 
   const warehouseSelectObj = [
     {
-      id: "1",
+      id: '1',
       name: 'Kho Mai Linh',
       phone_number: '0855555555',
       address: '1A Mai Linh',
@@ -108,8 +109,8 @@ const BalanceForm: React.FC<BalanceFormProps> = ({ detail, listItemSku }) => {
         name: 'Phu Nhuan',
         prefix: {},
       },
-    }
-  ]
+    },
+  ];
 
   useEffect(() => {
     if (warehouseId) {
@@ -117,11 +118,10 @@ const BalanceForm: React.FC<BalanceFormProps> = ({ detail, listItemSku }) => {
       //   warehouseManagement.find((v) => v.id === warehouseId)
       // );
     }
-    setWarehouseSelected(warehouseSelectObj)
+    setWarehouseSelected(warehouseSelectObj);
     // getListItemInWarehouseItem();
   }, [warehouseId]);
 
-  
   const getListWarehouse = async () => {
     const result = await WarehouseApi.getWarehouse();
     const listWarehouse = result.map((item: any) => ({
@@ -166,7 +166,7 @@ const BalanceForm: React.FC<BalanceFormProps> = ({ detail, listItemSku }) => {
       id: '123',
     },
   ];
-  console.log(warehouseSelected)
+  console.log(warehouseSelected);
 
   const handleSubmit = async (data: any) => {
     setLoading(true);
@@ -213,28 +213,28 @@ const BalanceForm: React.FC<BalanceFormProps> = ({ detail, listItemSku }) => {
       setLoading(false);
     }
   };
-  
+
   // Hanle Item sku
   const itemSkuInWarehouseList = [
     {
-      label: "555501 | Áo thun basic cotton - Trắng - S",
-      value: "555501 Áo thun basic cotton - Trắng - S",
+      label: '555501 | Áo thun basic cotton - Trắng - S',
+      value: '555501 Áo thun basic cotton - Trắng - S',
       difference: 0,
-      actual_remain: 0
+      actual_remain: 0,
     },
     {
-      label: "555501 | Áo thun basic cotton - Trắng - S",
-      value: "555501 Áo thun basic cotton - Trắng - S",
+      label: '555501 | Áo thun basic cotton - Trắng - S',
+      value: '555501 Áo thun basic cotton - Trắng - S',
       difference: 0,
-      actual_remain: 0
+      actual_remain: 0,
     },
     {
-      label: "555501 | Áo thun basic cotton - Trắng - S",
-      value: "555501 Áo thun basic cotton - Trắng - S",
+      label: '555501 | Áo thun basic cotton - Trắng - S',
+      value: '555501 Áo thun basic cotton - Trắng - S',
       difference: 0,
-      actual_remain: 0
+      actual_remain: 0,
     },
-  ]
+  ];
 
   // const getListItemInWarehouseItem = async () => {
   //   setLoading(true);
@@ -254,7 +254,6 @@ const BalanceForm: React.FC<BalanceFormProps> = ({ detail, listItemSku }) => {
   //   }
   //   setLoading(false);
   // };
-
 
   // setListItemSkuInWarehouse(itemSkuInWarehouseList);
 
@@ -293,38 +292,6 @@ const BalanceForm: React.FC<BalanceFormProps> = ({ detail, listItemSku }) => {
     };
     setItemSkus(itemSkus.concat(newItem));
   };
-
-  const itemSkuList: IProduct[] = [
-    {
-      actual_remain: 10,
-      is_show: true,
-      id: 10 ,
-      name:"t-shirt",
-      category_id:"12",
-      export_price: 10,
-      import_price: 10,
-      export_quantity: 10,
-      import_quantity: 10,
-      export_weight: 10,
-      import_weight: 10,
-      money: 10,
-      number_package: 10,
-      unit_package: 10,
-      total_money: 10,
-      quantity_transfer: 10,
-      weight_transfer: 10,
-      quantity_can_transfer: 10,
-      weight_can_transfer: 10,
-      quantity: 10,
-      weight: 10,
-      is_minus_sell: true,
-      price: 10,
-      discount: 10,
-      price_online: 10,
-      price_offline: 10,
-      price_in_app: 10,
-    }
-  ]
 
   return (
     <Form form={form} onFinish={handleSubmit} className="w-full">
@@ -434,7 +401,8 @@ const BalanceForm: React.FC<BalanceFormProps> = ({ detail, listItemSku }) => {
                 </span>
               </div>
               <p className="text-[#4B4B59] text-medium">
-              Số nhà 40, đường Phạm Quang Lịch, tổ 21, phường Tiền Phong, thành phố Thái Bình, Thái Bình
+                Số nhà 40, đường Phạm Quang Lịch, tổ 21, phường Tiền Phong,
+                thành phố Thái Bình, Thái Bình
                 {warehouseSelected?.address}{' '}
                 {warehouseSelected?.ward_info ? ', ' : ''}
                 {warehouseSelected?.ward_info?.prefix}{' '}

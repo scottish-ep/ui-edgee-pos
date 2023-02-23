@@ -158,6 +158,27 @@ const WareHouseManagementList: React.FC = () => {
       });
   };
 
+  const data: IWareHouseManagement[] = Array(50)
+  .fill({
+    name: "Kho Mai Linh",
+    phone_number: "08546464661",
+    ward_info: {
+      prefix: "123",
+      name: "Phuong 11"
+    },
+    district_info: {
+      prefix: "123",
+      name: "Quan 11"
+    },
+    province_info: {
+      prefix: "123",
+      name: "HCM"
+    },
+    description: "khong co",
+    updated_at: Date.now(),
+
+  })
+
   const columns: ColumnsType<IWareHouseManagement> = [
     {
       title: "Tên kho",
@@ -300,9 +321,10 @@ const WareHouseManagementList: React.FC = () => {
         locale={{
           emptyText: <TableEmpty />,
         }}
-        loading={loading}
+        // loading={loading}
         columns={columns}
-        dataSource={[...warehouseManagement]}
+        // dataSource={[...warehouseManagement]}
+        dataSource={data}
         pagination={false}
         scroll={{ x: 50 }}
       />
@@ -332,5 +354,4 @@ const WareHouseManagementList: React.FC = () => {
     </div>
   );
 };
-
-ReactDOM.render(<WareHouseManagementList />, document.getElementById("root"));
+export default WareHouseManagementList;

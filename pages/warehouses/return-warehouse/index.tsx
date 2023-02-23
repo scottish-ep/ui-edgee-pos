@@ -284,7 +284,7 @@ const ReturnWareHouseList = () => {
         onRow={() => {
           return {
             onClick: () => {
-              window.location.href = "/warehouse/return-commands/update/1";
+              window.location.href = "/warehouses/return-warehouse/1";
             },
           };
         }}
@@ -320,4 +320,4 @@ const ReturnWareHouseList = () => {
   );
 };
 
-ReactDOM.render(<ReturnWareHouseList />, document.getElementById("root"));
+export default ReturnWareHouseList;

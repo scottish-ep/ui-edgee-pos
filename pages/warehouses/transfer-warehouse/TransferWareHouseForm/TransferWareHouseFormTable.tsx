@@ -44,7 +44,7 @@ const TransferWareHouseFormTable: React.FC<TransferWareHouseFormTableProps> = ({
         <span className="text-medium font-medium text-[#1D1C2D]">
           {get(record, "item.name")}
           {isArray(get(record, "item_attribute_values")) &&
-            get(record, "item_attribute_values").map((item) => {
+            get(record, "item_attribute_values").map((item: any) => {
               return (
                 <span
                   className="text-medium font-medium text-[#1D1C2D]"
