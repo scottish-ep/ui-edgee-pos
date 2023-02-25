@@ -1,35 +1,48 @@
+import { useEffect, useState } from 'react';
+// Import Assets
 import { Table } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { useState } from 'react';
 // import get from "lodash/get";
+
+// Import Components
 import Image from 'next/image';
 import Button from '../../../components/Button/Button';
 import Icon from '../../../components/Icon/Icon';
 import TitlePage from '../../../components/TitlePage/Titlepage';
 import ModalConfirm from 'components/Modal/ModalConfirm/ModalConfirm';
+
+// Import service
+import ItemCategoryApi from '../../../services/item-categories';
+
+// Add interface
 import { IsProduct } from '../product.type';
+// Add modal
 import ModalUpdateCat from '../Modal/ModalUpdateCat';
+import { da } from 'date-fns/locale';
+import { error } from 'console';
+
+
+
+const pageTitle = 'Danh mục sản phẩm';
+const perPage = 10;
 
 const ProductCategory = (props: any) => {
+
+  // States
   const [loading, setLoading] = useState(false);
-  const [type, setType] = useState(false);
+  const [isUpdate, setIsUpdate] = useState(false);
   const [isShowModalConfirm, setIsShowModalConfirm] = useState(false)
   const [selectedRowKeys, setSelectedRowKeys] = useState<any[]>([]);
   const [isShowModalUpdateCat, setIsShowModalUpdateCat] = useState(false);
 
-  const onSelectChange = (newSelectedRowKeys: any[]) => {
-    setSelectedRowKeys(newSelectedRowKeys);
-  };
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalRecords, setTotalRecords] = useState(0);
+  const totalPages = Math.ceil(totalRecords / perPage);
 
-  // const headers = [
-  //   { label: '#', key: '#' },
-  //   { label: 'Ảnh', key: 'image' },
-  //   { label: 'Tên danh mục', key: 'portfolio' },
-  //   { label: 'Thao tác', key: 'action' },
-  // ];
-  const handleConfirmDelete = async () => {
-    setIsShowModalUpdateCat(false);
-  };
+  // Data 
+  const [itemCategories, setItemCategories] = useState([]);
+
   const items: IsProduct[] = [
     { order_id: 1, img: require('../../../public/clothes.svg'), name: 'Áo' },
     { order_id: 1, img: require('../../../public/clothes.svg'), name: 'Áo' },
@@ -46,7 +59,7 @@ const ProductCategory = (props: any) => {
       fixed: 'left',
       align: 'center',
       render: (_, record: any) => {
-        return <div>{record.order_id}</div>;
+        return <div>{record.id}</div>;
       },
     },
     {
@@ -57,7 +70,7 @@ const ProductCategory = (props: any) => {
       render: (_, record: any) => {
         return (
           <div className="w-[72px] h-[72px] relative rounded-[50%] m-auto">
-            <Image src={record.img} fill alt="" />
+            <Image src={record.image} fill alt="" />
           </div>
         );
       },
@@ -85,7 +98,7 @@ const ProductCategory = (props: any) => {
       render: (_, record: any) => {
         return (
           <div className="flex w-full justify-between">
-            <div  onClick={() => {setIsShowModalUpdateCat(true); setType(true)}}>
+            <div  onClick={() => {setIsShowModalUpdateCat(true); setIsUpdate(true)}}>
               <Icon icon="edit-2" size={24} />
             </div>
             <div onClick={() => setIsShowModalConfirm(true)}>
@@ -96,6 +109,61 @@ const ProductCategory = (props: any) => {
       },
     },
   ];
+
+  // Functions
+  const onSelectChange = (newSelectedRowKeys: any[]) => {
+    setSelectedRowKeys(newSelectedRowKeys);
+  };
+
+  const handleCreateUpdateCategory = () => {
+    console.log(1);
+    const category: IsProduct = {
+      name: '',
+      image: ''
+    }
+    if(isUpdate) {
+      const categoryId = '';
+
+    }
+    else {
+      
+    }
+
+
+
+    setIsShowModalUpdateCat(false);
+  };
+
+  const handleConfirmDelete = async () => {
+    console.log(2);
+    
+    setIsShowModalUpdateCat(false);
+  };
+
+  const fetchingData = () => {
+    const dataParams = {
+      limit: perPage,
+      offset: currentPage - 1
+    };
+    
+    const res = ItemCategoryApi.getItemCategory(dataParams).then(data => {
+      // console.log(data);
+      setItemCategories(data?.data);
+    });
+  };
+
+
+  useEffect(() => {
+    document.title = pageTitle;
+  }, []);
+
+  useEffect(() => {
+    fetchingData();
+  }, []);
+
+  useEffect(() => {
+      fetchingData();
+  }, [currentPage]);
 
   return (
     <div className="w-full">
@@ -114,7 +182,7 @@ const ProductCategory = (props: any) => {
             width={151}
             color="white"
             suffixIcon={<Icon icon="add-1" size={24} color="white" />}
-            onClick={() => {setIsShowModalUpdateCat(true); setType(false)}}
+            onClick={() => {setIsShowModalUpdateCat(true); setIsUpdate(false)}}
           >
             Thêm mới
           </Button>
@@ -139,13 +207,13 @@ const ProductCategory = (props: any) => {
             loading={loading}
             columns={columns}
             className="w-full"
-            dataSource={items}
+            dataSource={itemCategories}
           />
         </div>
       </div>
       <ModalUpdateCat
-        detail = {type}
-        onOpen={handleConfirmDelete}
+        detail = {isUpdate}
+        onOpen={handleCreateUpdateCategory}
         onClose={() => setIsShowModalUpdateCat(false)}
         isVisible={isShowModalUpdateCat}
       />

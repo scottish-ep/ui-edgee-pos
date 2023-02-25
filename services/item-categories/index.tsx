@@ -5,9 +5,8 @@ const getItemCategory = async (dataParams?: any) => {
   const query = qs.stringify(dataParams, {
     encodeValuesOnly: true, // prettify url
   });
-  const url = `/api/v2/item-categories/list?${query}`;
+  const url = `/api/v1/item-categories?${query}`;
   const { data } = await Api.get(url);
-
   if (data.success) return data.data;
   else return [];
 };
