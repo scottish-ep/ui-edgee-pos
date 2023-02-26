@@ -3,6 +3,8 @@ import Modal from 'components/Modal/Modal/Modal';
 import Select from 'components/Select/Select';
 import Button from 'components/Button/Button';
 import { orderStatus } from 'const/constant';
+import { Form } from 'antd';
+import styles from '../../../styles/ModalConfig.module.css';
 interface ModalConfigProps {
   detail?: boolean;
   isVisible: boolean;
@@ -29,6 +31,8 @@ const ModalConfig = (props: ModalConfigProps) => {
     id,
     data,
   } = props;
+
+  const [form] = Form.useForm();
 
   const statusCountOrderList = [
     {
@@ -67,28 +71,9 @@ const ModalConfig = (props: ModalConfigProps) => {
     },
   ];
 
-  const [statusCountOrder, setStatusCountOrder] = useState(
-    statusCountOrderList[0].value
-  );
-  const [roleApplyRevenue, setRoleApplyRevenue] = useState(
-    roleApplyRevenueList[0].value
-  );
-  const [statusCountRevenue, setStatusCountRevenue] = useState([
-    statusCountRevenueList[0].value,
-  ]);
-  const [statusLockRevenue, setStatusLockRevenue] = useState(
-    orderStatus[0].value
-  );
-
-  const saveData = {
-    status_count_order: statusCountOrder,
-    role_apply_revenue: roleApplyRevenue,
-    status_count_revenue: statusCountRevenue,
-    status_lock_revenue: statusLockRevenue,
-  };
-
-  const handleChangeValue = (label: string, value: string) => {
-    setStatusCountRevenue({ ...statusCountRevenue, [label]: value });
+  const handleSubmit = (value: any) => {
+    onOpen && onOpen(value);
+    form.resetFields();
   };
 
   const Footer = () => (
@@ -98,7 +83,9 @@ const ModalConfig = (props: ModalConfigProps) => {
         variant="secondary"
         text="LƯU (F12)"
         width="48%"
-        onClick={() => console.log('saveData', saveData)}
+        onClick={() => {
+          form.submit();
+        }}
       />
     </div>
   );
@@ -115,76 +102,114 @@ const ModalConfig = (props: ModalConfigProps) => {
       footer={<Footer />}
       className="px-[16px] py-[12px]"
     >
-      <div className="mb-[24px] flex justify-start flex-col">
-        <div className="flex flex-col w-[100%]">
-          <div className="flex justify-between items-center mb-[24px] w-[100%]">
-            <div className=" items-center flex justify-between w-max gap-[10px]">
-              <span className="rounded-[50%] bg-[#384ADC] w-[8px] h-[8px]"></span>
-              <div className="text-[#2E2D3D] font-medium text-sm">
-                Thời điểm tính đơn chốt:{' '}
+      <Form onFinish={handleSubmit} form={form} initialValues={data}>
+        <div className="mb-[24px] flex justify-start flex-col">
+          <div className="flex flex-col w-[100%]">
+            <div className={styles.row_wrapper}>
+              <div className={styles.row}>
+                <span className={styles.dot}></span>
+                <div className="text-[#2E2D3D] font-medium text-sm">
+                  Thời điểm tính đơn chốt:{' '}
+                </div>
               </div>
+              <Form.Item
+                name="status_count_order"
+                rules={[
+                  {
+                    required: false,
+                    message: 'Không được để trống',
+                  },
+                ]}
+              >
+                <Select
+                  width={248}
+                  showArrow
+                  // disabled={true}
+                  defaultValue={statusCountOrderList[0]}
+                  options={statusCountOrderList}
+                />
+              </Form.Item>
             </div>
-            <Select
-              width={248}
-              showArrow
-              // disabled={true}
-              defaultValue={statusCountOrderList[0]}
-              options={statusCountOrderList}
-              onChange={(e: any) => setStatusCountOrder(e)}
-            />
-          </div>
-          <div className="flex justify-between items-center mb-[24px] w-[100%]">
-            <div className=" items-center flex justify-between w-max gap-[10px]">
-              <span className="rounded-[50%] bg-[#384ADC] w-[8px] h-[8px]"></span>
-              <div className="text-[#2E2D3D] font-medium text-sm">
-                Doanh thu + doanh số được chốt cho:{' '}
+            <div className={styles.row_wrapper}>
+              <div className={styles.row}>
+                <span className={styles.dot}></span>
+                <div className="text-[#2E2D3D] font-medium text-sm">
+                  Doanh thu + doanh số được chốt cho:{' '}
+                </div>
               </div>
+              <Form.Item
+                name="role_apply_revenue"
+                rules={[
+                  {
+                    required: false,
+                    message: 'Không được để trống',
+                  },
+                ]}
+              >
+                <Select
+                  width={248}
+                  showArrow
+                  disabled={true}
+                  defaultValue={roleApplyRevenueList[0]}
+                  options={roleApplyRevenueList}
+                />
+              </Form.Item>
             </div>
-            <Select
-              width={248}
-              showArrow
-              disabled={true}
-              defaultValue={roleApplyRevenueList[0]}
-              options={roleApplyRevenueList}
-              onChange={(e: any) => setRoleApplyRevenue(e)}
-            />
-          </div>
-          <div className="flex justify-between items-center mb-[24px] w-[100%]">
-            <div className=" items-center flex justify-between w-max gap-[10px]">
-              <span className="rounded-[50%] bg-[#384ADC] w-[8px] h-[8px]"></span>
-              <div className="text-[#2E2D3D] font-medium text-sm">
-                Thời điểm tính doanh thu + doanh số :{' '}
+            <div className={styles.row_wrapper}>
+              <div className={styles.row}>
+                <span className={styles.dot}></span>
+                <div className="text-[#2E2D3D] font-medium text-sm">
+                  Thời điểm tính doanh thu + doanh số :{' '}
+                </div>
               </div>
+              <Form.Item
+                name="status_count_revenue"
+                rules={[
+                  {
+                    required: false,
+                    message: 'Không được để trống',
+                  },
+                ]}
+              >
+                <Select
+                  width={248}
+                  showArrow
+                  // disabled={true}
+                  mode="multiple"
+                  maxTagCount="responsive"
+                  defaultValue={statusCountRevenueList[0]}
+                  options={statusCountRevenueList}
+                />
+              </Form.Item>
             </div>
-            <Select
-              width={248}
-              showArrow
-              // disabled={true}
-              mode="multiple"
-              maxTagCount="responsive"
-              defaultValue={statusCountRevenueList[0]}
-              options={statusCountRevenueList}
-              onChange={(e) => handleChangeValue('status_count_revenue', e)}
-            />
-          </div>
-          <div className="flex justify-between items-center mb-[24px] w-[100%]">
-            <div className=" items-center flex justify-between w-max gap-[10px]">
-              <span className="rounded-[50%] bg-[#384ADC] w-[8px] h-[8px]"></span>
-              <div className="text-[#2E2D3D] font-medium text-sm">
-                Thời điểm chốt doanh thu + doanh số :{' '}
+            <div className={styles.row_wrapper}>
+              <div className={styles.row}>
+                <span className={styles.dot}></span>
+                <div className="text-[#2E2D3D] font-medium text-sm">
+                  Thời điểm chốt doanh thu + doanh số :{' '}
+                </div>
               </div>
+              <Form.Item
+                name="order_status"
+                rules={[
+                  {
+                    required: false,
+                    message: 'Không được để trống',
+                  },
+                ]}
+              >
+                <Select
+                  width={248}
+                  showArrow
+                  // disabled={true}
+                  defaultValue={orderStatus[0]}
+                  options={orderStatus}
+                />
+              </Form.Item>
             </div>
-            <Select
-              width={248}
-              showArrow
-              // disabled={true}
-              defaultValue={orderStatus[0]}
-              options={orderStatus}
-              onChange={(e: any) => setStatusLockRevenue(e)}
-            />
           </div>
         </div>
-      </div>
+      </Form>
     </Modal>
   );
 };
