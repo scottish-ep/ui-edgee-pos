@@ -122,6 +122,8 @@ const DetailsCustomer = (props: DataType) => {
       id: number | string;
     }[]
   >([]);
+
+
   const [listOrder, setListOrder] = useState<any[]>([]);
   const [customer, setCustomer] = useState<any>();
   const [listAddress, setListAddress] = useState<any[]>([]);
@@ -388,7 +390,80 @@ const DetailsCustomer = (props: DataType) => {
       .then((res) => res.json())
       .then((res) => {
         let result = formatCustomer(res.data);
+        let resultfake = {
+          id: 3,
+          name: 'thuhoai884@gmail.com',
+          phone_number: null,
+          email: 'thuhoai884@gmail.com',
+          sex: null,
+          status_tag: null,
+          type_id: null,
+          note: null,
+          class_id: null,
+          address: null,
+          ward_id: null,
+          created_at: '2022-10-19T07:59:05.000000Z',
+          updated_at: '2022-11-09T04:44:17.000000Z',
+          city_id: null,
+          district_id: null,
+          avatar: null,
+          facebook_user_id: null,
+          customer_level_id: 1,
+          birthday: '1970-01-01',
+          users_id: 4,
+          is_taken_by: 467,
+          source_id: null,
+          age_id: null,
+          age: null,
+          company_id: 1,
+          points: '0',
+          deleted_at: null,
+          is_block: 0,
+          note_block: null,
+          is_bad: false,
+          note_bad: null,
+          customer_tag_id: null,
+          customer_id: null,
+          is_in_app: true,
+          percent_return: '0',
+          create_user: null,
+          user: {
+            id: 4,
+            name: 'thuhoai884@gmail.com',
+            email: 'thuhoai884@gmail.com',
+            verified_at: null,
+            created_at: '2022-10-19T07:59:05.000000Z',
+            updated_at: '2022-10-19T07:59:05.000000Z',
+            avatar: null,
+            otp: 223153,
+            phone: '',
+            customer_id: 3,
+            deleted_at: null,
+            role_id: null,
+            warehouse_ids: null,
+            staff_group_id: 1,
+            staff_code: null,
+            birthday: null,
+            sex: null,
+            address: null,
+            is_blocked: false,
+          },
+          customer_level: {
+            id: 1,
+            name: 'Khách hàng mới',
+            note: 'User mới tạo account trên App và chưa có lịch sử mua hàng',
+            created_at: '2022-08-12T03:00:03.000000Z',
+            updated_at: '2022-08-12T03:00:06.000000Z',
+            icon: 'https://bach-hoa-viet.s3.ap-southeast-1.amazonaws.com/j5RCp7SPGi0OqSF7yHuC5znbV5wG9J10d9rdP36a.svg',
+            company_id: 1,
+            from: '0',
+            to: '0',
+            color: '#384ADC',
+          },
+          customer_tag_relations: [],
+        };
         setCustomer(result);
+        setCustomer(1000);
         setAvatar(result.avatar);
         setIsBlock(result.is_block || false);
         setIsBad(result.is_bad || false);
@@ -449,7 +524,16 @@ const DetailsCustomer = (props: DataType) => {
       return '';
     }
   };
-
+  const columnsData: DataType[] = Array(4).fill({
+    order_id: 1,
+    created_at: Date.now(),
+    total_cost: 10000,
+    order_item_sku: [],
+    order_status: {
+      is_online: true,
+      name: "Test"
+    },
+  });
   const columns: ColumnsType<DataType> = [
     {
       title: 'Mã đơn hàng',
@@ -590,6 +674,19 @@ const DetailsCustomer = (props: DataType) => {
       </div>
     </div>
   );
+
+  const fakeReview = Array(3).fill({
+    created_at: Date.now(),
+    name: 'Test',
+    star: 1,
+    images: [
+      {
+        item: require('../../public/yellow-star.svg'),
+      },
+    ],
+    is_show: 0,
+    id: 1,
+  });
 
   const reviewColumns: ColumnsType<any> = [
     {
@@ -953,6 +1050,26 @@ const DetailsCustomer = (props: DataType) => {
     }
   };
 
+  const data = {
+    name: 'tran Huyen',
+    phone_number: "0854634162",
+    email: "tran@gmail.com",
+    date: "",
+    sex: "Nam",
+    list: [
+     {
+      label: "Test 1",
+      value: "test-1",
+      id: "1"
+     },
+     {
+      label: "test 2",
+      value: "test2",
+      id: "2"
+     }
+    ]
+  };
+
   const handleUploadImage = async (options: any) => {
     const { file } = options;
 
@@ -965,7 +1082,12 @@ const DetailsCustomer = (props: DataType) => {
   };
 
   return (
-    <Form form={form} onFinish={handleSubmit} className="w-full">
+    <Form
+      form={form}
+      onFinish={handleSubmit}
+      initialValues={data}
+      className="w-full"
+    >
       <div className="flex justify-between items-center mb-[32px]">
         <TitlePage href="/customers" title="Khách hàng" />
         <div className="flex gap-[8px] flex-wrap">
@@ -1025,7 +1147,7 @@ const DetailsCustomer = (props: DataType) => {
                       />
                     ) : (
                       // <DefaultAvatar />
-                      <div className='rounded-[50%] overflow-hidden'>
+                      <div className="rounded-[50%] overflow-hidden">
                         <Image
                           src={require('../../public/yellow-star.svg')}
                           width={75}
@@ -1051,7 +1173,7 @@ const DetailsCustomer = (props: DataType) => {
                     },
                   ]}
                 >
-                  <Input width="100%" />
+                  <Input width="100%" value={data.name} />
                 </Form.Item>
               </div>
               <div className={styles.row}>
@@ -1072,7 +1194,7 @@ const DetailsCustomer = (props: DataType) => {
                     },
                   ]}
                 >
-                  <Input type="phone-number" width="100%" />
+                  <Input type="phone-number" width="100%" value={data.phone_number} />
                 </Form.Item>
               </div>
               <div className={styles.row}>
@@ -1080,7 +1202,7 @@ const DetailsCustomer = (props: DataType) => {
                 <div className="flex flex-1">
                   <div style={{ width: 296 }}>
                     <Form.Item name="sex">
-                      <Radio.Group>
+                      <Radio.Group defaultValue={data.sex}>
                         <div className="mr-[95px]">
                           <Radio value="Male">Nam</Radio>
                         </div>
@@ -1110,7 +1232,7 @@ const DetailsCustomer = (props: DataType) => {
                     },
                   ]}
                 >
-                  <Input type="email" width="100%" placeholder="Nhập email" />
+                  <Input type="email" width="100%" placeholder="Nhập email" value={data.email}/>
                 </Form.Item>
               </div>
               <div className={styles.row}>
@@ -1119,7 +1241,8 @@ const DetailsCustomer = (props: DataType) => {
                   <Select
                     placeholder="Chọn nguồn"
                     style={{ width: '100%' }}
-                    options={listSource}
+                    // options={listSource}
+                    options={data.list}
                   />
                 </Form.Item>
               </div>
@@ -1127,6 +1250,7 @@ const DetailsCustomer = (props: DataType) => {
                 <div className={styles.row_label}>Người tạo</div>
                 <div className="flex flex-1 flex-row">
                   <div className="text-medium font-medium max-w-max mr-[5px]  ">
+                    Tran Huyen
                     {get(customer, 'create_user.name')}
                   </div>
                   <div className="text-medium font-normal">
@@ -1304,7 +1428,7 @@ const DetailsCustomer = (props: DataType) => {
                   Tổng tiền hàng đã mua
                 </div>
                 <div className={styles.row_left}>
-                  {totalMoneyBuy.toLocaleString()} đ
+                  {totalMoneyBuy.toLocaleString()} đ 1000 đ
                 </div>
               </div>
               <div className="flex flex-row mb-[25px]">
@@ -1515,7 +1639,8 @@ const DetailsCustomer = (props: DataType) => {
           <div className="flex flex-1">
             <Table
               columns={columns}
-              dataSource={[...listOrder]}
+              // dataSource={[...listOrder]}
+              dataSource={columnsData}
               pagination={{
                 defaultPageSize: 10,
                 showSizeChanger: true,
@@ -1552,7 +1677,8 @@ const DetailsCustomer = (props: DataType) => {
             <Table
               loading={loadingReview}
               columns={reviewColumns}
-              dataSource={[...reviews]}
+              // dataSource={[...reviews]}
+              dataSource={fakeReview}
               locale={
                 !loadingReview
                   ? {

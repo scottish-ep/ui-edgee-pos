@@ -168,18 +168,19 @@ const ListProduct = (props: any) => {
   };
 
   const typeList = [
-    { 
-      label: "Chon",
-      value: "select",
+    {
+      label: 'Chon',
+      value: 'select',
     },
-    { 
-      label: "Thoi trang",
-      value: "fashion",
-    },{ 
-      label: "Suc khoe",
-      value: "health",
+    {
+      label: 'Thoi trang',
+      value: 'fashion',
     },
-  ]
+    {
+      label: 'Suc khoe',
+      value: 'health',
+    },
+  ];
   const getProductMetrics = async () => {
     const { totalCanSell, totalAlreadySell, totalRemain } =
       await ItemApi.getProductMetrics();
@@ -231,7 +232,7 @@ const ListProduct = (props: any) => {
       numberSale: 500,
       models: 3,
       createdAt: '15/02/2023',
-      status: "CAN_SALES",
+      status: 'CAN_SALES',
     })
     .map((item: any, index: any) => ({
       ...item,
@@ -286,9 +287,9 @@ const ListProduct = (props: any) => {
       render: (_, record) => (
         <div
           className="flex justify-start items-center"
-          onClick={(e) => {
-            window.location.href = `/products/${record.id}`;
-          }}
+          // onClick={(e) => {
+          //   window.location.href = `/products/${record.id}`;
+          // }}
         >
           <div className="mr-[8px] w-[40px] h-[40px] max-w-[40px] max-h-[40px] relative">
             {record.image ? (
@@ -314,14 +315,7 @@ const ListProduct = (props: any) => {
       key: 'category',
       align: 'center',
       render: (_, record) => (
-        <span
-          className="font-medium text-[#1D1C2D]"
-          onClick={(e) => {
-            window.location.href = `/products/${record.id}`;
-          }}
-        >
-          {record.category}
-        </span>
+        <span className="font-medium text-[#1D1C2D]">{record.category}</span>
       ),
     },
     {
@@ -331,14 +325,7 @@ const ListProduct = (props: any) => {
       key: 'numberSale',
       align: 'center',
       render: (_, record) => (
-        <span
-          className="font-medium text-[#1D1C2D]"
-          onClick={(e) => {
-            window.location.href = `/products/${record.id}`;
-          }}
-        >
-          {record.numberSale}
-        </span>
+        <span className="font-medium text-[#1D1C2D]">{record.numberSale}</span>
       ),
     },
     {
@@ -348,14 +335,7 @@ const ListProduct = (props: any) => {
       key: 'models',
       align: 'center',
       render: (_, record) => (
-        <span
-          className="font-medium text-[#1D1C2D]"
-          onClick={(e) => {
-            window.location.href = `/products/${record.id}`;
-          }}
-        >
-          {record.models}
-        </span>
+        <span className="font-medium text-[#1D1C2D]">{record.models}</span>
       ),
     },
     {
@@ -365,14 +345,7 @@ const ListProduct = (props: any) => {
       key: 'numberSale',
       align: 'center',
       render: (_, record) => (
-        <span
-          className="font-medium text-[#1D1C2D]"
-          onClick={(e) => {
-            window.location.href = `/products/${record.id}`;
-          }}
-        >
-          {record.numberSale}
-        </span>
+        <span className="font-medium text-[#1D1C2D]">{record.numberSale}</span>
       ),
     },
     {
@@ -382,14 +355,7 @@ const ListProduct = (props: any) => {
       key: 'createdAt',
       align: 'center',
       render: (_, record) => (
-        <div
-          className="font-medium text-[#1D1C2D]"
-          onClick={(e) => {
-            window.location.href = `/products/${record.id}`;
-          }}
-        >
-          {record.createdAt}
-        </div>
+        <div className="font-medium text-[#1D1C2D]">{record.createdAt}</div>
       ),
     },
     {
@@ -457,6 +423,8 @@ const ListProduct = (props: any) => {
       setCreatedAtTo(null);
     }
   };
+
+  
 
   const handleChooseCodePrint = (
     <div
@@ -642,7 +610,7 @@ const ListProduct = (props: any) => {
             <span className="font-medium text-[#384ADC]">
               {' '}
               {/* {metrics?.totalAlreadySell ?? 0}*/}
-              4999 đ 
+              4999 đ
             </span>
           </div>
           <div className={styles.row}>

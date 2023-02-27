@@ -346,6 +346,7 @@ const ListCustomer = () => {
         name: 'Nguyen Van A',
         phone: '092922221',
         updated_at: Date.now(),
+        id: 1,
       },
       customer_level: {
         name:LevelCustomer.NEW_CLIENT,
@@ -356,7 +357,7 @@ const ListCustomer = () => {
       count_received_order: 10,
       count_return_order: 10,
       count_partial_return_order: 10,
-      lastBuy: Date.now(),
+      lastBuy: 19,
     })
     .map((item, index) => ({ ...item, id: `KH${index + 1}` }));
 
@@ -836,6 +837,7 @@ const ListCustomer = () => {
         // loading={loading}
         rowSelection={rowSelection}
         columns={columns.filter((e: any) => columnSelecteted.includes(e.key))}
+
         // dataSource={[...customers]}
         dataSource={data}
         pagination={{

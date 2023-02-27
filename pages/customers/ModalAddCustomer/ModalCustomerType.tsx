@@ -2,7 +2,7 @@ import { useState, ReactNode } from 'react';
 import Button from 'components/Button/Button';
 import Input from 'components/Input/Input';
 import Modal from 'components/Modal/Modal/Modal';
-
+import { Form } from 'antd';
 interface ModalCustomerTypeProps {
   detail?: any;
   isVisible: boolean;
@@ -30,6 +30,13 @@ const ModalCustomerType = (props: ModalCustomerTypeProps) => {
     data,
   } = props;
 
+  const [form] = Form.useForm();
+
+  const handleSubmit = (value: any) => {
+    onOpen && onOpen(value);
+    form.resetFields();
+  };
+
   const Footer = () => (
     <div className="flex justify-between">
       <Button variant="outlined" text="Huỷ bỏ" width="48%" onClick={onClose} />
@@ -54,22 +61,30 @@ const ModalCustomerType = (props: ModalCustomerTypeProps) => {
       className="p-[16px]"
       footer={<Footer />}
     >
-      <div className="mb-[12px] flex flex-col">
-        <span className="text-[#212121] text-base font-medium mb-[28px]">
-          {Object.keys(detail).length > 0
-            ? 'Cập nhật loại khách hàng mới'
-            : 'Thêm loại khách hàng mới'}
-        </span>
-        <Input
-          className="mb-[24px]"
-          label="Tên"
-          placeholder={
-            Object.keys(detail).length > 0
-              ? ''
-              : 'Nhập tên phân loại khách hàng'
-          }
-        />
-      </div>
+      <Form onFinish={handleSubmit} form={form} initialValues={data}>
+        <div className="mb-[12px] flex flex-col">
+          <span className="text-[#212121] text-base font-medium mb-[28px]">
+            {Object.keys(detail).length > 0
+              ? 'Cập nhật loại khách hàng mới'
+              : 'Thêm loại khách hàng mới'}
+          </span>
+          <Form.Item
+            name="customer_type_name"
+            rules={[
+              {
+                required: false,
+                message: 'Không được để trống',
+              },
+            ]}
+          >
+            <Input
+              className="mb-[24px]"
+              label="Tên"
+              placeholder={detail ? '' : 'Nhập tên phân loại khách hàng'}
+            />
+          </Form.Item>
+        </div>
+      </Form>
     </Modal>
   );
 };
