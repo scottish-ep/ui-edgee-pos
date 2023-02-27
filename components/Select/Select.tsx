@@ -33,7 +33,7 @@ const Select = (props: SelectProps) => {
   return (
     <div
       className={classNames(
-        "flex flex-col w-full relative custom__select__antd",
+        "flex flex-col relative custom__select__antd",
         prefix && "has-prefix-icon",
         containerClassName
       )}

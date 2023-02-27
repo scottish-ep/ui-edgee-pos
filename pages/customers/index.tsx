@@ -1,34 +1,34 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from "react";
-import { ReactNode } from "react";
-import ReactDOM from "react-dom";
+import React, { useEffect, useState } from 'react';
+import { ReactNode } from 'react';
+import ReactDOM from 'react-dom';
 
-import { Table, Switch, notification, Tag } from "antd";
-import type { ColumnsType } from "antd/es/table";
-import get from "lodash/get";
-import TitlePage from "../../components/TitlePage/Titlepage";
-import Image from "next/image";
-import { isArray, onCoppy } from "../../utils/utils";
-import { LevelCustomer } from "../../enums/enums";
-import Select from "../../components/Select/Select";
-import Button from "../../components/Button/Button";
-import Icon from "../../components/Icon/Icon";
-import Input from "../../components/Input/Input";
-import InputRangePicker from "../../components/DateRangePicker/DateRangePicker";
-import ModalConfirm from "../../components/Modal/ModalConfirm/ModalConfirm";
-import ModalNotice from "../../components/Modal/ModalNotice/ModalConfirm";
-import ModalAddCustomer from "./ModalAddCustomer/ModalAddCustomer";
-import Checkbox from "../../components/CheckboxList/CheckboxList";
-import DefaultAvatar from "../../assets/default-avatar.svg";
-import CustomerApi from "../../services/customers";
-import { useDebounce } from "usehooks-ts";
-import { format } from "date-fns";
-import { IUser } from "../../types/users";
-import TableEmpty from "../../components/TableEmpty";
-import PaginationCustom from "../../components/PaginationCustom";
-import styles from "../../styles/DetailCustomer.module.css";
-import UserApi from "../../services/users";
-import { CustomerType } from "./CustomerType";
+import { Table, Switch, notification, Tag } from 'antd';
+import type { ColumnsType } from 'antd/es/table';
+import get from 'lodash/get';
+import TitlePage from '../../components/TitlePage/Titlepage';
+import Image from 'next/image';
+import { isArray, onCoppy } from '../../utils/utils';
+import { LevelCustomer } from '../../enums/enums';
+import Select from '../../components/Select/Select';
+import Button from '../../components/Button/Button';
+import Icon from '../../components/Icon/Icon';
+import Input from '../../components/Input/Input';
+import InputRangePicker from '../../components/DateRangePicker/DateRangePicker';
+import ModalConfirm from '../../components/Modal/ModalConfirm/ModalConfirm';
+import ModalNotice from '../../components/Modal/ModalNotice/ModalConfirm';
+import ModalAddCustomer from './ModalAddCustomer/ModalAddCustomer';
+import Checkbox from '../../components/CheckboxList/CheckboxList';
+import DefaultAvatar from '../../assets/default-avatar.svg';
+import CustomerApi from '../../services/customers';
+import { useDebounce } from 'usehooks-ts';
+import { format } from 'date-fns';
+import { IUser } from '../../types/users';
+import TableEmpty from '../../components/TableEmpty';
+import PaginationCustom from '../../components/PaginationCustom';
+import styles from '../../styles/DetailCustomer.module.css';
+import UserApi from '../../services/users';
+import { CustomerType } from './CustomerType';
 
 const ListCustomer = () => {
   const defaultPagination = {
@@ -57,7 +57,7 @@ const ListCustomer = () => {
   const [loading, setLoading] = useState(true);
 
   const [filter, setFilter] = useState<any>({});
-  const [searchKey, setSearchKey] = useState("");
+  const [searchKey, setSearchKey] = useState('');
   const debouncedSearchTerm = useDebounce(searchKey, 1000);
   const [pagination, setPagination] = useState<{
     current: number;
@@ -75,23 +75,23 @@ const ListCustomer = () => {
   const [selectedRecord, setSelectedRecord] = useState<CustomerType>();
   const [targetRow, setTargetRow] = useState({ id: 0, checked: false });
 
-  useEffect(() => {
-    const element = document.getElementById("loading__animation");
-    if (element) {
-      element.remove();
-    }
-    getListStaff();
-    getListSource();
-  }, []);
+  // useEffect(() => {
+  //   const element = document.getElementById('loading__animation');
+  //   if (element) {
+  //     element.remove();
+  //   }
+  //   getListStaff();
+  //   getListSource();
+  // }, []);
 
   useEffect(() => {
     getListCustomer(1, pagination.pageSize);
   }, [filter, debouncedSearchTerm]);
 
-  const getListCustomer = (page, pageSize) => {
+  const getListCustomer = (page: any, pageSize: any) => {
     setLoading(true);
     const url =
-      "/api/v2/customers/list?" +
+      '/api/v2/customers/list?' +
       new URLSearchParams({
         ...filter,
         search: debouncedSearchTerm,
@@ -102,13 +102,13 @@ const ListCustomer = () => {
       .then((res) => res.json())
       .then((res: any) => {
         const result = res.data.data;
-        console.log("result", result);
-        console.log("total", res.data.totalCustomers);
+        console.log('result', result);
+        console.log('total', res.data.totalCustomers);
         setPagination({
           current: page,
           page: page,
           pageSize: pageSize,
-          total: get(res, "data.totalCustomers"),
+          total: get(res, 'data.totalCustomers'),
         });
         setCustomers(result);
         setLoading(false);
@@ -144,16 +144,16 @@ const ListCustomer = () => {
     setListSource(
       [
         {
-          label: "Tất cả nguồn",
-          value: "",
-          id: "",
+          label: 'Tất cả nguồn',
+          value: '',
+          id: '',
         },
       ].concat(newListSource)
     );
   };
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    console.log("selectedRowKeys changed: ", selectedRowKeys);
+    console.log('selectedRowKeys changed: ', selectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
   };
 
@@ -225,17 +225,17 @@ const ListCustomer = () => {
     };
 
     const options = {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
     };
     fetch(url, options)
       .then((res) => res.json())
       .then((data) => {
-        console.log("data return", data);
+        console.log('data return', data);
         if (data.success) {
           notification.success({
-            message: "Cập nhật thông tin khách hàng thành công!",
+            message: 'Cập nhật thông tin khách hàng thành công!',
           });
           setTargetRow({
             id: record?.id ? +record.id : 0,
@@ -247,7 +247,7 @@ const ListCustomer = () => {
           notification.error({
             message: data.message,
           });
-          console.log("error");
+          console.log('error');
         }
       })
       .catch((error) => {
@@ -258,12 +258,12 @@ const ListCustomer = () => {
 
   const handleConfirmDelete = () => {
     setIsShowModalConfirm(false);
-    console.log("delete");
+    console.log('delete');
     if (!selectedRowKeys.length) {
       notification.error({
-        message: "Có lỗi !!!",
-        description: "Chưa chọn khách hàng để xoá",
-        placement: "top",
+        message: 'Có lỗi !!!',
+        description: 'Chưa chọn khách hàng để xoá',
+        placement: 'top',
       });
     }
     const url = `/api/v2/customers/delete-many`;
@@ -272,31 +272,31 @@ const ListCustomer = () => {
     };
 
     const options = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
     };
     fetch(url, options)
       .then((res) => res.json())
       .then((data) => {
-        console.log("data return", data);
+        console.log('data return', data);
         if (data.success) {
           getListCustomer(pagination.page, pagination.pageSize);
           setSelectedRowKeys([]);
           notification.success({
-            message: "Xóa thành công!",
+            message: 'Xóa thành công!',
           });
         } else {
           notification.error({
             message: data.message,
           });
-          console.log("error");
+          console.log('error');
         }
       });
     // setIsShowModalNotice(true);
   };
 
-  const handleSearchByDate = (value) => {
+  const handleSearchByDate = (value: any) => {
     if (value) {
       const from = value[0];
       const to = value[1];
@@ -308,40 +308,65 @@ const ListCustomer = () => {
     } else {
       setFilter({
         ...filter,
-        from: "",
-        to: "",
+        from: '',
+        to: '',
       });
     }
   };
 
   const handleExportExcel = () => {
-    window.location.href = "/api/v2/customers/export/";
+    window.location.href = '/api/v2/customers/export/';
   };
 
   const [columnSelecteted, setColumnSelecteted] = useState([
-    "is_block",
-    "id",
-    "name",
-    "phone_number",
-    "level",
-    "order",
-    "printed",
-    "received",
-    "orderReturn",
-    "orderReturnAPart",
-    "successCost",
-    "lastBuy",
-    "updated_at",
-    "",
+    'is_block',
+    'id',
+    'name',
+    'phone_number',
+    'level',
+    'order',
+    'printed',
+    'received',
+    'orderReturn',
+    'orderReturnAPart',
+    'successCost',
+    'lastBuy',
+    'updated_at',
+    '',
   ]);
+
+  const data: CustomerType[] = Array(50)
+    .fill({
+      is_block: false,
+      name: 'Tran Huyen',
+      phone_number: '0854634162',
+      email: 'a@gmail.com',
+      updated_at: Date.now(),
+      user: {
+        name: 'Nguyen Van A',
+        phone: '092922221',
+        updated_at: Date.now(),
+      },
+      customer_level: {
+        name:LevelCustomer.NEW_CLIENT,
+      },
+      customerLvName: LevelCustomer.NEW_CLIENT,
+      orderTotalCount: 100,
+      count_print_order: 10,
+      count_received_order: 10,
+      count_return_order: 10,
+      count_partial_return_order: 10,
+      lastBuy: Date.now(),
+    })
+    .map((item, index) => ({ ...item, id: `KH${index + 1}` }));
 
   const columns: ColumnsType<CustomerType> = [
     {
-      title: "Chặn",
+      title: 'Chặn',
       width: 75,
-      dataIndex: "is_block",
-      key: "is_block",
-      fixed: "left",
+      dataIndex: 'is_block',
+      key: 'is_block',
+      fixed: 'left',
       render: (_, record) => {
         return (
           <Switch
@@ -365,27 +390,27 @@ const ListCustomer = () => {
       },
     },
     {
-      title: "ID",
+      title: 'ID',
       width: 100,
-      key: "id",
-      fixed: "left",
-      align: "center",
-      render: (_, record) => <div>{record.id || get(record, "user.id")}</div>,
+      key: 'id',
+      fixed: 'left',
+      align: 'center',
+      render: (_, record) => <div>{record.id || get(record, 'user.id')}</div>,
     },
     {
-      title: "Tên khách hàng",
+      title: 'Tên khách hàng',
       width: 260,
-      dataIndex: "name",
-      key: "name",
-      fixed: "left",
+      dataIndex: 'name',
+      key: 'name',
+      fixed: 'left',
       render: (_, record) => (
         <div className="flex items-center">
           <div className="relative w-[36px] h-[36px] mr-[8px]">
-            {record?.avatar || get(record, "user.avatar") ? (
-              <img src={record?.avatar || get(record, "user.avatar")} />
+            {/* {record?.avatar || get(record, "user.avatar") ? (
+              <Image src={record?.avatar || get(record, "user.avatar")} alt=""/>
             ) : (
               <DefaultAvatar />
-            )}
+            )} */}
           </div>
           <div
             className="text-[#384ADC] font-medium text-medium"
@@ -396,9 +421,9 @@ const ListCustomer = () => {
                 ? onCoppy(e, record?.phone_number)
                 : record?.email
                 ? onCoppy(e, record?.email)
-                : get(record, "user.name")
-                ? onCoppy(e, get(record, "user.name"))
-                : onCoppy(e, get(record, "user.phone"));
+                : get(record, 'user.name');
+              // ? onCoppy(e, get(record, "user.name"))
+              // : onCoppy(e, get(record, "user.phone"));
             }}
           >
             {record?.name
@@ -407,84 +432,85 @@ const ListCustomer = () => {
               ? record?.phone_number
               : record?.email
               ? record?.email
-              : get(record, "user.name")
-              ? get(record, "user.name")
-              : get(record, "user.phone")}
+              : get(record, 'user.name')
+              ? get(record, 'user.name')
+              : get(record, 'user.phone')}
             {renderTag(record)}
           </div>
         </div>
       ),
     },
     {
-      title: "Số điện thoại",
+      title: 'Số điện thoại',
       width: 156,
-      dataIndex: "phone_number",
-      key: "phone_number",
-      align: "center",
+      dataIndex: 'phone_number',
+      key: 'phone_number',
+      align: 'center',
       render: (_, record) => (
         <div
-          onClick={(e) => {
-            record.phone_number
-              ? onCoppy(e, record.phone_number)
-              : onCoppy(e, get(record, "user.phone"));
-          }}
+        // onClick={(e) => {
+        //   record.phone_number
+        //     ? onCoppy(e, record.phone_number)
+        //     : onCoppy(e, get(record, "user.phone"));
+        // }}
         >
           {record.phone_number
             ? record.phone_number
-            : get(record, "user.phone")}
+            : get(record, 'user.phone')}
         </div>
       ),
     },
     {
-      title: "Cấp độ KH",
+      title: 'Cấp độ KH',
       width: 115,
-      dataIndex: "level",
-      key: "level",
-      align: "center",
+      dataIndex: 'level',
+      key: 'level',
+      align: 'center',
       render: (_, record) => (
         <div className="font-semibold">
-          {renderLevel(get(record, "customer_level.name"))}
+          {renderLevel(get(record, 'customer_level.name'))}
+          {/* {renderLevel(record.customerLvName)} */}
         </div>
       ),
     },
     {
-      title: "Tổng số lượng đơn",
+      title: 'Tổng số lượng đơn',
       width: 126,
-      dataIndex: "order",
-      key: "order",
-      align: "center",
+      dataIndex: 'order',
+      key: 'order',
+      align: 'center',
       render: (_, record) => <div>{record.orderTotalCount}</div>,
     },
     {
-      title: "Đã in",
+      title: 'Đã in',
       width: 88,
-      dataIndex: "printed",
-      key: "printed",
-      align: "center",
+      dataIndex: 'printed',
+      key: 'printed',
+      align: 'center',
       render: (_, record) => <div>{record.count_print_order}</div>,
     },
     {
-      title: "Đã nhận",
+      title: 'Đã nhận',
       width: 100,
-      dataIndex: "received",
-      key: "received",
-      align: "center",
+      dataIndex: 'received',
+      key: 'received',
+      align: 'center',
       render: (_, record) => <div>{record.count_received_order}</div>,
     },
     {
-      title: "Đơn hoàn",
+      title: 'Đơn hoàn',
       width: 110,
-      dataIndex: "orderReturn",
-      key: "orderReturn",
-      align: "center",
+      dataIndex: 'orderReturn',
+      key: 'orderReturn',
+      align: 'center',
       render: (_, record) => <div>{record.count_return_order}</div>,
     },
     {
-      title: "Hoàn 1 phần",
+      title: 'Hoàn 1 phần',
       width: 96,
-      dataIndex: "orderReturnAPart",
-      key: "orderReturnAPart",
-      align: "center",
+      dataIndex: 'orderReturnAPart',
+      key: 'orderReturnAPart',
+      align: 'center',
       render: (_, record) => <div>{record.count_partial_return_order}</div>,
     },
     // {
@@ -496,32 +522,38 @@ const ListCustomer = () => {
     //   // render: (_, record) => <div>{record.successCost || "0 vnđ"}</div>,
     // },
     {
-      title: "Lần mua cuối",
+      title: 'Lần mua cuối',
       width: 140,
-      dataIndex: "lastBuy",
-      key: "lastBuy",
-      align: "center",
+      dataIndex: 'lastBuy',
+      key: 'lastBuy',
+      align: 'center',
       render: (_, record) => <div>{record.lastBuy}</div>,
     },
     {
-      title: "Thời gian cập nhật",
+      title: 'Thời gian cập nhật',
       width: 185,
-      dataIndex: "updated_at",
-      key: "updated_at",
-      align: "center",
+      dataIndex: 'updated_at',
+      key: 'updated_at',
+      align: 'center',
       render: (_, record) => (
         <div className="flex flex-col gap-y-1 text-medium text-[#1D1C2D]">
           <span>
-            {format(
+            {/* {format(
               new Date(record.updated_at || get(record, "user.updated_at")),
               "HH:mm"
-            )}
+            )} */}
+            {record.updated_at
+              ? format(record.updated_at, 'HH:mm - dd/MM/yyyy')
+              : ''}
           </span>
           <span>
-            {format(
+            {record.updated_at
+              ? format(record.updated_at, 'HH:mm - dd/MM/yyyy')
+              : ''}
+            {/* {format(
               new Date(record.updated_at || get(record, "user.updated_at")),
               "dd/MM/yyyy"
-            )}
+            )} */}
           </span>
         </div>
       ),
@@ -533,66 +565,66 @@ const ListCustomer = () => {
     value: string;
   }[] = [
     {
-      label: "Chặn",
-      value: "is_block",
+      label: 'Chặn',
+      value: 'is_block',
     },
     {
-      label: "Cấp độ KH",
-      value: "level",
+      label: 'Cấp độ KH',
+      value: 'level',
     },
     {
-      label: "Tổng số lượng đơn",
-      value: "order",
+      label: 'Tổng số lượng đơn',
+      value: 'order',
     },
     {
-      label: "Đã in",
-      value: "printed",
+      label: 'Đã in',
+      value: 'printed',
     },
     {
-      label: "Đã nhận",
-      value: "received",
+      label: 'Đã nhận',
+      value: 'received',
     },
     {
-      label: "Đơn hoàn",
-      value: "orderReturn",
+      label: 'Đơn hoàn',
+      value: 'orderReturn',
     },
     {
-      label: "Hoàn 1 phần",
-      value: "orderReturnAPart",
+      label: 'Hoàn 1 phần',
+      value: 'orderReturnAPart',
     },
     {
-      label: "Đã thanh toán",
-      value: "successCost",
+      label: 'Đã thanh toán',
+      value: 'successCost',
     },
     {
-      label: "Lần mua cuối",
-      value: "lastBuy",
+      label: 'Lần mua cuối',
+      value: 'lastBuy',
     },
     {
-      label: "Thời gian cập nhật",
-      value: "updated_at",
+      label: 'Thời gian cập nhật',
+      value: 'updated_at',
     },
   ];
 
   const styleHiddenSlideToggle = {
     height: 0,
     opacity: 0.75,
-    overflow: "hidden",
-    padding: "0px",
+    overflow: 'hidden',
+    padding: '0px',
     // display: "none",
-    transition: "all 0.3s linear",
+    transition: 'all 0.3s linear',
   };
 
   const styleShowSlideToggle = {
-    height: "fit-content",
+    height: 'fit-content',
     opacity: 1,
     // display: "block",
-    padding: "10px",
-    border: "1px solod #FFCF90",
+    padding: '10px',
+    border: '1px solod #FFCF90',
   };
 
   const handleAddCustomer = (e: any) => {
-    console.log("e", e);
+    console.log('e', e);
     setIsShowModalAddCustomer(false);
     setLoading(true);
     const url = `/api/v2/customers/create`;
@@ -608,25 +640,25 @@ const ListCustomer = () => {
     };
 
     const options = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
     };
     fetch(url, options)
       .then((res) => res.json())
       .then((data) => {
-        console.log("data return", data);
+        console.log('data return', data);
         getListCustomer(pagination.page, pagination.pageSize);
         setLoading(false);
         if (data.success) {
           notification.success({
-            message: "Thêm khách hàng thành công!",
+            message: 'Thêm khách hàng thành công!',
           });
         } else {
           notification.error({
             message: data.message,
           });
-          console.log("error");
+          console.log('error');
         }
       });
   };
@@ -737,7 +769,7 @@ const ListCustomer = () => {
           placeholder="Nhập tên nhân viên"
         />
         <InputRangePicker
-          placeholder={["Ngày bắt đầu", "Ngày kết thúc"]}
+          placeholder={['Ngày bắt đầu', 'Ngày kết thúc']}
           width={306}
           prevIcon={<Icon size={24} icon="calendar" />}
           onChange={(value) => {
@@ -771,7 +803,7 @@ const ListCustomer = () => {
           <Checkbox
             options={checkboxSettings}
             onChange={(e) =>
-              setColumnSelecteted(e.concat(["id", "name", "phone_number"]))
+              setColumnSelecteted(e.concat(['id', 'name', 'phone_number']))
             }
             value={columnSelecteted}
           />
@@ -779,7 +811,7 @@ const ListCustomer = () => {
       </div>
       {isArray(selectedRowKeys) && (
         <div className="mb-[12px]">
-          Số khách hàng đang chọn:{" "}
+          Số khách hàng đang chọn:{' '}
           <span className="text-[#384ADC] font-semibold">
             {selectedRowKeys.length}
           </span>
@@ -797,14 +829,15 @@ const ListCustomer = () => {
         onRow={(record) => {
           return {
             onClick: () => {
-              window.location.href = `/customer/customer-list/edit/${record.id}`;
+              window.location.href = `/customers/${record.id}`;
             },
           };
         }}
-        loading={loading}
+        // loading={loading}
         rowSelection={rowSelection}
         columns={columns.filter((e: any) => columnSelecteted.includes(e.key))}
-        dataSource={[...customers]}
+        // dataSource={[...customers]}
+        dataSource={data}
         pagination={{
           current: pagination.current,
           total: pagination.total,
@@ -854,7 +887,7 @@ const ListCustomer = () => {
         content={
           <div>
             <div className="text-center mb-[12px]">
-              Bạn có chắc chắn muốn {targetRow.checked ? "bỏ chặn" : "chặn"}{" "}
+              Bạn có chắc chắn muốn {targetRow.checked ? 'bỏ chặn' : 'chặn'}{' '}
               khách hàng này không?
             </div>
           </div>
@@ -874,4 +907,4 @@ const ListCustomer = () => {
   );
 };
 
-ReactDOM.render(<ListCustomer />, document.getElementById("root"));
+export default ListCustomer;

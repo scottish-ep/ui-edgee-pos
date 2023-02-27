@@ -1,0 +1,22 @@
+.row_wrapper {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  width: 100%;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: max-content;
+  gap: 10px;
+}
+
+.dot {
+    border-radius: 50%;
+    background-color: #384ADC;
+    width: 8px;
+    height: 8px;
+    
+}
