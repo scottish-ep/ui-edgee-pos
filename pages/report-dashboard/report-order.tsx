@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import Button from "../../components/Button/Button";
 import DatePicker from "../../components/DatePicker/DatePicker";
+import ModalConfig from "./Modal/ModalConfig";
 import Icon from "../../components/Icon/Icon";
 import Select from "../../components/Select/Select";
 import TitlePage from "../../components/TitlePage/Titlepage";
@@ -32,6 +33,7 @@ const ReportOrder = () => {
   const [isCompare, setIsCompare] = useState(false);
   const [filter, setFilter] = useState<any>({});
   const [revenueOverview, setRevenueOverview] = useState<any>({});
+  const [isShowModalConfig, setIsShowModalConfig] = useState(true)
   const [loading, setLoading] = useState(false);
   const [pagination, setPagination] = useState({
     total: 0,
@@ -157,7 +159,7 @@ const ReportOrder = () => {
       setReportProductSalgeByWarehouse(data.reportTotalOrderByWarehouse);
       const listWarehouse =
         isArray(data.warehouseTotalOrder) &&
-        data.warehouseTotalOrder.map((item) => ({
+        data.warehouseTotalOrder.map((item: any) => ({
           ...item,
           value: item.id,
           valueReport: item.totalOrder,
@@ -196,8 +198,8 @@ const ReportOrder = () => {
     setLoadingOrder(false);
   };
 
-  const handleOnChangeWarehouse = (e) => {
-    const newSelectedWarehouses = warehouses.filter((item) => item.id == e);
+  const handleOnChangeWarehouse = (e: any) => {
+    const newSelectedWarehouses = warehouses.filter((item: any) => item.id == e);
     newSelectedWarehouses && setSelectWarehouses(newSelectedWarehouses);
   };
 
@@ -611,8 +613,13 @@ const ReportOrder = () => {
           }}
         />
       </div>
+      <ModalConfig
+        title="Cấu hình"
+        onClose={() => setIsShowModalConfig(false)}
+        isVisible={isShowModalConfig}
+        />
     </div>
   );
 };
 
-ReactDOM.render(<ReportOrder />, document.getElementById("root"));
+export default ReportOrder;

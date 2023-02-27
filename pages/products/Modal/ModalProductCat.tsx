@@ -1,14 +1,12 @@
-import Select from '../../../components/Select/Select';
-import Input from '../../../components/Input/Input';
-import Modal from '../../../components/Modal/Modal/Modal';
-import Button from '../../../components/Button/Button';
-import React, { useEffect, useState, ReactNode } from 'react';
-import TabsVerticle from '../../../components/TabsVerticle/Index';
 import Checkbox from 'antd/lib/checkbox/Checkbox';
 import SelectInput from 'components/SelectInput/SelectInput';
-import CheckboxList from '../../../components/CheckboxList/CheckboxList';
+import { ReactNode, useState } from 'react';
+import Button from '../../../components/Button/Button';
+import Modal from '../../../components/Modal/Modal/Modal';
+import Select from '../../../components/Select/Select';
+import TabsVerticle from '../../../components/TabsVerticle/Index';
 import { isArray } from '../../../utils/utils';
-import Tabs from '../../../components/Tabs';
+import { Form } from 'antd';
 
 interface ModalProductCatProps {
   isVisible: boolean;
@@ -37,6 +35,8 @@ const ModalProductCat = (props: ModalProductCatProps) => {
     tabData,
     tabStatus,
   } = props;
+
+  const [form] = Form.useForm();
 
   const [statusCheckList, setStatusCheckList] = useState<
     Array<string | number>
@@ -98,6 +98,11 @@ const ModalProductCat = (props: ModalProductCatProps) => {
     { label: 'App', value: 'app' },
   ];
 
+  const handleSubmit = (value: any) => {
+    onOpen && onOpen(value);
+    form.resetFields();
+  };
+
   const RenderComponent = () => {
     let list: Array<any> = [];
     if (activeTabValue === '1') {
@@ -111,20 +116,21 @@ const ModalProductCat = (props: ModalProductCatProps) => {
     }
 
     return (
-      <>
+      <Form onFinish={handleSubmit} form={form} initialValues={data}>
         <div className="mb-[12px]">
           <div>
             {list === statusCheckList && (
               <div className="flex flex-col justify-start  ml-[14px]">
                 {isArray(statusSettings) &&
                   statusSettings.map((item) => (
-                    <Checkbox
-                      className="w-[200px] m-0 no-mg-inline mb-[20px]"
-                      value={item.value}
-                      key={item.value}
-                    >
-                      {item.label}
-                    </Checkbox>
+                    <Form.Item key={item.value} name="status_setting">
+                      <Checkbox
+                        className="w-[200px] m-0 no-mg-inline mb-[20px]"
+                        value={item.value}
+                      >
+                        {item.label}
+                      </Checkbox>
+                    </Form.Item>
                   ))}
               </div>
             )}
@@ -136,19 +142,23 @@ const ModalProductCat = (props: ModalProductCatProps) => {
                       key={item.value}
                       className="flex justify-between items-center mb-[20px] ml-[14px]"
                     >
-                      <Checkbox
-                        className="w-[200px] m-0 no-mg-inline "
-                        value={item.value}
-                      >
-                        {item.label}
-                      </Checkbox>
-                      <SelectInput
-                        placeholder="Nhập số lượng"
-                        selectWidth={111}
-                        inputWidth={309}
-                        compareList={compareList}
-                        defaultValue={compareList[0].label}
-                      />
+                      <Form.Item name="amount_setting_check">
+                        <Checkbox
+                          className="w-[200px] m-0 no-mg-inline "
+                          value={item.value}
+                        >
+                          {item.label}
+                        </Checkbox>
+                      </Form.Item>
+                      <Form.Item name="amount_setting_select">
+                        <SelectInput
+                          placeholder="Nhập số lượng"
+                          selectWidth={111}
+                          inputWidth={309}
+                          compareList={compareList}
+                          defaultValue={compareList[0].label}
+                        />
+                      </Form.Item>
                     </div>
                   ))}
               </div>
@@ -161,19 +171,23 @@ const ModalProductCat = (props: ModalProductCatProps) => {
                       key={item.value}
                       className="flex justify-between items-center mb-[20px] ml-[14px]"
                     >
-                      <Checkbox
-                        className="w-[200px] m-0 no-mg-inline "
-                        value={item.value}
-                      >
-                        {item.label}
-                      </Checkbox>
-                      <SelectInput
-                        placeholder="Nhập số lượng"
-                        selectWidth={111}
-                        inputWidth={309}
-                        compareList={compareList}
-                        defaultValue={compareList[0].label}
-                      />
+                      <Form.Item name="price_setting_check">
+                        <Checkbox
+                          className="w-[200px] m-0 no-mg-inline "
+                          value={item.value}
+                        >
+                          {item.label}
+                        </Checkbox>
+                      </Form.Item>
+                      <Form.Item name="price_setting_select">
+                        <SelectInput
+                          placeholder="Nhập số lượng"
+                          selectWidth={111}
+                          inputWidth={309}
+                          compareList={compareList}
+                          defaultValue={compareList[0].label}
+                        />
+                      </Form.Item>
                     </div>
                   ))}
               </div>
@@ -186,13 +200,16 @@ const ModalProductCat = (props: ModalProductCatProps) => {
                       key={item.value}
                       className="flex justify-between items-center ml-[14px]"
                     >
-                      <Checkbox
-                        className="w-[200px] m-0 no-mg-inline "
-                        value={item.value}
-                      >
-                        {item.label}
-                      </Checkbox>
+                      <Form.Item name="product_setting_check">
+                        <Checkbox
+                          className="w-[200px] m-0 no-mg-inline "
+                          value={item.value}
+                        >
+                          {item.label}
+                        </Checkbox>
+                      </Form.Item>
                       <div>
+                        <Form.Item name="select">
                         {item.type === 'select' ? (
                           <Select
                             width={420}
@@ -209,6 +226,7 @@ const ModalProductCat = (props: ModalProductCatProps) => {
                             defaultValue={compareList[0].label}
                           />
                         )}
+                        </Form.Item>
                       </div>
                     </div>
                   ))}
@@ -216,7 +234,7 @@ const ModalProductCat = (props: ModalProductCatProps) => {
             )}
           </div>
         </div>
-      </>
+      </Form>
     );
   };
 
@@ -234,7 +252,9 @@ const ModalProductCat = (props: ModalProductCatProps) => {
           variant="secondary"
           text="ÁP DỤNG"
           width="48%"
-          onClick={onOpen}
+          onClick={() => {
+            form.submit();
+          }}
         />
       </div>
     </div>
