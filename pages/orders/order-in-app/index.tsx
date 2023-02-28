@@ -1,40 +1,42 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from "react";
-import { ReactNode } from "react";
-import ReactDOM from "react-dom";
-import { useDebounce } from "usehooks-ts";
-import Button from "../../components/Button/Button";
-import DatePicker from "../../components/DatePicker/DatePicker";
-import Icon from "../../components/Icon/Icon";
-import Input from "../../components/Input/Input";
-import Select from "../../components/Select/Select";
-import Tabs from "../../components/Tabs";
-import TitlePage from "../../components/TitlePage/Titlepage";
+import React, { useEffect, useState } from 'react';
+import { ReactNode } from 'react';
+import ReactDOM from 'react-dom';
+import { useDebounce } from 'usehooks-ts';
+import Button from '../../../components/Button/Button';
+import DatePicker from '../../../components/DatePicker/DatePicker';
+import { statusList } from '../../../utils/utils';
+import { orderList } from '../../../utils/utils';
+import Icon from '../../../components/Icon/Icon';
+import Input from '../../../components/Input/Input';
+import Select from '../../../components/Select/Select';
+import Tabs from '../../../components/Tabs';
+import TitlePage from '../../../components/TitlePage/Titlepage';
 import {
   orderCheckCommandColor,
   orderStatus,
   warehouses,
   warehouseStatusColor,
-} from "../../const/constant";
-import styles from "../../styles/DetailCustomer.module.css";
-import { StatusEnum } from "../../types";
-import { OrderEnum, OrderEnumId, OrderStatus } from "../../enums/enums";
-import InputRangePicker from "../../components/DateRangePicker/DateRangePicker";
-import CheckboxList from "../../components/CheckboxList/CheckboxList";
-import UserApi from "../../services/users";
-import { IUser } from "../../types/users";
-import { isArray, onCoppy } from "../../utils/utils";
-import OrderApi from "../../services/orders";
-import { Form, message, notification, Popover, Switch, Table } from "antd";
-import type { ColumnsType } from "antd/es/table";
-import { IsProduct } from "../products/product.type";
-import classNames from "classnames";
-import TableEmpty from "../../components/TableEmpty";
-import { get } from "lodash";
-import { format } from "date-fns";
-import Item from "antd/lib/list/Item";
-import { CSVLink } from "react-csv";
-import TransportCompanyApi from "../../services/transport-company";
+} from '../../../const/constant';
+import styles from '../../../styles/DetailCustomer.module.css';
+import { StatusEnum } from '../../../types';
+import { OrderEnum, OrderEnumId, OrderStatus } from '../../../enums/enums';
+import InputRangePicker from '../../../components/DateRangePicker/DateRangePicker';
+import CheckboxList from '../../../components/CheckboxList/CheckboxList';
+import UserApi from '../../../services/users';
+import { IUser } from '../../../types/users';
+import { isArray, onCoppy } from '../../../utils/utils';
+import OrderApi from '../../../services/orders';
+import { Form, message, notification, Popover, Switch, Table } from 'antd';
+import type { ColumnsType } from 'antd/es/table';
+import { IsProduct } from '../../products/product.type';
+import classNames from 'classnames';
+import TableEmpty from '../../../components/TableEmpty';
+import { get } from 'lodash';
+import { format } from 'date-fns';
+import Item from 'antd/lib/list/Item';
+import { CSVLink } from 'react-csv';
+import TransportCompanyApi from '../../../services/transport-company';
 
 const ListOrderInApp = () => {
   const defaultPagination = {
@@ -52,7 +54,7 @@ const ListOrderInApp = () => {
   >([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<any>({});
-  const [searchKey, setSearchKey] = useState("");
+  const [searchKey, setSearchKey] = useState('');
   const debouncedSearchTerm = useDebounce(searchKey, 1000);
   const [tabStatus, setTabStatus] = useState<any[]>([]);
   const [orders, setOrders] = useState<any[]>([]);
@@ -78,7 +80,7 @@ const ListOrderInApp = () => {
   }>(defaultPagination);
 
   useEffect(() => {
-    const element = document.getElementById("loading__animation");
+    const element = document.getElementById('loading__animation');
     if (element) {
       element.remove();
     }
@@ -88,79 +90,79 @@ const ListOrderInApp = () => {
 
   const statusOrderInApp = [
     {
-      label: "Tạo mới",
+      label: 'Tạo mới',
       value: 1,
       is_show_order_list: true,
       index: 0,
     },
     {
-      label: "Chờ đủ hàng",
+      label: 'Chờ đủ hàng',
       value: 4,
       is_show_order_list: true,
       index: 1,
     },
     {
-      label: "Chờ xử lý",
+      label: 'Chờ xử lý',
       value: 3,
       is_show_order_list: true,
       index: 1,
     },
     {
-      label: "Đã đủ hàng",
+      label: 'Đã đủ hàng',
       value: 5,
       is_show_order_list: true,
       index: 2,
     },
     {
-      label: "Đã xử lý",
+      label: 'Đã xử lý',
       value: 6,
       is_show_order_list: true,
       index: 2,
     },
     {
-      label: "Xác nhận",
+      label: 'Xác nhận',
       value: 2,
       is_show_order_list: true,
       index: 3,
     },
     {
-      label: "Đã in",
+      label: 'Đã in',
       value: 7,
       is_show_order_list: true,
       index: 4,
     },
     {
-      label: "Đang giao",
+      label: 'Đang giao',
       value: 8,
       is_show_order_list: true,
       index: 5,
     },
     {
-      label: "Đã nhận",
+      label: 'Đã nhận',
       value: 9,
       is_show_order_list: true,
       index: 6,
     },
     {
-      label: "Đang hoàn",
+      label: 'Đang hoàn',
       value: 10,
       is_show_order_list: true,
       index: 7,
     },
     {
-      label: "Hoàn 1 phần",
+      label: 'Hoàn 1 phần',
       value: 11,
       is_show_order_list: true,
       index: 8,
     },
     {
-      label: "Hoàn toàn bộ",
+      label: 'Hoàn toàn bộ',
       value: 12,
       is_show_order_list: true,
       index: 9,
     },
     {
-      label: "Huỷ",
+      label: 'Huỷ',
       value: 14,
       is_show_order_list: true,
       index: 10,
@@ -207,27 +209,27 @@ const ListOrderInApp = () => {
   };
 
   const headers = [
-    { label: "ID", key: "id" },
-    { label: "Mã đơn hàng", key: "order_id" },
-    { label: "Mã vận chuyển", key: "delivery_id" },
-    { label: "Trạng thái", key: "status_name" },
-    { label: "Số lần in", key: "number_printed" },
-    { label: "Tên Khách hàng", key: "customer_name" },
-    { label: "Địa chỉ", key: "address_full" },
-    { label: "Tổng tiền sản phẩm", key: "total_product_cost" },
-    { label: "Tổng khối lượng", key: "weight" },
-    { label: "Tiền thu COD", key: "total_cod" },
-    { label: "Tiền chuyển khoản", key: "total_transfer" },
-    { label: "Thời gian tạo", key: "created_at_order" },
-    { label: "Người tạo", key: "user_create" },
-    { label: "Thời gian in đơn", key: "printed_order_at" },
+    { label: 'ID', key: 'id' },
+    { label: 'Mã đơn hàng', key: 'order_id' },
+    { label: 'Mã vận chuyển', key: 'delivery_id' },
+    { label: 'Trạng thái', key: 'status_name' },
+    { label: 'Số lần in', key: 'number_printed' },
+    { label: 'Tên Khách hàng', key: 'customer_name' },
+    { label: 'Địa chỉ', key: 'address_full' },
+    { label: 'Tổng tiền sản phẩm', key: 'total_product_cost' },
+    { label: 'Tổng khối lượng', key: 'weight' },
+    { label: 'Tiền thu COD', key: 'total_cod' },
+    { label: 'Tiền chuyển khoản', key: 'total_transfer' },
+    { label: 'Thời gian tạo', key: 'created_at_order' },
+    { label: 'Người tạo', key: 'user_create' },
+    { label: 'Thời gian in đơn', key: 'printed_order_at' },
   ];
 
   const getListOrder = async () => {
     setLoading(true);
     const data = await OrderApi.getOrderInApp({
       ...filter,
-      arrSearch: debouncedSearchTerm && debouncedSearchTerm.split(" "),
+      arrSearch: debouncedSearchTerm && debouncedSearchTerm.split(' '),
       page: pagination.page,
       pageSize: pagination.pageSize,
     });
@@ -241,28 +243,28 @@ const ListOrderInApp = () => {
     setTotalMoneyTransfer(data.totalMoneyTransfer);
     let rawExportOrders = data.orders.map((item: any) => {
       const fullAddress =
-        get(item, "address") +
-        ", " +
-        get(item, "ward.prefix") +
-        " " +
-        get(item, "ward.name") +
-        ", " +
-        get(item, "district.prefix") +
-        " " +
-        get(item, "district.name") +
-        ", " +
-        get(item, "province.name");
+        get(item, 'address') +
+        ', ' +
+        get(item, 'ward.prefix') +
+        ' ' +
+        get(item, 'ward.name') +
+        ', ' +
+        get(item, 'district.prefix') +
+        ' ' +
+        get(item, 'district.name') +
+        ', ' +
+        get(item, 'province.name');
       const createTime =
-        format(new Date(item.created_at), "HH:mm") +
-        format(new Date(item.created_at), "dd/MM/yyyy");
+        format(new Date(item.created_at), 'HH:mm') +
+        format(new Date(item.created_at), 'dd/MM/yyyy');
       const printedTime =
-        format(new Date(item.printed_at), "HH:mm") +
-        format(new Date(item.printed_at), "dd/MM/yyyy");
+        format(new Date(item.printed_at), 'HH:mm') +
+        format(new Date(item.printed_at), 'dd/MM/yyyy');
       let weight = 0;
       isArray(item.order_item_skus) &&
         item.order_item_skus.map((item: any) => {
           weight +=
-            (get(item, "item_sku.weight") || 0) * parseFloat(item.quantity);
+            (get(item, 'item_sku.weight') || 0) * parseFloat(item.quantity);
         });
       return {
         ...item,
@@ -274,7 +276,7 @@ const ListOrderInApp = () => {
         address_full: fullAddress,
         total_cod: item.total_order_value - item.total_transfer,
         created_at_order: createTime,
-        user_create: get(item, "user.name"),
+        user_create: get(item, 'user.name'),
         printed_order_at: printedTime,
         weight: weight,
       };
@@ -285,12 +287,13 @@ const ListOrderInApp = () => {
       ...item,
       count: item.orders_count,
     }));
+    console.log('.raw', rawStatus);
     setTabStatus(rawStatus);
     setLoading(false);
   };
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    console.log("selectedRowKeys changed: ", selectedRowKeys);
+    console.log('selectedRowKeys changed: ', selectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
   };
   const rowSelection = {
@@ -299,90 +302,92 @@ const ListOrderInApp = () => {
   };
 
   const [columnSelecteted, setColumnSelecteted] = useState([
-    "order_id",
-    "delivery_id",
-    "order_status_id",
-    "printed",
-    "customer",
-    "address",
-    "tags",
-    "items",
-    "total_product_cost",
-    "total_pay",
-    "total_transfer",
-    "created_at",
-    "printed_at",
-    "weight",
+    'order_id',
+    'delivery_id',
+    'order_status_id',
+    'printed',
+    'customer',
+    'address',
+    'tags',
+    'items',
+    'total_product_cost',
+    'total_pay',
+    'total_transfer',
+    'created_at',
+    'printed_at',
+    'weight',
   ]);
   const checkboxSettings: {
     label: string;
     value: string;
   }[] = [
     {
-      label: "Trạng thái",
-      value: "order_status_id",
+      label: 'Trạng thái',
+      value: 'order_status_id',
     },
     {
-      label: "Số lần in",
-      value: "printed",
+      label: 'Số lần in',
+      value: 'printed',
     },
     {
-      label: "Khách hàng",
-      value: "customer",
+      label: 'Khách hàng',
+      value: 'customer',
     },
     {
-      label: "Địa chỉ GH",
-      value: "address",
+      label: 'Địa chỉ GH',
+      value: 'address',
     },
     {
-      label: "Thẻ",
-      value: "tags",
+      label: 'Thẻ',
+      value: 'tags',
     },
     {
-      label: "Giỏ hàng",
-      value: "items",
+      label: 'Giỏ hàng',
+      value: 'items',
     },
     {
-      label: "Tổng tiền SP",
-      value: "total_product_cost",
+      label: 'Tổng tiền SP',
+      value: 'total_product_cost',
     },
     {
-      label: "Tổng tiền COD",
-      value: "total_pay",
+      label: 'Tổng tiền COD',
+      value: 'total_pay',
     },
     {
-      label: "Chuyển khoản",
-      value: "total_transfer",
+      label: 'Chuyển khoản',
+      value: 'total_transfer',
     },
     {
-      label: "TG tạo đơn",
-      value: "created_at",
+      label: 'TG tạo đơn',
+      value: 'created_at',
     },
     {
-      label: "TG in đơn",
-      value: "printed_at",
+      label: 'TG in đơn',
+      value: 'printed_at',
     },
   ];
+
+
 
   const styleHiddenSlideToggle = {
     height: 0,
     opacity: 0.75,
-    overflow: "hidden",
-    padding: "0px",
+    overflow: 'hidden',
+    padding: '0px',
     // display: "none",
-    transition: "all 0.3s linear",
+    transition: 'all 0.3s linear',
   };
 
   const styleShowSlideToggle = {
-    height: "fit-content",
+    height: 'fit-content',
     opacity: 1,
     // display: "block",
-    padding: "10px",
-    border: "1px solod #FFCF90",
+    padding: '10px',
+    border: '1px solod #FFCF90',
   };
 
-  const handleSearchByDate = (value) => {
-    console.log("value", value);
+  const handleSearchByDate = (value: any) => {
+    console.log('value', value);
     if (value) {
       const from = new Date(value[0]);
       const to = new Date(value[1]);
@@ -394,20 +399,68 @@ const ListOrderInApp = () => {
     } else {
       setFilter({
         ...filter,
-        from: "",
-        to: "",
+        from: '',
+        to: '',
       });
     }
   };
 
+  // export const data: IsProduct[] = Array(50)
+  //   .fill({
+  //     delivery_code: 1123,
+  //     order_status_id: 7,
+  //     name: 'Tester',
+  //     phone: '08527271',
+  //     total_product_cost: 10000,
+  //     total_pay: 10000,
+  //     total_cost: 10000,
+  //     total_transfer: 10000,
+  //     created_at: Date.now(),
+  //     user: {
+  //       name: 'test',
+  //     },
+  //     address: '2 Hoang Thi Loan',
+  //     ward: {
+  //       prefix: 'Phuong',
+  //       name: ' 10',
+  //     },
+  //     district: {
+  //       prefix: 'Quan',
+  //       name: '9',
+  //     },
+  //     province: {
+  //       name: 'Sai Gon',
+  //     },
+  //     order_check_command_item: {
+  //       item_status: 'Chưa đối soát',
+  //     },
+  //     order_item_skus: [
+  //       {
+  //         item_sku: {
+  //           item: {
+  //             name: 'test',
+  //           },
+  //           weight: 13,
+  //           item_attribute_values: [
+  //             {
+  //               value: 13,
+  //             },
+  //           ],
+  //         },
+  //         quantity: 13,
+  //       },
+  //     ],
+  //   })
+  //   .map((item, index) => ({ ...item, order_id: `${index++}` }));
+
   const columns: ColumnsType<IsProduct> = [
     {
-      title: "Mã đơn hàng",
+      title: 'Mã đơn hàng',
       width: 170,
-      dataIndex: "order_id",
-      key: "order_id",
-      fixed: "left",
-      align: "center",
+      dataIndex: 'order_id',
+      key: 'order_id',
+      fixed: 'left',
+      align: 'center',
       render: (_, record) => (
         <span
           className="text-[#384ADC] font-semibold"
@@ -417,7 +470,7 @@ const ListOrderInApp = () => {
         >
           {record.order_id}
           {record.need_return_money == true && (
-            <div className={classNames(styles.tag, "mt-[4px]", styles.red_tag)}>
+            <div className={classNames(styles.tag, 'mt-[4px]', styles.red_tag)}>
               Nợ khách
             </div>
           )}
@@ -425,12 +478,12 @@ const ListOrderInApp = () => {
       ),
     },
     {
-      title: "Mã vận chuyển",
+      title: 'Mã vận chuyển',
       width: 190,
-      dataIndex: "delivery_id",
-      key: "delivery_id",
-      fixed: "left",
-      align: "center",
+      dataIndex: 'delivery_id',
+      key: 'delivery_id',
+      fixed: 'left',
+      align: 'center',
       render: (_, record: any) => {
         return (
           <div
@@ -447,10 +500,10 @@ const ListOrderInApp = () => {
     {
       title: <span className="dragHandler">Trạng thái</span>,
       width: 170,
-      dataIndex: "order_status_id",
-      key: "order_status_id",
-      fixed: "left",
-      align: "center",
+      dataIndex: 'order_status_id',
+      key: 'order_status_id',
+      fixed: 'left',
+      align: 'center',
       render: (_, record) => {
         const statusSelected = warehouseStatusColor.find(
           (item) => item.id === record.order_status_id
@@ -480,11 +533,11 @@ const ListOrderInApp = () => {
       },
     },
     {
-      title: "Số lần in",
+      title: 'Số lần in',
       width: 110,
-      dataIndex: "printed",
-      key: "printed",
-      align: "center",
+      dataIndex: 'printed',
+      key: 'printed',
+      align: 'center',
       render: (_, record) => (
         <div
           onClick={(e) => {
@@ -496,50 +549,50 @@ const ListOrderInApp = () => {
       ),
     },
     {
-      title: "Khách hàng",
+      title: 'Khách hàng',
       width: 150,
-      dataIndex: "customer",
-      key: "customer",
-      align: "left",
+      dataIndex: 'customer',
+      key: 'customer',
+      align: 'left',
       render: (_, record) => (
         <div className="flex flex-col items-start">
           <div
             className="text-[#384ADC] font-semibold"
             onClick={(e) => {
-              get(record, "name") && onCoppy(e, record?.name);
+              get(record, 'name') && onCoppy(e, record?.name);
             }}
           >
-            {get(record, "name") ? get(record, "name") : ""}
+            {get(record, 'name') ? get(record, 'name') : ''}
           </div>
           <div
-            onClick={(e) => {
-              get(record, "phone") && onCoppy(e, get(record, "phone"));
+            onClick={(e: any) => {
+              get(record, 'phone') && onCoppy(e, record?.phone);
             }}
           >
-            {get(record, "phone") ? get(record, "phone") : ""}
+            {get(record, 'phone') ? get(record, 'phone') : ''}
           </div>
         </div>
       ),
     },
     {
-      title: "Địa chỉ GH",
+      title: 'Địa chỉ GH',
       width: 220,
-      dataIndex: "address",
-      key: "address",
-      align: "left",
+      dataIndex: 'address',
+      key: 'address',
+      align: 'left',
       render: (_, record) => {
         const fullAddress =
-          get(record, "address") +
-          ", " +
-          get(record, "ward.prefix") +
-          " " +
-          get(record, "ward.name") +
-          ", " +
-          get(record, "district.prefix") +
-          " " +
-          get(record, "district.name") +
-          ", " +
-          get(record, "province.name");
+          get(record, 'address') +
+          ', ' +
+          get(record, 'ward.prefix') +
+          ' ' +
+          get(record, 'ward.name') +
+          ', ' +
+          get(record, 'district.prefix') +
+          ' ' +
+          get(record, 'district.name') +
+          ', ' +
+          get(record, 'province.name');
         return (
           <div
             className="flex flex-col items-start"
@@ -563,25 +616,25 @@ const ListOrderInApp = () => {
     //   ),
     // },
     {
-      title: "Giỏ hàng",
+      title: 'Giỏ hàng',
       width: 110,
-      dataIndex: "items",
-      key: "items",
-      align: "center",
+      dataIndex: 'items',
+      key: 'items',
+      align: 'center',
       render: (_, record) => {
         const ContentItemSku = (
           <div className="td_items_skus">
             {isArray(record.order_item_skus) &&
               record.order_item_skus &&
               record.order_item_skus.map((orderItemSku, index) => {
-                let inforItem = `${get(orderItemSku, "item_sku.item.name")}`;
-                isArray(get(orderItemSku, "item_sku.item_attribute_values")) &&
-                  get(orderItemSku, "item_sku.item_attribute_values").map(
+                let inforItem = `${get(orderItemSku, 'item_sku.item.name')}`;
+                isArray(get(orderItemSku, 'item_sku.item_attribute_values')) &&
+                  get(orderItemSku, 'item_sku.item_attribute_values').map(
                     (itemSku: any) => {
                       inforItem += ` | ${itemSku.value}`;
                     }
                   );
-                inforItem += ` x${get(orderItemSku, "quantity")}`;
+                inforItem += ` x${get(orderItemSku, 'quantity')}`;
                 return <p key={index}>{inforItem}</p>;
               })}
           </div>
@@ -595,9 +648,9 @@ const ListOrderInApp = () => {
           >
             <div>
               <span>
-                {get(record, "order_item_skus_count")
-                  ? get(record, "order_item_skus_count")
-                  : 0}{" "}
+                {get(record, 'order_item_skus_count')
+                  ? get(record, 'order_item_skus_count')
+                  : 0}{' '}
                 sản phẩm
               </span>
             </div>
@@ -606,11 +659,11 @@ const ListOrderInApp = () => {
       },
     },
     {
-      title: "Tổng tiền SP",
+      title: 'Tổng tiền SP',
       width: 150,
-      dataIndex: "total_product_cost",
-      key: "total_product_cost",
-      align: "center",
+      dataIndex: 'total_product_cost',
+      key: 'total_product_cost',
+      align: 'center',
       render: (_, record: any) => (
         <div
           onClick={(e) => {
@@ -618,33 +671,33 @@ const ListOrderInApp = () => {
           }}
         >
           {record.total_product_cost
-            ? parseFloat(record.total_product_cost).toLocaleString() + "đ"
+            ? parseFloat(record.total_product_cost).toLocaleString() + 'đ'
             : 0}
         </div>
       ),
     },
     {
-      title: "Tổng trọng lượng",
+      title: 'Tổng trọng lượng',
       width: 150,
-      dataIndex: "weight",
-      key: "weight",
-      align: "center",
+      dataIndex: 'weight',
+      key: 'weight',
+      align: 'center',
       render: (_, record: any) => {
         let weight = 0;
         isArray(record.order_item_skus) &&
           record.order_item_skus.map((item: any) => {
             weight +=
-              (get(item, "item_sku.weight") || 0) * parseFloat(item.quantity);
+              (get(item, 'item_sku.weight') || 0) * parseFloat(item.quantity);
           });
         return <div>{weight}</div>;
       },
     },
     {
-      title: "Tiền thu COD",
+      title: 'Tiền thu COD',
       width: 150,
-      dataIndex: "total_pay",
-      key: "total_pay",
-      align: "center",
+      dataIndex: 'total_pay',
+      key: 'total_pay',
+      align: 'center',
       render: (_, record: any) => (
         <div
           onClick={(e) => {
@@ -652,17 +705,17 @@ const ListOrderInApp = () => {
           }}
         >
           {record.payment_method_id == 2
-            ? parseFloat(record.total_cost)?.toLocaleString() + "đ"
+            ? parseFloat(record.total_cost)?.toLocaleString() + 'đ'
             : 0}
         </div>
       ),
     },
     {
-      title: "Chuyển khoản",
+      title: 'Chuyển khoản',
       width: 150,
-      dataIndex: "total_transfer",
-      key: "total_transfer",
-      align: "center",
+      dataIndex: 'total_transfer',
+      key: 'total_transfer',
+      align: 'center',
       render: (_, record: any) => (
         <div
           onClick={(e) => {
@@ -670,25 +723,25 @@ const ListOrderInApp = () => {
           }}
         >
           {record.total_transfer
-            ? parseFloat(record.total_transfer).toLocaleString() + "đ"
+            ? parseFloat(record.total_transfer).toLocaleString() + 'đ'
             : 0}
         </div>
       ),
     },
     {
-      title: "TG tạo đơn",
+      title: 'TG tạo đơn',
       width: 240,
-      dataIndex: "created_at",
-      key: "created_at",
-      align: "left",
+      dataIndex: 'created_at',
+      key: 'created_at',
+      align: 'left',
       render: (_, record) => (
         <div className="flex flex-col items-start">
           <div className="flex flex-row gap-x-1 text-medium text-[#1D1C2D]">
-            <span>{format(new Date(record.created_at), "HH:mm")} </span>
-            <span>{format(new Date(record.created_at), "dd/MM/yyyy")}</span>
+            <span>{format(new Date(record.created_at), 'HH:mm')} </span>
+            <span>{format(new Date(record.created_at), 'dd/MM/yyyy')}</span>
           </div>
           <div className="text-medium font-semibold">
-            {get(record, "user") ? get(record, "user.name") : " "}
+            {get(record, 'user') ? get(record, 'user.name') : ' '}
           </div>
         </div>
       ),
@@ -696,13 +749,13 @@ const ListOrderInApp = () => {
     {
       title: <span className="dragHandler">TG in đơn</span>,
       width: 240,
-      dataIndex: "printed_at",
-      key: "printed_at",
-      align: "left",
+      dataIndex: 'printed_at',
+      key: 'printed_at',
+      align: 'left',
       render: (_, record) => {
         const statusOrderCheckCommand = orderCheckCommandColor.find(
           (item) =>
-            item.label === get(record, "order_check_command_item.item_status")
+            item.label === get(record, 'order_check_command_item.item_status')
         );
         return (
           <div className="flex flex-col items-start">
@@ -710,27 +763,27 @@ const ListOrderInApp = () => {
               record.printed_at && (
                 <div className="flex flex-col gap-y-1 text-medium text-[#1D1C2D]">
                   <span>
-                    {format(new Date(record.printed_at), "HH:mm")}
-                    {" - "}
+                    {format(new Date(record.printed_at), 'HH:mm')}
+                    {' - '}
                     <span>
-                      {format(new Date(record.printed_at), "dd/MM/yyyy")}
+                      {format(new Date(record.printed_at), 'dd/MM/yyyy')}
                     </span>
                   </span>
                 </div>
               )}
             <div className="text-medium font-semibold">
               {record.order_status_id === OrderEnumId.PRINT_OK &&
-              get(record, "user")
-                ? get(record, "user.name")
-                : " "}
+              get(record, 'user')
+                ? get(record, 'user.name')
+                : ' '}
             </div>
-            {get(record, "order_check_command_item.item_status") && (
+            {get(record, 'order_check_command_item.item_status') && (
               <span
                 className={classNames(
                   `text-[${statusOrderCheckCommand?.value}] z-2 font-bold`
                 )}
               >
-                {get(record, "order_check_command_item.item_status")}
+                {get(record, 'order_check_command_item.item_status')}
               </span>
             )}
           </div>
@@ -738,7 +791,7 @@ const ListOrderInApp = () => {
       },
     },
   ];
-  const handleChangeTab = (e) => {
+  const handleChangeTab = (e: any) => {
     if (e) {
       const tabSelect: any = orderStatus.find((item) => item.label === e);
       setFilter({
@@ -748,19 +801,19 @@ const ListOrderInApp = () => {
     } else {
       setFilter({
         ...filter,
-        order_status_id: "",
+        order_status_id: '',
       });
     }
   };
 
   const handleOnChangeStatus = async () => {
     setIsShowChangeStatus(false);
-    console.log("selectedRowKeys", selectedRowKeys);
+    console.log('selectedRowKeys', selectedRowKeys);
     if (!selectedRowKeys.length) {
       notification.error({
-        message: "Có lỗi !!!",
-        description: "Vui lòng chọn đơn hàng để cập nhật",
-        placement: "top",
+        message: 'Có lỗi !!!',
+        description: 'Vui lòng chọn đơn hàng để cập nhật',
+        placement: 'top',
       });
     }
 
@@ -772,11 +825,11 @@ const ListOrderInApp = () => {
       getListOrder();
       setSelectedRowKeys([]);
       notification.success({
-        message: "Cập nhật đơn hàng thành công!",
+        message: 'Cập nhật đơn hàng thành công!',
       });
       if (selectStatus == 7) {
         selectedRowKeys.map((id) => {
-          console.log("id", id);
+          console.log('id', id);
           window.open(`/order-management/print/${id}`);
         });
       }
@@ -784,18 +837,18 @@ const ListOrderInApp = () => {
       notification.error({
         message: data.message,
       });
-      console.log("error");
+      console.log('error');
     }
   };
 
   const handleDelete = async () => {
     setIsShowChangeStatus(false);
-    console.log("selectedRowKeys", selectedRowKeys);
+    console.log('selectedRowKeys', selectedRowKeys);
     if (!selectedRowKeys.length) {
       notification.error({
-        message: "Có lỗi !!!",
-        description: "Vui lòng chọn đơn hàng để xoá",
-        placement: "top",
+        message: 'Có lỗi !!!',
+        description: 'Vui lòng chọn đơn hàng để xoá',
+        placement: 'top',
       });
     }
 
@@ -807,13 +860,13 @@ const ListOrderInApp = () => {
       getListOrder();
       setSelectedRowKeys([]);
       notification.success({
-        message: "Xóa đơn hàng thành công!",
+        message: 'Xóa đơn hàng thành công!',
       });
     } else {
       notification.error({
         message: data.message,
       });
-      console.log("error");
+      console.log('error');
     }
   };
 
@@ -823,9 +876,9 @@ const ListOrderInApp = () => {
     setIsShowPrintPopever(false);
     if (!selectedRowKeys.length) {
       notification.error({
-        message: "Có lỗi !!!",
-        description: "Vui lòng chọn đơn hàng để in!",
-        placement: "top",
+        message: 'Có lỗi !!!',
+        description: 'Vui lòng chọn đơn hàng để in!',
+        placement: 'top',
       });
     }
     let existError = false;
@@ -846,7 +899,7 @@ const ListOrderInApp = () => {
     if (existError) {
       notification.error({
         message:
-          "Chỉ có thể in đơn hàng có trạng thái Xác nhận, Đã in hoặc Đã đủ hàng!",
+          'Chỉ có thể in đơn hàng có trạng thái Xác nhận, Đã in hoặc Đã đủ hàng!',
       });
     }
 
@@ -861,17 +914,17 @@ const ListOrderInApp = () => {
         getListOrder();
         setSelectedRowKeys([]);
         notification.success({
-          message: "In đơn thành công!",
+          message: 'In đơn thành công!',
         });
         newSelectedRowKeys.map((id) => {
-          console.log("id", id);
+          console.log('id', id);
           window.open(`/order-management/print/${id}`);
         });
       } else {
         notification.error({
           message: data.message,
         });
-        console.log("error");
+        console.log('error');
       }
     }
   };
@@ -921,13 +974,13 @@ const ListOrderInApp = () => {
       getListOrder();
       setSelectedRowKeys([]);
       notification.success({
-        message: "Xoá thẻ nợ khách thành công!",
+        message: 'Xoá thẻ nợ khách thành công!',
       });
     } else {
       notification.error({
         message: data.message,
       });
-      console.log("error");
+      console.log('error');
     }
   };
 
@@ -946,7 +999,7 @@ const ListOrderInApp = () => {
           rules={[
             {
               required: true,
-              message: "Đơn vị vận chuyển là bắt buộc!",
+              message: 'Đơn vị vận chuyển là bắt buộc!',
             },
           ]}
         >
@@ -965,7 +1018,7 @@ const ListOrderInApp = () => {
           rules={[
             {
               required: true,
-              message: "Tài khoản của đơn vị vận chuyển là bắt buộc!",
+              message: 'Tài khoản của đơn vị vận chuyển là bắt buộc!',
             },
           ]}
           className="mt-[24px]"
@@ -1014,7 +1067,7 @@ const ListOrderInApp = () => {
             className="detail-customer"
             trigger="click"
             overlayStyle={{
-              padding: "16px",
+              padding: '16px',
             }}
             open={isShowChangeStatus}
           >
@@ -1044,7 +1097,7 @@ const ListOrderInApp = () => {
             className="detail-customer"
             trigger="click"
             overlayStyle={{
-              padding: "16px",
+              padding: '16px',
             }}
             open={isShowPrintPopever}
           >
@@ -1063,9 +1116,9 @@ const ListOrderInApp = () => {
           <CSVLink
             headers={headers}
             data={orderExport}
-            filename={"don-hang.csv"}
+            filename={'don-hang.csv'}
             onClick={() => {
-              message.success("Download thành công");
+              message.success('Download thành công');
             }}
           >
             <Button
@@ -1105,7 +1158,7 @@ const ListOrderInApp = () => {
           Ghim tìm kiếm
         </Button> */}
         <InputRangePicker
-          placeholder={["Ngày bắt đầu", "Ngày kết thúc"]}
+          placeholder={['Ngày bắt đầu', 'Ngày kết thúc']}
           width={306}
           prevIcon={<Icon size={24} icon="calendar" />}
           onChange={(value) => {
@@ -1126,15 +1179,15 @@ const ListOrderInApp = () => {
         <div
           style={isShowSettings ? styleShowSlideToggle : styleHiddenSlideToggle}
           className={classNames(
-            "w-full bg-[#FFFFFF] rounded-b",
-            isShowSettings && "my-[12px]"
+            'w-full bg-[#FFFFFF] rounded-b',
+            isShowSettings && 'my-[12px]'
           )}
         >
           <CheckboxList
             options={checkboxSettings}
             onChange={(e) =>
               setColumnSelecteted(
-                e.concat(["order_id", "delivery_id", "phone_number"])
+                e.concat(['order_id', 'delivery_id', 'phone_number'])
               )
             }
             value={columnSelecteted}
@@ -1143,7 +1196,7 @@ const ListOrderInApp = () => {
       </div>
       {isArray(selectedRowKeys) && (
         <div className="mb-[12px]">
-          Số đơn hàng đang chọn:{" "}
+          Số đơn hàng đang chọn:{' '}
           <span className="text-[#384ADC] font-semibold">
             {selectedRowKeys.length}
           </span>
@@ -1151,7 +1204,7 @@ const ListOrderInApp = () => {
       )}
       <Tabs
         countTotal={pagination.total}
-        tabs={tabStatus}
+        tabs={statusList}
         onClick={(e) => handleChangeTab(e)}
       />
       <div className="relative">
@@ -1168,7 +1221,8 @@ const ListOrderInApp = () => {
           }}
           rowSelection={rowSelection}
           columns={columns.filter((e: any) => columnSelecteted.includes(e.key))}
-          dataSource={[...orders]}
+          // dataSource={[...orders]}
+          dataSource={orderList}
           pagination={{
             total: pagination.total,
             defaultPageSize: pagination.pageSize,
@@ -1185,36 +1239,36 @@ const ListOrderInApp = () => {
           onRow={(record) => {
             return {
               onClick: () => {
-                window.location.href = `/order-management/edit/order-in-app/${record.id}`;
+                window.location.href = `/orders/order-in-app/${record.order_id}`;
               },
             };
           }}
           scroll={{ x: 50 }}
         />
-        <div className={classNames("flex items-center", styles.total_wrapper)}>
+        <div className={classNames('flex items-center', styles.total_wrapper)}>
           <div className={styles.row_total}>
             Tổng COD:
             <span className="font-medium text-[#384ADC]">
-              {" "}
-              {totalMoneyCOD ? totalMoneyCOD.toLocaleString() + "đ" : "--"}
+              {' '}
+              {totalMoneyCOD ? totalMoneyCOD.toLocaleString() + 'đ' : '--'}
             </span>
           </div>
           <div className={styles.row_total}>
             Tổng tiền trong giỏ hàng:
             <span className="font-medium text-[#384ADC]">
-              {" "}
+              {' '}
               {totalMoneyProduct
-                ? totalMoneyProduct.toLocaleString() + "đ"
-                : "--"}
+                ? totalMoneyProduct.toLocaleString() + 'đ'
+                : '--'}
             </span>
           </div>
           <div className={styles.row_total}>
             Tiền chuyển khoản:
             <span className="font-medium text-[#384ADC]">
-              {" "}
+              {' '}
               {totalMoneyTransfer
-                ? totalMoneyTransfer.toLocaleString() + "đ"
-                : "--"}
+                ? totalMoneyTransfer.toLocaleString() + 'đ'
+                : '--'}
             </span>
           </div>
         </div>
@@ -1223,4 +1277,4 @@ const ListOrderInApp = () => {
   );
 };
 
-ReactDOM.render(<ListOrderInApp />, document.getElementById("root"));
+export default ListOrderInApp;

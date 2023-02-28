@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import Button from "../../components/Button/Button";
 import DatePicker from "../../components/DatePicker/DatePicker";
+import { wareHouseList } from "../../const/constant";
 import Icon from "../../components/Icon/Icon";
 import Select from "../../components/Select/Select";
 import TitlePage from "../../components/TitlePage/Titlepage";
@@ -40,39 +41,39 @@ const ReportProduct = () => {
   const [productSaleByChannel, setProductSaleByChannel] = useState<any[]>([
     {
       name: "Tại quầy",
-      value: 0,
+      value: 100,
     },
-    { name: "Onine", value: 0 },
-    { name: "Trên app", value: 0 },
+    { name: "Onine", value: 20 },
+    { name: "Trên app", value: 30 },
   ]);
   const [orderTypeOptions, setOrderTypeOptions] = useState<any[]>([
     {
       label: "Tất cả",
-      value: "",
+      value: "100",
     },
     {
       label: "Online",
-      value: 1,
+      value: 13,
     },
     {
       label: "Tại quầy",
-      value: 2,
+      value: 25,
     },
     {
       label: "In app",
-      value: 3,
+      value: 31,
     },
   ]);
   const [selectedOrderTypeOptions, setSelectedOrderTypeOptions] = useState("");
 
   const [productOverview, setProductOverview] = useState<any>({
-    totalProductSale: 0,
-    totalProdudctSaleOffline: 0,
-    totalProdudctSaleOnline: 0,
-    totalProdudctSaleInApp: 0,
-    totalImportPrice: 0,
-    totalItemImport: 0,
-    totalCostSale: 0,
+    totalProductSale: 20,
+    totalProdudctSaleOffline: 10,
+    totalProdudctSaleOnline: 30,
+    totalProdudctSaleInApp: 50,
+    totalImportPrice: 20,
+    totalItemImport: 10,
+    totalCostSale: 20,
   });
   const [warehouses, setWarehouse] = useState<
     {
@@ -132,7 +133,7 @@ const ReportProduct = () => {
       setReportProductSalgeByWarehouse(data.reportProductSalgeByWarehouse);
       const listWarehouse =
         isArray(data.warehouseTotalProductSale) &&
-        data.warehouseTotalProductSale.map((item) => ({
+        data.warehouseTotalProductSale.map((item: any) => ({
           ...item,
           value: item.id,
           valueReport: item.totalProductSale,
@@ -185,7 +186,7 @@ const ReportProduct = () => {
     setLoadingProduct(false);
   };
 
-  const handleOnChangeWarehouse = (e) => {
+  const handleOnChangeWarehouse = (e: any) => {
     const newSelectedWarehouses = warehouses.filter((item) => item.id == e);
     newSelectedWarehouses && setSelectWarehouses(newSelectedWarehouses);
   };
@@ -204,6 +205,13 @@ const ReportProduct = () => {
       value: OrderStatusEnum.CANCELLED,
     },
   ];
+  const colData: IsProduct[] = Array(10)
+  .fill({
+    code: "123SDNAN",
+    name: "Test",
+    quantity: 12,
+    revenue: 1234,
+  })
 
   const columns: ColumnsType<IsProduct> = [
     {
@@ -275,8 +283,8 @@ const ReportProduct = () => {
           >
             Xuất file
           </Button> */}
-          <div className="flex items-center">
-            <div className="text-medium font-semibold mr-[8px]">
+          <div className="justify-end flex items-center">
+            <div className="min-w-max text-medium font-semibold mr-[8px]">
               Hiển thị theo thời gian
             </div>
             <InputRangePicker
@@ -357,7 +365,8 @@ const ReportProduct = () => {
         />
       </div>
       <LineChart
-        warehouses={warehouses}
+        // warehouses={warehouses}
+        warehouses={wareHouseList}
         onChangeWarehouse={(e) => handleOnChangeWarehouse(e)}
         onChangeStatus={(e) => setSelectedStatusOrder(e)}
         selectedStatusOrder={selectedStatusOrder}
@@ -419,10 +428,11 @@ const ReportProduct = () => {
                 }
               : { emptyText: <></> }
           }
-          loading={loadingProduct}
+          // loading={loadingProduct}
           className="table-layout1"
           columns={columns}
-          dataSource={[...topProduct]}
+          // dataSource={[...topProduct]}
+          dataSource={colData}
           pagination={{
             total: pagination.total,
             defaultPageSize: pagination.pageSize,
@@ -442,4 +452,4 @@ const ReportProduct = () => {
   );
 };
 
-ReactDOM.render(<ReportProduct />, document.getElementById("root"));
+export default ReportProduct;

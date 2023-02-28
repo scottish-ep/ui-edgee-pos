@@ -1,17 +1,17 @@
-import { message, notification } from "antd";
-import { UploadFile } from "antd/es/upload";
-import { UploadChangeParam } from "antd/lib/upload";
-import React, { useEffect, useState } from "react";
-import { uuid } from "uuidv4";
-import Button from "../../../components/Button/Button";
-import Icon from "../../../components/Icon/Icon";
-import Modal from "../../../components/Modal/Modal/Modal";
-import Select from "../../../components/Select/Select";
-import Upload from "../../../components/Upload/Upload";
-import { shippingUnitList } from "../../../const/constant";
-import Api from "../../../services";
-import OrderCheckCommandApi from "../../../services/order-check-command";
-import { IOption } from "../../../types/permission";
+import { message, notification } from 'antd';
+import { UploadFile } from 'antd/es/upload';
+import { UploadChangeParam } from 'antd/lib/upload';
+import React, { useEffect, useRef, useState } from 'react';
+import { uuid } from 'uuidv4';
+import Button from '../../../components/Button/Button';
+import Icon from '../../../components/Icon/Icon';
+import Modal from '../../../components/Modal/Modal/Modal';
+import Select from '../../../components/Select/Select';
+import Upload from '../../../components/Upload/Upload';
+import { shippingUnitList } from '../../../const/constant';
+import Api from '../../../services';
+import OrderCheckCommandApi from '../../../services/order-check-command';
+import { IOption } from '../../../types/permission';
 
 interface ModalAddOrderChecksProps {
   isVisible: boolean;
@@ -25,14 +25,18 @@ const ModalAddOrderChecks: React.FC<ModalAddOrderChecksProps> = (props) => {
   const [warehouses, setWarehouses] = useState<IOption[]>([]);
   const [transportCompanies, setTransportCompanies] = useState<IOption[]>([]);
   const [transportCompanyIdSelected, setTransportCompanyIdSelected] =
-    useState<string>("");
-  const [warehouseIdSelected, setWarehouseIdSelected] = useState<string>("");
-  const selectedUser = window.loggedInUser;
+    useState<string>('');
+  const [warehouseIdSelected, setWarehouseIdSelected] = useState<string>('');
+  let selectedUser = '';
   const [loadingSubmit, setLoadingSubmit] = useState(false);
   useEffect(() => {
     getAllWarehouse();
     getAllTransportCompanies();
   }, []);
+
+  useRef(() => {
+    selectedUser = window.loggedInUser;
+  });
 
   const getAllWarehouse = async () => {
     const url = `/api/v2/warehouses/list`;
@@ -40,12 +44,12 @@ const ModalAddOrderChecks: React.FC<ModalAddOrderChecksProps> = (props) => {
 
     let arr: Array<IOption> = [
       {
-        value: "",
-        label: "--chọn--",
+        value: '',
+        label: '--chọn--',
       },
     ];
 
-    data?.data?.map((item) => {
+    data?.data?.map((item: any) => {
       arr.push({
         label: item?.name,
         value: item?.id,
@@ -60,12 +64,12 @@ const ModalAddOrderChecks: React.FC<ModalAddOrderChecksProps> = (props) => {
 
     let arr: Array<IOption> = [
       {
-        value: "",
-        label: "--chọn--",
+        value: '',
+        label: '--chọn--',
       },
     ];
 
-    data?.data?.map((item) => {
+    data?.data?.map((item: any) => {
       if (item?.id === 9) {
         // ninjavan
         arr.push({
@@ -80,19 +84,19 @@ const ModalAddOrderChecks: React.FC<ModalAddOrderChecksProps> = (props) => {
   const onSubmit = async () => {
     setLoadingSubmit(true);
     if (!file || !transportCompanyIdSelected) {
-      message.error("Vui lòng điền đầy đủ thông tin");
+      message.error('Vui lòng điền đầy đủ thông tin');
       return null;
     }
 
     const formData = new FormData();
-    formData.append("file", file);
-    formData.append("transportCompanyId", transportCompanyIdSelected);
+    formData.append('file', file);
+    formData.append('transportCompanyId', transportCompanyIdSelected);
     // formData.append("warehouseId", warehouseIdSelected);
-    formData.append("selectedUser", selectedUser);
+    formData.append('selectedUser', selectedUser);
     const config = {
       headers: {
-        "content-type": "multipart/form-data",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        'content-type': 'multipart/form-data',
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
     };
     const { data } = await OrderCheckCommandApi.add(formData, config);
@@ -100,7 +104,7 @@ const ModalAddOrderChecks: React.FC<ModalAddOrderChecksProps> = (props) => {
     if (data) {
       onSuccess?.(uuid());
       notification.success({
-        message: "Thêm thành công",
+        message: 'Thêm thành công',
       });
       onClear();
     }
@@ -108,8 +112,8 @@ const ModalAddOrderChecks: React.FC<ModalAddOrderChecksProps> = (props) => {
   };
 
   const onClear = () => {
-    setTransportCompanyIdSelected("");
-    setWarehouseIdSelected("");
+    setTransportCompanyIdSelected('');
+    setWarehouseIdSelected('');
     setFile(null);
     onClose();
   };
@@ -123,11 +127,7 @@ const ModalAddOrderChecks: React.FC<ModalAddOrderChecksProps> = (props) => {
         className="flex-1"
         variant="secondary"
         onClick={onSubmit}
-        disabled={
-          !file ||
-          !transportCompanyIdSelected ||
-          loadingSubmit
-        }
+        disabled={!file || !transportCompanyIdSelected || loadingSubmit}
         loading={loadingSubmit}
       >
         TẠO ĐỐI SOÁT

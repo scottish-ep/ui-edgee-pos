@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { message, notification, Popover, Switch, Table } from 'antd';
+import Checkbox from 'antd/lib/checkbox/Checkbox';
 import type { ColumnsType } from 'antd/es/table';
 // import get from "lodash/get";
 import { format } from 'date-fns';

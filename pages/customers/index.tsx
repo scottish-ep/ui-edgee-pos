@@ -607,6 +607,12 @@ const ListCustomer = () => {
     },
   ];
 
+  const transactionByWarehouseData = [
+    {
+      
+    }
+  ]
+
   const styleHiddenSlideToggle = {
     height: 0,
     opacity: 0.75,

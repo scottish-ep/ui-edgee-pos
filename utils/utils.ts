@@ -1,15 +1,16 @@
-import { notification } from "antd";
-import { differenceInMinutes } from "date-fns";
-import { get } from "lodash";
-import React from "react";
-import { TargetStatus } from "../const/constant";
+import { notification } from 'antd';
+import { differenceInMinutes } from 'date-fns';
+import { get } from 'lodash';
+import React from 'react';
+import { TargetStatus } from '../const/constant';
 import {
   LevelCustomer,
   ModuleLog,
   ModuleLogAction,
   ModuleLogActionEnum,
   OrderEnumId,
-} from "../enums/enums";
+} from '../enums/enums';
+import { IsProduct } from 'pages/products/product.type';
 
 export const isArray = (items: any) => {
   return Array.isArray(items) && items.length > 0;
@@ -25,7 +26,7 @@ export const formatCustomer = (item: any) => ({
   address: item?.address,
   age: item?.age,
   ageId: item?.age_id,
-  avatar: item?.avatar || get(item, "user.avatar"),
+  avatar: item?.avatar || get(item, 'user.avatar'),
   birthday: item?.birthday,
   city_id: item?.city_id,
   class_id: item?.class_id,
@@ -34,13 +35,13 @@ export const formatCustomer = (item: any) => ({
   customer_level: item?.customer_level,
   deleted_at: item?.deleted_at,
   district_id: item?.district_id,
-  email: item?.email || get(item, "user.email"),
+  email: item?.email || get(item, 'user.email'),
   id: item?.id,
   is_block: item?.is_block,
   is_taken_by: item?.is_taken_by,
-  name: item?.name || get(item, "user.name"),
+  name: item?.name || get(item, 'user.name'),
   note: item?.note,
-  phone_number: item?.phone_number || get(item, "user.phone"),
+  phone_number: item?.phone_number || get(item, 'user.phone'),
   points: item?.points,
   sex: item?.sex,
   source_id: item?.source_id,
@@ -52,7 +53,7 @@ export const formatCustomer = (item: any) => ({
   user: item.user ? formatUser(item?.user) : {},
   is_bad: item?.is_bad || false,
   create_user: item.create_user,
-  note_bad: item.note_bad || "",
+  note_bad: item.note_bad || '',
   is_in_app: item.is_in_app || false,
   customer_tags: item.customer_tag_relations
     ? item.customer_tag_relations.map((v: any) => {
@@ -96,8 +97,8 @@ export const onCoppy = (
   event.stopPropagation();
   navigator.clipboard.writeText(text.toString());
   notification.success({
-    message: "Thành công!",
-    description: "Coppy successfully",
+    message: 'Thành công!',
+    description: 'Coppy successfully',
   });
 };
 
@@ -106,23 +107,23 @@ export const renderLevelCustomer = (points: number) => {
     color: string;
     type: string;
   } = {
-    color: "#0EA5E9",
-    type: "KH mới",
+    color: '#0EA5E9',
+    type: 'KH mới',
   };
   if (499 > points && points > 9) {
     data = {
-      color: "#F97316",
-      type: "Đồng",
+      color: '#F97316',
+      type: 'Đồng',
     };
   } else if (points < 999) {
     data = {
-      color: "#5F5E6B",
-      type: "Bạc",
+      color: '#5F5E6B',
+      type: 'Bạc',
     };
   } else {
     data = {
-      color: "#EAB308",
-      type: "Vàng",
+      color: '#EAB308',
+      type: 'Vàng',
     };
   }
   return data;
@@ -137,7 +138,7 @@ export const calcWithPoints = (points: any) => {
     width = (parseFloat(points) / 100) * 100;
   } else if (parseFloat(points) <= 500) {
     console.log(2);
-    console.log("calc", ((parseFloat(points) - 100) / 500) * 100);
+    console.log('calc', ((parseFloat(points) - 100) / 500) * 100);
     width = ((parseFloat(points) - 100) / 500) * 100;
   } else if (parseFloat(points) <= 1000) {
     console.log(3);
@@ -149,7 +150,7 @@ export const calcWithPoints = (points: any) => {
     console.log(5);
     return 100;
   }
-  console.log("width", width);
+  console.log('width', width);
   return width;
 };
 
@@ -161,14 +162,14 @@ export const handleDirect = (data: any) => {
     data.module === ModuleLog.ORDER &&
     data.action !== ModuleLogActionEnum.DELETED
   ) {
-    if (get(data, "order.order_status.id") === OrderEnumId.DRAFT) {
-      if (get(data, "order.order_type") == 1) {
+    if (get(data, 'order.order_status.id') === OrderEnumId.DRAFT) {
+      if (get(data, 'order.order_type') == 1) {
         window.location.href = `/order-management/add/order-online?order-type=1`;
       } else {
         window.location.href = `/order-management/add/order-offline?order-type=2`;
       }
     } else {
-      if (get(data, "order.order_type") == 1) {
+      if (get(data, 'order.order_type') == 1) {
         window.location.href = `/order-management/edit/order-online/${data.order.id}`;
       } else {
         window.location.href = `/order-management/edit/order-offline/${data.order.id}`;
@@ -215,12 +216,12 @@ export const parseItemSkus = (data: any[]) => {
       isArray(item.item_attribute_values) &&
         item.item_attribute_values.map((attr: any, index: any) => {
           if (index == 0) {
-            nameSku += " | " + attr.value;
+            nameSku += ' | ' + attr.value;
           } else {
-            nameSku += " - " + attr.value;
+            nameSku += ' - ' + attr.value;
           }
         });
-      let category = item.item_category ? item.item_category.name : "";
+      let category = item.item_category ? item.item_category.name : '';
 
       rawData.push({
         id: item.id,
@@ -251,30 +252,32 @@ export const parseItemSkuFromCommandItems = (data: any[]) => {
   let rawData: any[] = [];
   isArray(data) &&
     data.map((item: any) => {
-      console.log("item", item);
-      let nameSku = get(item, "item_sku.item.name");
-      isArray(get(item, "item_sku.item_attribute_values")) &&
-        get(item, "item_sku.item_attribute_values").map((attr: any, index: any) => {
-          if (index == 0) {
-            nameSku += " | " + attr.value;
-          } else {
-            nameSku += " - " + attr.value;
+      console.log('item', item);
+      let nameSku = get(item, 'item_sku.item.name');
+      isArray(get(item, 'item_sku.item_attribute_values')) &&
+        get(item, 'item_sku.item_attribute_values').map(
+          (attr: any, index: any) => {
+            if (index == 0) {
+              nameSku += ' | ' + attr.value;
+            } else {
+              nameSku += ' - ' + attr.value;
+            }
           }
-        });
-      let category = get(item, "item_sku.item.item_category")
-        ? get(item, "item_sku.item.item_category.name")
-        : "";
+        );
+      let category = get(item, 'item_sku.item.item_category')
+        ? get(item, 'item_sku.item.item_category.name')
+        : '';
 
       rawData.push({
-        id: get(item, "item_sku.id"),
-        code: get(item, "item_sku.code"),
-        is_allow_wholesale: get(item, "item_sku.is_allow_wholesale"),
-        is_minus_sell: get(item, "item_sku.is_minus_sell"),
-        is_show: get(item, "item_sku.is_show"),
-        item_id: get(item, "item_sku.item_id"),
+        id: get(item, 'item_sku.id'),
+        code: get(item, 'item_sku.code'),
+        is_allow_wholesale: get(item, 'item_sku.is_allow_wholesale'),
+        is_minus_sell: get(item, 'item_sku.is_minus_sell'),
+        is_show: get(item, 'item_sku.is_show'),
+        item_id: get(item, 'item_sku.item_id'),
         name: nameSku,
-        qr_link: get(item, "item_sku.qr_link"),
-        sku_code: get(item, "item_sku.sku_code"),
+        qr_link: get(item, 'item_sku.qr_link'),
+        sku_code: get(item, 'item_sku.sku_code'),
         category: category,
         manufactured_date: item.manufactured_date,
         total_package_price: parseFloat(item.total_package_price),
@@ -293,3 +296,65 @@ export const parseItemSkuFromCommandItems = (data: any[]) => {
     });
   return rawData;
 };
+
+export const statusList = Array(10).fill({
+  count: 37,
+  id: 1,
+  index: 0,
+  is_app: true,
+  is_offline: false,
+  is_online: true,
+  is_pickup: false,
+  is_show_order_list: true,
+  name: 'Tạo mới',
+  name_en: 'INIT',
+  orders_count: 37,
+});
+
+export const orderList: IsProduct[] = Array(50)
+  .fill({
+    delivery_code: 1123,
+    order_status_id: 7,
+    name: 'Tester',
+    phone: '08527271',
+    total_product_cost: 10000,
+    total_pay: 10000,
+    total_cost: 10000,
+    total_transfer: 10000,
+    created_at: Date.now(),
+    user: {
+      name: 'test',
+    },
+    address: '2 Hoang Thi Loan',
+    ward: {
+      prefix: 'Phuong',
+      name: ' 10',
+    },
+    district: {
+      prefix: 'Quan',
+      name: '9',
+    },
+    province: {
+      name: 'Sai Gon',
+    },
+    order_check_command_item: {
+      item_status: 'Chưa đối soát',
+    },
+    order_item_skus: [
+      {
+        item_sku: {
+          item: {
+            name: 'test',
+          },
+          weight: 13,
+          item_attribute_values: [
+            {
+              value: 13,
+            },
+          ],
+        },
+        quantity: 13,
+      },
+    ],
+  })
+  .map((item, index) => ({ ...item, order_id: `${index++}` }));
