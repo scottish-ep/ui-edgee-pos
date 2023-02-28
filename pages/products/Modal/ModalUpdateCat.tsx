@@ -5,6 +5,7 @@ import Input from '../../../components/Input/Input';
 import Upload from '../../../components/Upload/Upload';
 import Modal from '../../../components/Modal/Modal/Modal';
 import { Form } from 'antd';
+import ItemCategoryApi from 'services/item-categories';
 
 interface ModalUpdateCatProps {
   isUpdate?: boolean;
@@ -51,7 +52,25 @@ const ModalUpdateCat = (props: ModalUpdateCatProps) => {
   const handleSubmit = (event: any) => {
     const name = form.getFieldValue('name');
     const image = form.getFieldValue('upload');
-    form.resetFields();
+    const itemCategoryId = data?.id;
+    const itemCategory = {
+      name,
+      image
+    };
+    if(!isUpdate) {
+      if(itemCategory.name && itemCategory.image) {
+        ItemCategoryApi.addItemCategory(itemCategory);
+        form.resetFields();
+      }
+    }
+    else {
+      if(itemCategory.name) {
+        ItemCategoryApi.updateItemCategory(itemCategoryId, itemCategory);
+        form.setFieldValue('name', "");
+        form.setFieldValue('upload', undefined);
+        form.resetFields();
+      }
+    }
   };
 
   return (
@@ -89,7 +108,7 @@ const ModalUpdateCat = (props: ModalUpdateCatProps) => {
             Tên danh mục
           </span>
           <Form.Item name="name">
-            <Input value={data?.name} width={420} placeholder="Nhập" className="mb-[28px]" />
+            <Input value={data?.name} width={420} placeholder="Nhập tên danh mục" className="mb-[28px]" />
           </Form.Item>
         </div>
       </Form>

@@ -145,7 +145,6 @@ const ProductCategory = (props: any) => {
     };
     
     const res = ItemCategoryApi.getItemCategory(dataParams).then(data => {
-      // console.log(data);
       setItemCategories(data?.data);
     });
   };
