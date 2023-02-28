@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, createContext, useContext } from 'react';
 // Import Assets
 import { Table } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
@@ -21,11 +21,14 @@ import ModalUpdateCat from '../Modal/ModalUpdateCat';
 import { da } from 'date-fns/locale';
 import { error } from 'console';
 
-
-
 const pageTitle = 'Danh mục sản phẩm';
 const perPage = 10;
+const serviceFetching = 'Đang tải dữ liệu...';
+const serviceFetched = 'Dữ liệu đã được tải!';
+const serviceFailed = 'Không tìm thấy dữ liệu!';
 
+// export const CreateUpdateItemCategoryContext = createContext<IsProduct | any>('');
+// export const useItemCategoryContext = () => useContext(CreateUpdateItemCategoryContext);
 const ProductCategory = (props: any) => {
 
   // States
@@ -41,7 +44,8 @@ const ProductCategory = (props: any) => {
   const totalPages = Math.ceil(totalRecords / perPage);
 
   // Data 
-  const [itemCategories, setItemCategories] = useState([]);
+  const [createUpdateCategory, setCreateUpdateCategory] = useState<IsProduct|any>();
+  const [itemCategories, setItemCategories] = useState<IsProduct[]>([]);
 
   const items: IsProduct[] = [
     { order_id: 1, img: require('../../../public/clothes.svg'), name: 'Áo' },
@@ -66,6 +70,7 @@ const ProductCategory = (props: any) => {
       title: 'Ảnh',
       width: 97,
       key: 'image',
+      fixed: 'left',
       align: 'center',
       render: (_, record: any) => {
         return (
@@ -98,10 +103,17 @@ const ProductCategory = (props: any) => {
       render: (_, record: any) => {
         return (
           <div className="flex w-full justify-between">
-            <div  onClick={() => {setIsShowModalUpdateCat(true); setIsUpdate(true)}}>
+            <div  onClick={() => {
+              setIsShowModalUpdateCat(true); 
+              setIsUpdate(true);
+              setCreateUpdateCategory(record);
+              }}>
               <Icon icon="edit-2" size={24} />
             </div>
-            <div onClick={() => setIsShowModalConfirm(true)}>
+            <div onClick={() => {
+              setIsShowModalConfirm(true);
+              setCreateUpdateCategory(record);
+              }}>
               <Icon icon="trash" size={24} />
             </div>
           </div>
@@ -115,35 +127,21 @@ const ProductCategory = (props: any) => {
     setSelectedRowKeys(newSelectedRowKeys);
   };
 
-  const handleCreateUpdateCategory = () => {
-    console.log(1);
-    const category: IsProduct = {
-      name: '',
-      image: ''
-    }
-    if(isUpdate) {
-      const categoryId = '';
-
-    }
-    else {
-      
-    }
-
-
-
+  const handleCreateUpdateCategory = (event: any) => {
     setIsShowModalUpdateCat(false);
+    setCreateUpdateCategory(undefined);
   };
 
   const handleConfirmDelete = async () => {
-    console.log(2);
-    
+    ItemCategoryApi.deleteManyItemCategorys([...createUpdateCategory?.id]);
     setIsShowModalUpdateCat(false);
+    setCreateUpdateCategory(undefined);
   };
 
   const fetchingData = () => {
     const dataParams = {
-      limit: perPage,
-      offset: currentPage - 1
+      // limit: perPage,
+      // offset: currentPage - 1
     };
     
     const res = ItemCategoryApi.getItemCategory(dataParams).then(data => {
@@ -161,75 +159,81 @@ const ProductCategory = (props: any) => {
     fetchingData();
   }, []);
 
-  useEffect(() => {
-      fetchingData();
-  }, [currentPage]);
-
   return (
-    <div className="w-full">
-      <div className="flex items-center justify-between  flex-wrap mt-[26px]">
-        <TitlePage title="Danh mục sản phẩm" />
-        <div className="mb-[12px] flex gap-[8px] flex-wrap">
-          <Button
-            variant="outlined"
-            width={113}
-            icon={<Icon icon="export" size={24} />}
-          >
-            Xuất file
-          </Button>
-          <Button
-            variant="primary"
-            width={151}
-            color="white"
-            suffixIcon={<Icon icon="add-1" size={24} color="white" />}
-            onClick={() => {setIsShowModalUpdateCat(true); setIsUpdate(false)}}
-          >
-            Thêm mới
-          </Button>
-          <Button
-            variant="no-outlined"
-            width={62}
-            color="white"
-            icon={<Icon icon="question" size={16} />}
-          >
-            <a
-              href="https://docs.google.com/document/d/1wXPHowLeFIU6q-iXi-ryM56m7GuLahu4FFxsNPzJXYw/edit"
-              target="_blank"
-              rel="noopener noreferrer"
+    // <CreateUpdateItemCategoryContext.Provider value={{createUpdateCategory, setCreateUpdateCategory}}>
+
+      <div className="w-full">
+        <div className="flex items-center justify-between  flex-wrap mt-[26px]">
+          <TitlePage title="Danh mục sản phẩm" />
+          <div className="mb-[12px] flex gap-[8px] flex-wrap">
+            <Button
+              variant="outlined"
+              width={113}
+              icon={<Icon icon="export" size={24} />}
             >
-              Hỗ trợ
-            </a>
-          </Button>
-        </div>
-        <div className="relative w-full">
-          <Table
-            rowKey={(record: any) => record.id}
-            loading={loading}
-            columns={columns}
-            className="w-full"
-            dataSource={itemCategories}
-          />
-        </div>
-      </div>
-      <ModalUpdateCat
-        detail = {isUpdate}
-        onOpen={handleCreateUpdateCategory}
-        onClose={() => setIsShowModalUpdateCat(false)}
-        isVisible={isShowModalUpdateCat}
-      />
-       <ModalConfirm
-        titleBody="Xóa thông tin danh mục?"
-        content={
-          <div className="text-center">
-            Mọi dữ liệu của danh mục này <br />
-            sẽ bị xoá khỏi hệ thống
+              Xuất file
+            </Button>
+            <Button
+              variant="primary"
+              width={151}
+              color="white"
+              suffixIcon={<Icon icon="add-1" size={24} color="white" />}
+              onClick={() => {
+                setIsShowModalUpdateCat(true);
+                setIsUpdate(false);
+                setCreateUpdateCategory(undefined);
+                }}
+            >
+              Thêm mới
+            </Button>
+            <Button
+              variant="no-outlined"
+              width={62}
+              color="white"
+              icon={<Icon icon="question" size={16} />}
+            >
+              <a
+                href="https://docs.google.com/document/d/1wXPHowLeFIU6q-iXi-ryM56m7GuLahu4FFxsNPzJXYw/edit"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Hỗ trợ
+              </a>
+            </Button>
           </div>
-        }
-        onOpen={handleConfirmDelete}
-        onClose={() => setIsShowModalConfirm(false)}
-        isVisible={isShowModalConfirm}
-      />
-    </div>
+          <div className="relative w-full">
+            <Table
+              rowKey={(record: any) => record.id}
+              loading={loading}
+              columns={columns}
+              className="w-full"
+              dataSource={itemCategories}
+            />
+          </div>
+        </div>
+        <ModalUpdateCat
+          isUpdate = {isUpdate}
+          data={createUpdateCategory}
+          onOpen={() => handleCreateUpdateCategory}
+          onClose={() => setIsShowModalUpdateCat(false)}
+          isVisible={isShowModalUpdateCat}
+        />
+        <ModalConfirm
+          titleBody="Xóa thông tin danh mục?"
+          content={
+            <div className="text-center">
+              Mọi dữ liệu của danh mục này <br />
+              sẽ bị xoá khỏi hệ thống
+            </div>
+          }
+          onOpen={handleConfirmDelete}
+          onClose={() => setIsShowModalConfirm(false)}
+          isVisible={isShowModalConfirm}
+        />
+      </div>
+
+      // {/* </CreateUpdateItemCategoryContext.Provider> */}
+    
   );
 };
 

@@ -3,13 +3,16 @@ import type { ColumnsType } from 'antd/es/table';
 import Button from 'components/Button/Button';
 import Icon from 'components/Icon/Icon';
 import TitlePage from 'components/TitlePage/Titlepage';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { onCoppy } from '../../../utils/utils';
 import { IsProduct } from '../product.type';
 import CreateAttribute from './create';
 import ModalConfirm from 'components/Modal/ModalConfirm/ModalConfirm';
+import ItemAttributeApi from 'services/item-attributes';
 
 const AttributeSetting = () => {
+
+  // Pagination
   const [pageSize, setPageSize] = useState<number>(10);
   const [page, setPage] = useState<number>(1);
   const [isShowModalConfirm, setIsShowModalConfirm] = useState(false);
@@ -19,15 +22,15 @@ const AttributeSetting = () => {
     defaultCurrent: page,
   });
 
-  const handleConfirmDelete = () => {
-    setIsShowModalConfirm(false);
-  };
-
+  // Data 
+  const pageTitle = "Cài Đặt Thuộc Tính";
+  const [attributes, setAttributes] = useState<IsProduct[]|any>(undefined);
+  const [attribute, setAttribute] = useState<IsProduct|any>();
   const attrList: IsProduct[] = Array(50)
     .fill({
-      attr_code: 'MAU',
-      attr_name: 'Màu sắc',
-      attr_type: [
+      code: 'MAU',
+      name: 'Màu sắc',
+      type: [
         { label: 'TRẮNG', value: 'trang' },
         { label: 'ĐEN', value: 'den' },
       ],
@@ -57,33 +60,33 @@ const AttributeSetting = () => {
     {
       title: 'Mã thuộc tính',
       width: 119,
-      key: 'attr_code',
+      key: 'code',
       align: 'center',
       render: (_, record: any) => (
         <span className="text-[#1D1C2D] text-[14px] font-medium uppercase">
-          {record.attr_code}
+          {record.code}
         </span>
       ),
     },
     {
       title: 'Tên thuộc tính',
       width: 284,
-      key: 'attr_name',
+      key: 'name',
       align: 'left',
       render: (_, record: any) => (
         <span className="text-[#1D1C2D] text-[14px] font-medium">
-          {record.attr_name}
+          {record.name}
         </span>
       ),
     },
     {
       title: 'Kiểu thuộc tính',
       width: 505,
-      key: 'attr_type',
+      key: 'type',
       align: 'left',
       render: (_, record: any) => (
         <span className="flex justify-start">
-          {record.attr_type.map((item: any) => (
+          {record.type.map((item: any) => (
             <span
               key={item.value}
               className="py-[4px] px-[8px] bg-[#F5F5F6] w-max text-[#1D1C2D] mr-[8px]"
@@ -121,7 +124,10 @@ const AttributeSetting = () => {
             >
               <Icon icon="edit-2" size={24} />
             </div>
-            <div onClick={() => setIsShowModalConfirm(true)}>
+            <div onClick={() => {
+              setAttribute(record);
+              setIsShowModalConfirm(true);
+              }}>
               <Icon icon="trash" size={24} />
             </div>
           </div>
@@ -129,6 +135,40 @@ const AttributeSetting = () => {
       },
     },
   ];
+
+  // Functions 
+  const fetchingData = () => {
+    const dataParams = {
+      // limit: pageSize,
+      // offset: page - 1
+    };
+
+    const res = ItemAttributeApi.getItemAttribute(dataParams);
+    res.then(data => {
+      setAttributes(data);
+    });
+
+    console.log(attributes);
+
+  };
+
+  const handleConfirmDelete = () => {
+    ItemAttributeApi.deleteManyItemAttributes([attribute?.id]);
+    setIsShowModalConfirm(false);
+    setAttribute(undefined);
+  };
+
+  useEffect(() => {
+    document.title = pageTitle;
+  }, []);
+
+  useEffect(() => {
+    fetchingData();
+  }, []);
+
+  useEffect(() => {
+      fetchingData();
+  }, [page]);
 
   return (
     <div className="w-full">
@@ -179,7 +219,7 @@ const AttributeSetting = () => {
           }}
           // rowSelection={rowSelection}
           columns={columns}
-          dataSource={attrList}
+          dataSource={[...attributes]}
           pagination={{
             total: pagination.total,
             defaultPageSize: pagination.pageSize,

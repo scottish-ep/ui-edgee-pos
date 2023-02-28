@@ -41,7 +41,7 @@ const getItemCategoryDetail = async (id: any, data?: any) => {
 };
 
 const updateItemCategory = async (itemId: number, params?: any) => {
-  const url = `/api/v2/item-categories/${itemId}`;
+  const url = `/api/v1/item-categories/${itemId}`;
   return Api.put(url, {
     data: params,
   });
@@ -55,7 +55,7 @@ const deleteManyItemCategorys = async (arrayId: any[]) => {
 };
 
 const addItemCategory = async (params?: any) => {
-  const url = `/api/v2/item-categories`;
+  const url = `/api/v1/item-categories`;
   return Api.post(url, {
     data: params,
   });
