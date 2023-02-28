@@ -24,7 +24,7 @@ const AttributeSetting = () => {
 
   // Data 
   const pageTitle = "Cài Đặt Thuộc Tính";
-  const [attributes, setAttributes] = useState<IsProduct[]|any>(undefined);
+  const [attributes, setAttributes] = useState<IsProduct[]|any[]>([]);
   const [attribute, setAttribute] = useState<IsProduct|any>();
   const attrList: IsProduct[] = Array(50)
     .fill({
@@ -53,7 +53,7 @@ const AttributeSetting = () => {
           className="text-medium text-[#1D1C2D] font-medium"
           onClick={(e) => onCoppy(e, record.id)}
         >
-          {record.id}
+          {record?.id}
         </span>
       ),
     },
@@ -64,7 +64,7 @@ const AttributeSetting = () => {
       align: 'center',
       render: (_, record: any) => (
         <span className="text-[#1D1C2D] text-[14px] font-medium uppercase">
-          {record.code}
+          {record?.code}
         </span>
       ),
     },
@@ -75,7 +75,7 @@ const AttributeSetting = () => {
       align: 'left',
       render: (_, record: any) => (
         <span className="text-[#1D1C2D] text-[14px] font-medium">
-          {record.name}
+          {record?.name}
         </span>
       ),
     },
@@ -86,12 +86,12 @@ const AttributeSetting = () => {
       align: 'left',
       render: (_, record: any) => (
         <span className="flex justify-start">
-          {record.type.map((item: any) => (
+          {record?.type?.map((item: any) => (
             <span
-              key={item.value}
+              key={item?.value}
               className="py-[4px] px-[8px] bg-[#F5F5F6] w-max text-[#1D1C2D] mr-[8px]"
             >
-              {item.label}
+              {item?.label}
             </span>
           ))}
         </span>
@@ -104,7 +104,7 @@ const AttributeSetting = () => {
       align: 'center',
       render: (_, record: any) => (
         <span className="text-[#1D1C2D] text-[14px] font-medium">
-          {record.updatedAt}
+          {record?.updatedAt}
         </span>
       ),
     },
@@ -119,7 +119,7 @@ const AttributeSetting = () => {
           <div className="flex w-full justify-between">
             <div
               onClick={() =>
-                (window.location.href = `/products/attribute/${record.id}`)
+                (window.location.href = `/products/attribute/${record?.id}`)
               }
             >
               <Icon icon="edit-2" size={24} />
@@ -165,10 +165,6 @@ const AttributeSetting = () => {
   useEffect(() => {
     fetchingData();
   }, []);
-
-  useEffect(() => {
-      fetchingData();
-  }, [page]);
 
   return (
     <div className="w-full">
@@ -219,7 +215,7 @@ const AttributeSetting = () => {
           }}
           // rowSelection={rowSelection}
           columns={columns}
-          dataSource={[...attributes]}
+          // dataSource={[...attributes]}  
           pagination={{
             total: pagination.total,
             defaultPageSize: pagination.pageSize,

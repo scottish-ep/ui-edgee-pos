@@ -4,13 +4,14 @@ import type { ColumnsType } from 'antd/es/table';
 import Button from 'components/Button/Button';
 import Icon from 'components/Icon/Icon';
 import TitlePage from 'components/TitlePage/Titlepage';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { onCoppy } from '../../../utils/utils';
 import { IsProduct } from '../product.type';
 import ModalConfirm from 'components/Modal/ModalConfirm/ModalConfirm';
 const CreateAttribute = () => {
   const [isShowModalDeleteAttr, setIsShowModalDeleteAttr] = useState(false);
   const [form] = Form.useForm();
+  const pageTitle = "Cài Đặt Thuộc Tính";
 
   const attrList = Array(5)
     .fill({
@@ -83,6 +84,10 @@ const CreateAttribute = () => {
     },
   ];
 
+  useEffect(() => {
+    document.title = pageTitle;
+  }, []);
+
   return (
     <div className="w-full">
       <div className="flex justify-between items-center">
@@ -90,7 +95,7 @@ const CreateAttribute = () => {
           <div onClick={() => (window.location.href = `/products/attribute`)}>
             <Icon icon="back1" size={36} />
           </div>
-          <TitlePage title="Cập nhật thuộc tính" />
+          <TitlePage title="Tạo mới thuộc tính" />
         </div>
         <div className="flex justify-between min-w-[270px] items-center">
           <Button
@@ -105,6 +110,7 @@ const CreateAttribute = () => {
             variant="secondary"
             width={148}
             height={45}
+            // text="LƯU (F12)"
             text="LƯU (F12)"
             onClick={() => {
               form.submit();

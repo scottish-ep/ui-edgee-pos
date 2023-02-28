@@ -133,7 +133,7 @@ const ProductCategory = (props: any) => {
   };
 
   const handleConfirmDelete = async () => {
-    ItemCategoryApi.deleteManyItemCategorys([...createUpdateCategory?.id]);
+    ItemCategoryApi.deleteManyItemCategorys([createUpdateCategory?.id]);
     setIsShowModalUpdateCat(false);
     setCreateUpdateCategory(undefined);
   };
@@ -215,7 +215,10 @@ const ProductCategory = (props: any) => {
           isUpdate = {isUpdate}
           data={createUpdateCategory}
           onOpen={() => handleCreateUpdateCategory}
-          onClose={() => setIsShowModalUpdateCat(false)}
+          onClose={() => {
+            setIsShowModalUpdateCat(false);
+            setCreateUpdateCategory(undefined);
+          }}
           isVisible={isShowModalUpdateCat}
         />
         <ModalConfirm

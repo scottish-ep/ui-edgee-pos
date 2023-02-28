@@ -9,12 +9,16 @@ import { onCoppy } from '../../../utils/utils';
 import { IsProduct } from '../product.type';
 import ModalConfirm from 'components/Modal/ModalConfirm/ModalConfirm';
 import ItemAttributeApi from 'services/item-attributes';
+import { useRouter } from 'next/router';
 const AttributeDetail = () => {
   const pageTitle = "Cài Đặt Thuộc Tính";
   const [attribute, setAttribute] = useState<IsProduct|any>();
   const [isShowModalDeleteAttr, setIsShowModalDeleteAttr] = useState(false);
   const [form] = Form.useForm();
 
+  const router = useRouter();
+  const AttributeId = router.query.id;
+  console.log(AttributeId);
   const attrList = Array(5)
     .fill({
       label: 'TRẮNG',
@@ -48,7 +52,7 @@ const AttributeDetail = () => {
       align: 'center',
       render: (_, record: any) => (
         <Input
-          value={record.value}
+          value={record?.value}
           width={223}
           className="border-[#DADADD] border-1 border-solid rounded-[4px] "
           inputClassName="pl-[12px] pt-[12px] pr-[8px] pb-[8px] text-center"
@@ -62,7 +66,7 @@ const AttributeDetail = () => {
       align: 'left',
       render: (_, record: any) => (
         <Input
-          value={record.label}
+          value={record?.label}
           width={488}
           className="border-[#DADADD] border-1 border-solid rounded-[4px] "
           inputClassName="pl-[12px] pt-[12px] pr-[8px] pb-[8px]"
@@ -92,11 +96,16 @@ const AttributeDetail = () => {
       // offset: page - 1
     };
 
-    const res = ItemAttributeApi.getItemAttribute(dataParams);
-    res.then(data => {
+    const res = ItemAttributeApi.getItemAttributeDetail(AttributeId);
+    res.then((data: any) => {
       setAttribute(data);
     });
 
+  };
+
+  const hanldeDeleteItemAttribute = () => {
+    ItemAttributeApi.deleteManyItemAttributes([AttributeId]);
+    window.location.href = "/products/attribute";
   };
 
   useEffect(() => {
@@ -104,7 +113,7 @@ const AttributeDetail = () => {
   }, []);
 
   useEffect(() => {
-    fetchingData();
+    // fetchingData();
   }, []);
 
   return (
@@ -141,8 +150,8 @@ const AttributeDetail = () => {
         </div>
       </div>
       <div className="w-full flex justify-between bg-[#fff] p-[12px] gap-[16px] rounded-[4px] mt-[19px] mb-[24px]">
-        <Input label="Mã thuộc tính *" width={640} />
-        <Input label="Tên thuộc tính *" width={640} />
+        <Input label="Mã thuộc tính *" width={640} value={attribute?.code}/>
+        <Input label="Tên thuộc tính *" width={640} value={attribute?.name}/>
       </div>
       <div className="relative">
         {columns&&<Table columns={columns} dataSource={attrList} pagination={false} />}
@@ -152,7 +161,7 @@ const AttributeDetail = () => {
       </div>
       <ModalConfirm
         titleBody="Xóa thuộc tính này?"
-        // onOpen={deleteCustomerAddress}
+        onOpen={hanldeDeleteItemAttribute}
         onClose={() => setIsShowModalDeleteAttr(false)}
         isVisible={isShowModalDeleteAttr}
       />
