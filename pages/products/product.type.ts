@@ -3,6 +3,7 @@ import { StatusEnum } from "../../types";
 export interface IsProduct {
   order_id?: string | number;
   show?: boolean | number;
+  phone: string | number;
   delivery_id?: string;
   order_status_id?: number;
   total_product_cost?: number;
@@ -38,6 +39,7 @@ export interface IsProduct {
   printed_at?: any;
   need_return_money?: boolean;
   order_item_skus?: any[];
+  quantity?: number;
 }
 
 export interface IProduct {

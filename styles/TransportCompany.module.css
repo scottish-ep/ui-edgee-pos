@@ -1,0 +1,18 @@
+.company_wrapper {
+    display: flex;
+    align-items: center;
+    /* justify-content: space-between; */
+    column-gap: 10px;
+    background: #FFFFFF;
+    border-radius: 12px;
+    padding: 17px;
+    margin-bottom: 12px;
+    width: 23%;
+    /* width: 331px; */
+}
+
+.content {
+    width: calc(100% - 80px);
+    display: flex;
+    flex-direction: column;
+}
