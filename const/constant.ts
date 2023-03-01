@@ -602,6 +602,24 @@ export const warehouses: {
   },
 ];
 
+export const warehousesList: {
+  label: string;
+  value: string;
+}[] = [
+  {
+    label: 'Kho tổng Linh Dương',
+    value: 'Kho tổng Linh Dương',
+  },
+  {
+    label: 'Kho tổng Linh Đan',
+    value: 'Kho tổng Linh Đan',
+  },
+  {
+    label: 'Kho tổng Linh Thị',
+    value: 'Kho tổng Linh Thị',
+  },
+]
+
 export const employeeProcess: {
   label: string;
   value: string;

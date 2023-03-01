@@ -123,6 +123,11 @@
     font-weight: 600;
 }
 
+.ant-btn.third {
+    background-color: #fff;
+    color: #ff970d;
+    font-weight: 600;
+}
 .ant-btn.danger {
     color: #ffffff;
     border: 1px solid #ef4444;

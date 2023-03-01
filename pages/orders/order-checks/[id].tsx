@@ -598,4 +598,4 @@ const OrderChecksDetail: React.FC = () => {
   );
 };
 
-ReactDOM.render(<OrderChecksDetail />, document.getElementById("root"));
+export default OrderChecksDetail;

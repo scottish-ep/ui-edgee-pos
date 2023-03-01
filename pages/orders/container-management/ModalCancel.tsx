@@ -3,7 +3,7 @@ import Button from 'components/Button/Button';
 import Input from 'components/Input/Input';
 import Modal from 'components/Modal/Modal/Modal';
 import { Form } from 'antd';
-interface ModalCustomerTypeProps {
+interface ModalCancelProps {
   detail?: any;
   isVisible: boolean;
   title?: string;
@@ -16,7 +16,7 @@ interface ModalCustomerTypeProps {
   data?: any;
 }
 
-const ModalCustomerType = (props: ModalCustomerTypeProps) => {
+const ModalCancel = (props: ModalCancelProps) => {
   const {
     detail,
     isVisible,
@@ -65,8 +65,8 @@ const ModalCustomerType = (props: ModalCustomerTypeProps) => {
         <div className="mb-[12px] flex flex-col">
           <span className="text-[#212121] text-base font-medium mb-[28px]">
             {Object.keys(detail).length > 0
-              ? 'Cập nhật loại khách hàng mới'
-              : 'Thêm loại khách hàng mới'}
+              ? 'Cập nhật lí do hủy'
+              : 'Thêm lí do hủy'}
           </span>
           <Form.Item
             name="customer_type_name"
@@ -80,7 +80,7 @@ const ModalCustomerType = (props: ModalCustomerTypeProps) => {
             <Input
               className="mb-[24px]"
               label="Tên"
-              placeholder={detail ? '' : 'Nhập tên phân loại khách hàng'}
+              placeholder={detail ? '' : 'Nhập tên lí do hủy'}
             />
           </Form.Item>
         </div>
@@ -89,4 +89,4 @@ const ModalCustomerType = (props: ModalCustomerTypeProps) => {
   );
 };
 
-export default ModalCustomerType;
+export default ModalCancel;

@@ -7,7 +7,7 @@ import { StatusEnum, StatusList } from "../../types";
 interface TabsProps {
   defaultTab?: string;
   countTotal?: number;
-  tabs?: { name: StatusEnum | string; count: number }[];
+  tabs?: { name: StatusEnum | string; count?: number }[];
   onChange?: (value: string) => void;
   onClick?: (value: string) => void;
   showTabAll?: boolean;
