@@ -77,6 +77,13 @@ export interface ProductAttributeProps {
   typeAttribute: any;
 }
 
+export interface AttributeList {
+  id: number | string;
+  name: string;
+  value: number | string;
+}
+
+
 export interface ProductDetailProps {
   show?: boolean | number;
   is_show?: boolean | number;
@@ -102,3 +109,4 @@ export interface ProductMetricsProps {
   totalAlreadySell: number | string;
   totalRemain: number | string;
 }
+

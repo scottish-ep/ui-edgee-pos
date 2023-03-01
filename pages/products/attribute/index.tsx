@@ -147,9 +147,6 @@ const AttributeSetting = () => {
     res.then(data => {
       setAttributes(data);
     });
-
-    console.log(attributes);
-
   };
 
   const handleConfirmDelete = () => {
@@ -208,6 +205,7 @@ const AttributeSetting = () => {
       </div>
       <div className="relative">
         <Table
+          rowKey="id"
           onChange={(e) => {
             console.log('e', e);
             setPageSize(e.pageSize || 10);

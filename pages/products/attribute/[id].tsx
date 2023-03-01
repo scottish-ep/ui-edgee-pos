@@ -10,6 +10,7 @@ import { IsProduct } from '../product.type';
 import ModalConfirm from 'components/Modal/ModalConfirm/ModalConfirm';
 import ItemAttributeApi from 'services/item-attributes';
 import { useRouter } from 'next/router';
+import _ from 'lodash';
 const AttributeDetail = () => {
   const pageTitle = "Cài Đặt Thuộc Tính";
   const [attribute, setAttribute] = useState<IsProduct|any>();
@@ -17,17 +18,8 @@ const AttributeDetail = () => {
   const [form] = Form.useForm();
 
   const router = useRouter();
-  const AttributeId = router.query.id;
-  console.log(AttributeId);
-  const attrList = Array(5)
-    .fill({
-      label: 'TRẮNG',
-      value: 'trang',
-    })
-    .map((item: any, index: any) => ({
-      ...item,
-      id: index + 1,
-    }));
+  const AttributeId: number | string | any = router.query.id;
+  const [attrList, setAttrList] = useState<any>([]);
 
   const columns: ColumnsType<IsProduct> = [
     {
@@ -52,7 +44,7 @@ const AttributeDetail = () => {
       align: 'center',
       render: (_, record: any) => (
         <Input
-          value={record?.value}
+          defaultValue={record?.value}
           width={223}
           className="border-[#DADADD] border-1 border-solid rounded-[4px] "
           inputClassName="pl-[12px] pt-[12px] pr-[8px] pb-[8px] text-center"
@@ -66,7 +58,7 @@ const AttributeDetail = () => {
       align: 'left',
       render: (_, record: any) => (
         <Input
-          value={record?.label}
+          defaultValue={record?.code}
           width={488}
           className="border-[#DADADD] border-1 border-solid rounded-[4px] "
           inputClassName="pl-[12px] pt-[12px] pr-[8px] pb-[8px]"
@@ -81,7 +73,7 @@ const AttributeDetail = () => {
       render: (_, record: any) => {
         return (
           <div className="flex w-full justify-end">
-            <div onClick={() => {}}>
+            <div onClick={() => hanldeDeleteAttributeList(record)}>
               <Icon icon="trash" size={24} />
             </div>
           </div>
@@ -89,6 +81,21 @@ const AttributeDetail = () => {
       },
     },
   ];
+
+  const handleSubmit = () => {
+    const code = form.getFieldValue('code');
+    const name = form.getFieldValue('name');
+    const ItemAttribute = {
+      code, 
+      name,
+      attributeList: attrList
+    }
+    if(code && name) {
+      ItemAttributeApi.updateItemAttribute(parseInt(AttributeId), ItemAttribute).then((res) => {
+        console.log(res)        
+      });
+    }
+  };
 
   const fetchingData = () => {
     const dataParams = {
@@ -99,8 +106,30 @@ const AttributeDetail = () => {
     const res = ItemAttributeApi.getItemAttributeDetail(AttributeId);
     res.then((data: any) => {
       setAttribute(data);
+      setAttrList(data?.attributeList);
     });
 
+  };
+
+  const hanldeAddAttributeList = () => {
+    setAttrList((pre: any) => {
+      return [...pre, {
+        label: '',
+        name: '',
+        id: attrList.length + 1
+      }];
+    });
+  };
+
+  const hanldeDeleteAttributeList = (record: any) => {
+    setAttrList((pre:any) => {
+      return pre.filter((attr: any) => attr?.id != record?.id).map((attr: any, index: any) => 
+        ({
+          ...attr,
+          id: index + 1
+        })
+      );
+    });
   };
 
   const hanldeDeleteItemAttribute = () => {
@@ -142,21 +171,29 @@ const AttributeDetail = () => {
             onClick={() => {
               form.submit();
             }}
-            // onClick={() =>
-            //   itemSelected ? onSubmit("update") : onSubmit("add")
-            // }
-            // disabled={disabledBtn}
           />
         </div>
       </div>
-      <div className="w-full flex justify-between bg-[#fff] p-[12px] gap-[16px] rounded-[4px] mt-[19px] mb-[24px]">
-        <Input label="Mã thuộc tính *" width={640} value={attribute?.code}/>
-        <Input label="Tên thuộc tính *" width={640} value={attribute?.name}/>
-      </div>
+      <Form onFinish={handleSubmit} form={form}>
+        <div className="w-full flex justify-between bg-[#fff] p-[12px] gap-[16px] rounded-[4px] mt-[19px] mb-[24px]">
+        <Form.Item name="code" rules={[{required: true, message: "Vui lòng nhập mã thuộc tính"}]}>
+              <Input label="Mã thuộc tính *" width={640} value={attribute?.code} />
+            </Form.Item>
+            <Form.Item name="name" rules={[{required: true, message: "Vui lòng nhập tên thuộc tính"}]}>
+              <Input label="Tên thuộc tính *" width={640} value={attribute?.name}/>
+            </Form.Item>
+        </div>
+      </Form>
       <div className="relative">
-        {columns&&<Table columns={columns} dataSource={attrList} pagination={false} />}
+        <Table 
+          rowKey="id"
+          columns={columns} 
+          dataSource={_.cloneDeep(attrList)} 
+          pagination={false} />
       </div>
-      <div className="text-[#384ADC] mt-[24px] text-[15px] font-semibold cursor-pointer">
+      <div 
+        className="text-[#384ADC] mt-[24px] text-[15px] font-semibold cursor-pointer"
+        onClick={hanldeAddAttributeList}>
         + Thêm mới
       </div>
       <ModalConfirm
