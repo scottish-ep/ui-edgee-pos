@@ -27,6 +27,7 @@ export interface IsProduct {
   createdAt?: string;
   updatedAt?: string;
   outOfDate?: string;
+  expired_date?: string;
   is_show?: boolean;
   status?: StatusEnum;
   is_minus_sell?: boolean;
@@ -40,6 +41,8 @@ export interface IsProduct {
   need_return_money?: boolean;
   order_item_skus?: any[];
   quantity?: number;
+  total_quantity_import?: number;
+  currency?: number;
 }
 
 export interface IProduct {
@@ -79,6 +82,13 @@ export interface ProductAttributeProps {
   typeAttribute: any;
 }
 
+export interface AttributeList {
+  id: number | string;
+  name: string;
+  value: number | string;
+}
+
+
 export interface ProductDetailProps {
   show?: boolean | number;
   is_show?: boolean | number;
@@ -104,3 +114,4 @@ export interface ProductMetricsProps {
   totalAlreadySell: number | string;
   totalRemain: number | string;
 }
+

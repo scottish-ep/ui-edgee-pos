@@ -2,7 +2,11 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['quanlyhethong-staging.tienichlinhduong.com', 'bach-hoa-viet.s3.ap-southeast-1.amazonaws.com'],
+    domains: [
+      'quanlyhethong-staging.tienichlinhduong.com', 
+      'bach-hoa-viet.s3.ap-southeast-1.amazonaws.com',
+      's3.ap-southeast-1.amazonaws.com'
+    ],
   },
 };
 
