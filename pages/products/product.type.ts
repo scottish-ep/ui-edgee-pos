@@ -27,6 +27,7 @@ export interface IsProduct {
   createdAt?: string;
   updatedAt?: string;
   outOfDate?: string;
+  expired_date?: string;
   is_show?: boolean;
   status?: StatusEnum;
   is_minus_sell?: boolean;
@@ -40,6 +41,8 @@ export interface IsProduct {
   need_return_money?: boolean;
   order_item_skus?: any[];
   quantity?: number;
+  total_quantity_import?: number;
+  currency?: number;
 }
 
 export interface IProduct {

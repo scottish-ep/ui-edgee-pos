@@ -356,6 +356,10 @@ element.style {
     left: calc(100% - 16px) !important;
 }
 
+.ant-switch-checked {
+    background-color: #384ADC !important;
+}
+
 .ant-radio-checked .ant-radio-inner {
     border-color: #4B4B59;
 }

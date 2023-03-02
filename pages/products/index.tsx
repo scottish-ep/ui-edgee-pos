@@ -18,7 +18,6 @@ import DropdownStatus from '../../components/DropdownStatus';
 import { StatusColorEnum, StatusEnum, StatusList } from '../../types';
 // import defaultAvatar from "../../assets/default-avatar.svg";
 import classNames from 'classnames';
-
 import styles from '../../styles/ListProduct.module.css';
 
 import { IsProduct, ProductMetricsProps } from './product.type';
@@ -34,24 +33,40 @@ import ModalConfirm from '../../components/Modal/ModalConfirm/ModalConfirm';
 import { CSVLink } from 'react-csv';
 import { isArray, onCoppy } from '../../utils/utils';
 import ModalProductCat from './Modal/ModalProductCat';
+import moment from 'moment';
+// Image
+import NoImage from '../../assets/no-image.svg';
 
 const ListProduct = (props: any) => {
-  const [selectedRowKeys, setSelectedRowKeys] = useState<any[]>([]);
+  // State
+  const [isShowModalConfirm, setIsShowModalConfirm] = useState(false);
+  const [isShowModalProductCat, setIsShowModalProductCat] = useState(false);
+
+  // Pagination
   const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(10);
-  const [items, setItems] = useState<IsProduct[]>([]);
-  const [itemExport, setItemExport] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [pagination, setPagination] = useState({
+    total: 0,
+    pageSize: pageSize,
+    defaultCurrent: page,
+  });
 
+  // Query
+  const [createdAtFrom, setCreatedAtFrom] = useState(null);
+  const [createdAtTo, setCreatedAtTo] = useState(null);
+  const [searchPhrase, setSearchPhrase] = useState<string>('');
+  const debouncedSearchTerm = useDebounce(searchPhrase, 1000);
+
+  // Data 
+  const currency = "đ";
+  const pageTitle = "Quản lý sản phẩm";
+  const [itemExport, setItemExport] = useState<any[]>([]);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<any[]>([]);
+  const [selectedWarehouse, setSelectedWarehouse] = useState<string>('');
   const [productTypeList, setProductTypeList] = useState<any>([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [listDisabledId, setListDisabledId] = useState<number[]>([]);
-  const [searchPhrase, setSearchPhrase] = useState<string>('');
-  const debouncedSearchTerm = useDebounce(searchPhrase, 1000);
-  const [selectedWarehouse, setSelectedWarehouse] = useState<string>('');
-  const [createdAtFrom, setCreatedAtFrom] = useState(null);
-  const [createdAtTo, setCreatedAtTo] = useState(null);
-  const [isShowModalConfirm, setIsShowModalConfirm] = useState(false);
-  const [isShowModalProductCat, setIsShowModalProductCat] = useState(false);
 
   const [optionPrint, setOptionPrint] = useState<any[]>([
     {
@@ -68,13 +83,7 @@ const ListProduct = (props: any) => {
     },
   ]);
   const [selectedOptionPrint, setSelectedOptionPrint] = useState('both');
-
-  const [loading, setLoading] = useState(false);
-  const [pagination, setPagination] = useState({
-    total: 0,
-    pageSize: pageSize,
-    defaultCurrent: page,
-  });
+  
   const [metrics, getMetrics] = useState<ProductMetricsProps>({
     totalCanSell: 0,
     totalAlreadySell: 0,
@@ -104,6 +113,7 @@ const ListProduct = (props: any) => {
   ]);
 
   useEffect(() => {
+    document.title = pageTitle;
     getAllProductTypes();
     getProductMetrics();
     getAllWarehouses();
@@ -138,7 +148,6 @@ const ListProduct = (props: any) => {
         )?.name,
       };
     });
-    setItems(data);
     setItemExport(rawItemExport);
     setPagination({
       total: totalItem,
@@ -150,38 +159,18 @@ const ListProduct = (props: any) => {
 
   const getAllProductTypes = async () => {
     const { data } = await ItemCategoryApi.getItemCategory();
-    const rawProductCategory = [
-      {
-        label: 'Chọn',
-        value: '',
-        id: '',
-      },
-    ];
+    console.log(data);
+    const rawProductCategory: any[] = [];
     data.map((item: any) =>
       rawProductCategory.push({
         label: item.label,
-        value: item.label,
-        id: item.value,
+        value: item.name,
+        id: item.id,
       })
     );
 
     setProductTypeList(rawProductCategory);
   };
-
-  const typeList = [
-    {
-      label: 'Chon',
-      value: 'select',
-    },
-    {
-      label: 'Thoi trang',
-      value: 'fashion',
-    },
-    {
-      label: 'Suc khoe',
-      value: 'health',
-    },
-  ];
   const getProductMetrics = async () => {
     const { totalCanSell, totalAlreadySell, totalRemain } =
       await ItemApi.getProductMetrics();
@@ -190,7 +179,6 @@ const ListProduct = (props: any) => {
 
   const getAllWarehouses = async () => {
     const data = await WarehouseApi.getWarehouse();
-
     setWarehouses(
       warehouses.concat(
         data.map((v: any) => ({
@@ -238,7 +226,7 @@ const ListProduct = (props: any) => {
     .map((item: any, index: any) => ({
       ...item,
       id: index + 1,
-    }));
+  }));
 
   const columns: ColumnsType<IsProduct> = [
     {
@@ -288,9 +276,6 @@ const ListProduct = (props: any) => {
       render: (_, record) => (
         <div
           className="flex justify-start items-center"
-          // onClick={(e) => {
-          //   window.location.href = `/products/${record.id}`;
-          // }}
         >
           <div className="mr-[8px] w-[40px] h-[40px] max-w-[40px] max-h-[40px] relative">
             {record.image ? (
@@ -301,11 +286,20 @@ const ListProduct = (props: any) => {
                 alt=""
               />
             ) : (
-              // <NoImage className="w-[40px] h-[40px]" />
-              <div></div>
+              <Image
+                className="min-w-[40px] min-h-[40px]"
+                src={NoImage}
+                fill
+                alt=""
+              />
             )}
           </div>
-          <span className="font-medium">{record.name}</span>
+          <span 
+            className="font-medium" 
+            onClick={(e) => {
+              window.location.href = `/products/${record.id}`;
+            }}
+            >{record.name}</span>
         </div>
       ),
     },
@@ -326,7 +320,7 @@ const ListProduct = (props: any) => {
       key: 'numberSale',
       align: 'center',
       render: (_, record) => (
-        <span className="font-medium text-[#1D1C2D]">{record.numberSale}</span>
+        <span className="font-medium text-[#1D1C2D]">{record.total_quantity_import}</span>
       ),
     },
     {
@@ -350,6 +344,26 @@ const ListProduct = (props: any) => {
       ),
     },
     {
+      title: 'Giá bán',
+      width: 132,
+      dataIndex: 'numberSale',
+      key: 'numberSale',
+      align: 'center',
+      render: (_, record) => (
+        <span className="font-medium text-[#1D1C2D]">{record.price} {record.currency}</span>
+      ),
+    },
+    {
+      title: 'Tổng tiền sản phẩm',
+      width: 132,
+      dataIndex: 'numberSale',
+      key: 'numberSale',
+      align: 'center',
+      render: (_, record) => (
+        <span className="font-medium text-[#1D1C2D]">{record.price} {record.currency}</span>
+      ),
+    },
+    {
       title: 'Ngày tạo',
       width: 132,
       dataIndex: 'createdAt',
@@ -357,6 +371,16 @@ const ListProduct = (props: any) => {
       align: 'center',
       render: (_, record) => (
         <div className="font-medium text-[#1D1C2D]">{record.createdAt}</div>
+      ),
+    },
+    {
+      title: 'Ngày hết hạn',
+      width: 132,
+      dataIndex: 'createdAt',
+      key: 'createdAt',
+      align: 'center',
+      render: (_, record) => (
+        <div className="font-medium text-[#1D1C2D]">{record.expired_date ? moment(record.expired_date).format("DD/MM/YYYY") : ""}</div>
       ),
     },
     {
@@ -558,10 +582,8 @@ const ListProduct = (props: any) => {
             clearIcon={<Icon icon="cancel" size={16} />}
             prefix={<Icon icon="category" size={24} color="#5F5E6B" />}
             placeholder="Tìm theo danh mục sản phẩm"
-            options={typeList}
+            options={productTypeList}
             onChange={(e, option: any) => {
-              console.log('e', e);
-              console.log('option', option);
               setSelectedCategory(option.id);
             }}
           />
@@ -588,7 +610,7 @@ const ListProduct = (props: any) => {
           }}
           rowSelection={rowSelection}
           columns={columns}
-          dataSource={listProduct}
+          dataSource={itemExport}
           pagination={{
             total: pagination.total,
             defaultPageSize: pagination.pageSize,
@@ -602,24 +624,23 @@ const ListProduct = (props: any) => {
             Có thể bán:
             <span className="font-medium text-[#384ADC]">
               {' '}
-              {/* {metrics?.totalCanSell ?? 0}  */}
-              4999 đ
+              {metrics?.totalCanSell ?? 0}
             </span>
           </div>
           <div className={styles.row}>
             Tổng tiền đã bán:
             <span className="font-medium text-[#384ADC]">
               {' '}
-              {/* {metrics?.totalAlreadySell ?? 0}*/}
-              4999 đ
+              {metrics?.totalAlreadySell ?? 0}
+              {currency}
             </span>
           </div>
           <div className={styles.row}>
             Tiền hàng còn lại:
             <span className="font-medium text-[#384ADC]">
               {' '}
-              {/* {metrics?.totalRemain ?? 0}  */}
-              4999 đ
+              {metrics?.totalRemain ?? 0}
+              {currency} 
             </span>
           </div>
         </div>
