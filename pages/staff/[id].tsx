@@ -1,51 +1,35 @@
-import React, { useEffect, useState } from "react";
-import ReactDOM from "react-dom";
-import { notification, Switch, Table } from "antd";
-import type { ColumnsType } from "antd/es/table";
-import get from "lodash/get";
-import { format } from "date-fns";
-import Image from "next/image";
-import { Checkbox } from "antd";
-import Tabs from "../../components/Tabs";
-import TitlePage from "../../components/TitlePage/Titlepage";
-import { Radio } from "antd";
-import { Popover } from "antd";
-import Select from "../../components/Select/Select";
-import Button from "../../components/Button/Button";
-import Icon from "../../components/Icon/Icon";
-import Input from "../../components/Input/Input";
-import DatePicker from "../../components/DatePicker/DatePicker";
-import DropdownStatus from "../../components/DropdownStatus";
-import { StatusColorEnum, StatusEnum, StatusList } from "../../types";
-import ModalSettingGroup from "./Modal/modal-setting-group";
-import ModalEditFault from "./Modal/modal-edit-fault";
-import ModalSettingFault from "./Modal/modal-setting-fault";
-import classNames from "classnames";
-import type { ITartgetManageProps, IFaultDetailProps } from "./staff.type";
-import styles from "../../styles/ListProduct.module.css";
-import { IStaffListProps } from "./staff.type";
-import {
-  productTypeList,
-  groupStaff,
-  warehouseStatusColor,
-} from "../../const/constant";
-import StaffApi from "../../services/staffs";
-import StaffGroupApi from "../../services/staff-groups";
-import StaffErrorApi from "../../services/staff-errors";
-import WarehouseApi from "../../services/warehouses";
-import { min, omit } from "lodash";
-import ImageApi from "../../services/images";
-import Upload from "../../components/Upload/Upload";
-import DefaultAvatar from "../../assets/big-default-avatar.svg";
-import StaffErrorRelationApi from "../../services/staff-error-relations";
-import ModalRemove from "../../components/ModalRemove/ModalRemove";
-import TargetApi from "../../services/targets";
-import PermissionApi from "../../services/permission";
-import OrderApi from "../../services/orders";
-import { IsProduct } from "../products/product.type";
-import { getMin, isArray, onCoppy } from "../../utils/utils";
-import { OrderEnumId, OrderStatus } from "../../enums/enums";
-import TableEmpty from "../../components/TableEmpty";
+import { notification, Popover, Radio, Switch, Table } from 'antd';
+import type { ColumnsType } from 'antd/es/table';
+import classNames from 'classnames';
+import { format } from 'date-fns';
+import { omit } from 'lodash';
+import get from 'lodash/get';
+import Image from 'next/image';
+import { useEffect, useRef, useState } from 'react';
+import Button from '../../components/Button/Button';
+import Icon from '../../components/Icon/Icon';
+import Input from '../../components/Input/Input';
+import ModalRemove from '../../components/ModalRemove/ModalRemove';
+import Select from '../../components/Select/Select';
+import TableEmpty from '../../components/TableEmpty';
+import TitlePage from '../../components/TitlePage/Titlepage';
+import Upload from '../../components/Upload/Upload';
+import { warehouseStatusColor } from '../../const/constant';
+import { OrderStatus } from '../../enums/enums';
+import ImageApi from '../../services/images';
+import OrderApi from '../../services/orders';
+import PermissionApi from '../../services/permission';
+import StaffErrorRelationApi from '../../services/staff-error-relations';
+import StaffErrorApi from '../../services/staff-errors';
+import StaffGroupApi from '../../services/staff-groups';
+import StaffApi from '../../services/staffs';
+import TargetApi from '../../services/targets';
+import WarehouseApi from '../../services/warehouses';
+import styles from '../../styles/ListProduct.module.css';
+import { getMin, isArray, onCoppy } from '../../utils/utils';
+import { IsProduct } from '../products/product.type';
+import ModalEditFault from './Modal/modal-edit-fault';
+import type { IFaultDetailProps, ITartgetManageProps } from './staff.type';
 const StaffDetail = () => {
   const defaultPagination = {
     page: 1,
@@ -60,19 +44,19 @@ const StaffDetail = () => {
   };
   const columns: ColumnsType<ITartgetManageProps> = [
     {
-      title: "Tên chỉ tiêu",
+      title: 'Tên chỉ tiêu',
       width: 117,
-      dataIndex: "name",
-      align: "center",
+      dataIndex: 'name',
+      align: 'center',
       render: (value, record) => {
-        return <p className="text-medium font-medium">{value}</p>;
+        return <p className="text-medium font-medium">{value}Hoan thanh bai tap</p>;
       },
     },
     {
-      title: "Chỉ tiêu đơn hàng / KPI",
+      title: 'Chỉ tiêu đơn hàng / KPI',
       width: 301,
-      align: "center",
-      dataIndex: "total_order",
+      align: 'center',
+      dataIndex: 'total_order',
       render: (_, record: any) => {
         return (
           <div className="flex flex-col w-full justify-center items-center">
@@ -111,10 +95,10 @@ const StaffDetail = () => {
       },
     },
     {
-      title: "Chỉ tiêu doanh thu / KPI",
+      title: 'Chỉ tiêu doanh thu / KPI',
       width: 301,
-      align: "center",
-      dataIndex: "total_revenue",
+      align: 'center',
+      dataIndex: 'total_revenue',
       render: (_, record: any) => {
         return (
           <div className="flex flex-col w-full justify-center items-center">
@@ -156,19 +140,19 @@ const StaffDetail = () => {
 
   const columnErrorDetails: ColumnsType<IFaultDetailProps> = [
     {
-      title: "Tên lỗi",
+      title: 'Tên lỗi',
       width: 336,
-      dataIndex: "name",
-      align: "left",
+      dataIndex: 'name',
+      align: 'left',
       render: (_, record) => {
         return <p className="font-medium  text-medium">{record.error.name}</p>;
       },
     },
     {
-      title: "Số lần vi phạm",
+      title: 'Số lần vi phạm',
       width: 120,
-      dataIndex: "fault",
-      align: "center",
+      dataIndex: 'fault',
+      align: 'center',
       render: (_, record) => {
         return (
           <p className="font-medium  text-medium">{record.number_violations}</p>
@@ -176,20 +160,20 @@ const StaffDetail = () => {
       },
     },
     {
-      title: "Cập nhật cuối",
+      title: 'Cập nhật cuối',
       width: 150,
-      dataIndex: "update",
-      align: "center",
+      dataIndex: 'update',
+      align: 'center',
       render: (_, record) => {
         return (
           <p className="font-normal text-medium">
-            {format(new Date(record.updated_at), "dd/MM/yyyy HH:mm")}
+            {format(new Date(record.updated_at), 'dd/MM/yyyy HH:mm')}
           </p>
         );
       },
     },
     {
-      title: "Thao tác",
+      title: 'Thao tác',
       width: 100,
       render: (_, record) => {
         return (
@@ -218,8 +202,18 @@ const StaffDetail = () => {
   ];
 
   const [isShowEditFault, setIsShowEditFault] = useState(false);
-  const [staff, setStaff] = useState<any>();
-  const [errorRecord, setErrorRecord] = useState<any>();
+  const [staff, setStaff] = useState<any>({
+    name: 'tester',
+    phone: '010202011',
+    email: 'a@gmail.com',
+    sex: 'male',
+    birthday: '19/02/2300',
+    role_id: 1,
+    staff_group_id: 2,
+    warehouse_id: 3,
+    is_blocked: false,
+  });
+  const [errorRecord, git add setErrorRecord] = useState<any>();
   const [isShowDeleteModal, setIsShowDeleteModal] = useState(false);
   const [isShowBlockModal, setIsShowBlockModal] = useState(false);
   const [staffGroups, setStaffGroups] = useState<any[]>([]);
@@ -227,13 +221,16 @@ const StaffDetail = () => {
   const [staffErrors, setStaffErrors] = useState<any[]>([]);
   const [warehouses, setWarehouses] = useState([]);
   const [record, setRecord] = useState({});
-  const pathNameArr = window.location.pathname.split("/");
+  let pathNameArr = [''];
+  useRef(() => {
+    pathNameArr = window.location.pathname.split('/');
+  });
   const id = pathNameArr[pathNameArr.length - 1];
-  const [avatar, setAvatar] = useState("");
+  const [avatar, setAvatar] = useState('');
   const [loading, setLoading] = useState(false);
-  const [titleBody, setTitleBody] = useState("");
-  const [content, setContent] = useState("");
-  const [textButtonSubmit, setTextButtonSubmit] = useState("");
+  const [titleBody, setTitleBody] = useState('');
+  const [content, setContent] = useState('');
+  const [textButtonSubmit, setTextButtonSubmit] = useState('');
   const [colorButtonSubmit, setColorButtonSubmit] = useState<any>();
   const [roles, setRoles] = useState<any[]>([]);
   const [targets, setTagets] = useState<any[]>([]);
@@ -251,11 +248,11 @@ const StaffDetail = () => {
   const getStaffDetail = async () => {
     const { data } = await StaffApi.getStaffDetail(id, {
       populate: [
-        "staff_group:id,name",
-        "user_role:id,name",
-        "staff_errors:id,staff_id,staff_error_id,number_violations,updated_at,note",
-        "staff_errors.error:id,name",
-        "warehouses.warehouse:id,name",
+        'staff_group:id,name',
+        'user_role:id,name',
+        'staff_errors:id,staff_id,staff_error_id,number_violations,updated_at,note',
+        'staff_errors.error:id,name',
+        'warehouses.warehouse:id,name',
       ],
     });
     const targetList = await TargetApi.getTargetListByStaff({
@@ -266,7 +263,7 @@ const StaffDetail = () => {
       order: 0,
       revenue: 0,
     };
-    targetList.map((item) => {
+    targetList.map((item: any) => {
       rawTotal.order += parseFloat(item.total_order);
       rawTotal.revenue += parseFloat(item.total_order_price);
     });
@@ -281,7 +278,7 @@ const StaffDetail = () => {
 
   const getStaffErrorList = async () => {
     const data = await StaffErrorRelationApi.getStaffErrorRelation({
-      populate: ["error"],
+      populate: ['error'],
       staff_id: id,
     });
     setStaffErrors(data);
@@ -321,7 +318,7 @@ const StaffDetail = () => {
 
   const getRoles = async () => {
     const result = await PermissionApi.list();
-    const roles = result.map((item) => ({
+    const roles = result.map((item: any) => ({
       ...item,
       value: item.id,
       label: item.name,
@@ -344,11 +341,11 @@ const StaffDetail = () => {
 
   useEffect(() => {
     if (id) {
-      setLoading(true);
-      getStaffDetail();
-      getStaffErrorList();
-      getListOrder();
-      setLoading(false);
+      // setLoading(true);
+      // getStaffDetail();
+      // getStaffErrorList();
+      // getListOrder();
+      // setLoading(false);
     }
   }, [id]);
 
@@ -360,7 +357,7 @@ const StaffDetail = () => {
   }, []);
 
   const handleDelete = (record: any) => {
-    setTitleBody("Xác nhận xóa lỗi này?");
+    setTitleBody('Xác nhận xóa lỗi này?');
     setErrorRecord(record);
     setIsShowDeleteModal(true);
   };
@@ -374,22 +371,22 @@ const StaffDetail = () => {
 
   const onSubmit = async () => {
     const data = omit(staff, [
-      "staff_group",
-      "warehouses",
-      "id",
-      "staff_errors",
-      "user_role",
+      'staff_group',
+      'warehouses',
+      'id',
+      'staff_errors',
+      'user_role',
     ]);
     try {
       const dataReturn = await StaffApi.updateStaff(id, { ...data });
-      console.log("dataReturn", dataReturn);
-      if (get(dataReturn, "data.success")) {
+      console.log('dataReturn', dataReturn);
+      if (get(dataReturn, 'data.success')) {
         notification.success({
-          message: "Cập nhật thông tin thành công",
+          message: 'Cập nhật thông tin thành công',
         });
       } else {
         notification.error({
-          message: get(dataReturn, "data.message"),
+          message: get(dataReturn, 'data.message'),
         });
       }
     } catch (error: any) {
@@ -404,10 +401,10 @@ const StaffDetail = () => {
     try {
       const data = await ImageApi.upload(file);
       // setAvatar(data.url);
-      handleChange(data.url, "avatar");
+      handleChange(data.url, 'avatar');
     } catch (err) {
-      console.log("Error: ", err);
-      const error = new Error("Some error");
+      console.log('Error: ', err);
+      const error = new Error('Some error');
       onError({ err });
     }
   };
@@ -427,7 +424,7 @@ const StaffDetail = () => {
         setIsShowEditFault(false);
         setErrorRecord(false);
         notification.success({
-          message: "Cập nhật lỗi thành công!",
+          message: 'Cập nhật lỗi thành công!',
         });
       } else {
         await StaffErrorRelationApi.createStaffErrorRelations({
@@ -438,7 +435,7 @@ const StaffDetail = () => {
         setIsShowEditFault(false);
         setErrorRecord(false);
         notification.success({
-          message: "Tạo lỗi thành công!",
+          message: 'Tạo lỗi thành công!',
         });
       }
     } catch (error: any) {
@@ -453,7 +450,7 @@ const StaffDetail = () => {
       await StaffErrorRelationApi.deleteStaffErrorRelations(errorRecord.id);
       await getStaffErrorList();
       notification.success({
-        message: "Xóa lỗi thành công!",
+        message: 'Xóa lỗi thành công!',
       });
     } catch (error: any) {
       notification.error({
@@ -465,28 +462,85 @@ const StaffDetail = () => {
 
   const handleBlockStaff = (e: any) => {
     if (e) {
-      setTitleBody("Xác nhận chặn người dùng này?");
-      setContent("Người dùng sẽ không thể truy cập hệ thống khi bị chặn");
-      setColorButtonSubmit("danger");
-      setTextButtonSubmit("Chặn");
+      setTitleBody('Xác nhận chặn người dùng này?');
+      setContent('Người dùng sẽ không thể truy cập hệ thống khi bị chặn');
+      setColorButtonSubmit('danger');
+      setTextButtonSubmit('Chặn');
     } else {
-      setTitleBody("Xác nhận bỏ chặn người dùng này?");
-      setContent("Người dùng sẽ được truy cập và thao tác trong hệ thống");
-      setTextButtonSubmit("Bỏ chặn");
-      setColorButtonSubmit("secondary");
+      setTitleBody('Xác nhận bỏ chặn người dùng này?');
+      setContent('Người dùng sẽ được truy cập và thao tác trong hệ thống');
+      setTextButtonSubmit('Bỏ chặn');
+      setColorButtonSubmit('secondary');
     }
-    handleChange(e, "is_blocked");
+    handleChange(e, 'is_blocked');
     setIsShowBlockModal(true);
   };
 
+  const colsData: IsProduct[] = Array(20)
+    .fill({
+      need_return_money: true,
+      name: 'tester',
+      phone: '01202000',
+      order_item_skus: [
+        {
+          item_sku: {
+            item: {
+              name: 'Tester',
+            },
+            sku_code: 'XO10202',
+          },
+          quantity: 23,
+        },
+        {
+          item_sku: {
+            item: {
+              name: 'Tester',
+            },
+            sku_code: 'XO10202',
+          },
+          quantity: 23,
+        },
+      ],
+      order_item_skus_count: 103,
+      total_product_cost: 20,
+      total_order_value: 10000,
+      total_transfer: 1002,
+      created_at: Date.now(),
+      user: {
+        name: 'Test1',
+      },
+    })
+    .map((item, index) => ({
+      ...item,
+      order_status_id: index++,
+      order_id: index++,
+    }));
+
+  const targetData: ITartgetManageProps[] = Array(5).fill({
+    value: 'Hoan thanh 10 bai tap',
+    total_order: '10',
+    total_order_handle: '20',
+    total_order_price: '100',
+    total_revenue: '2000',
+  });
+
+  const errorData: IFaultDetailProps[] = Array(5).fill({
+    error: {
+      name: "Di tre",
+    },
+    number_violations: 2,
+    updated_at: Date.now(),
+
+  })
+
   const orderColumns: ColumnsType<IsProduct> = [
     {
-      title: "Mã đơn hàng",
+      title: 'Mã đơn hàng',
       width: 170,
-      dataIndex: "order_id",
-      key: "order_id",
-      fixed: "left",
-      align: "center",
+      dataIndex: 'order_id',
+      key: 'order_id',
+      fixed: 'left',
+      align: 'center',
       render: (_, record) => (
         <span
           className="text-[#384ADC] font-semibold"
@@ -496,7 +550,7 @@ const StaffDetail = () => {
         >
           {record.order_id}
           {record.need_return_money == true && (
-            <div className={classNames(styles.tag, "mt-[4px]", styles.red_tag)}>
+            <div className={classNames(styles.tag, 'mt-[4px]', styles.red_tag)}>
               Nợ khách
             </div>
           )}
@@ -504,15 +558,15 @@ const StaffDetail = () => {
       ),
     },
     {
-      title: "Trạng thái",
+      title: 'Trạng thái',
       width: 170,
-      dataIndex: "order_status_id",
-      key: "order_status_id",
-      fixed: "left",
-      align: "center",
+      dataIndex: 'order_status_id',
+      key: 'order_status_id',
+      fixed: 'left',
+      align: 'center',
       render: (_, record) => {
         const statusSelected = warehouseStatusColor.find(
-          (item) => item.id === record.order_status_id
+          (item: any) => item.id === record.order_status_id
         );
         return (
           <div
@@ -529,47 +583,47 @@ const StaffDetail = () => {
       },
     },
     {
-      title: "Khách hàng",
+      title: 'Khách hàng',
       width: 150,
-      dataIndex: "customer",
-      key: "customer",
-      align: "left",
+      dataIndex: 'customer',
+      key: 'customer',
+      align: 'left',
       render: (_, record) => (
         <div className="flex flex-col items-start">
           <div
             className="text-[#384ADC] font-semibold"
             onClick={(e) => {
-              get(record, "name") && onCoppy(e, record?.name);
+              get(record, 'name') && onCoppy(e, record?.name);
             }}
           >
-            {get(record, "name") ? get(record, "name") : ""}
+            {get(record, 'name') ? get(record, 'name') : ''}
           </div>
           <div
             onClick={(e) => {
-              get(record, "phone") && onCoppy(e, get(record, "phone"));
+              get(record, 'phone') && onCoppy(e, get(record, 'phone'));
             }}
           >
-            {get(record, "phone") ? get(record, "phone") : ""}
+            {get(record, 'phone') ? get(record, 'phone') : ''}
           </div>
         </div>
       ),
     },
     {
-      title: "Giỏ hàng",
+      title: 'Giỏ hàng',
       width: 110,
-      dataIndex: "items",
-      key: "items",
-      align: "center",
+      dataIndex: 'items',
+      key: 'items',
+      align: 'center',
       render: (_, record) => {
         const ContentItemSku = (
           <div className="td_items_skus">
             {isArray(record.order_item_skus) &&
               record.order_item_skus &&
               record.order_item_skus.map((orderItemSku, index) => {
-                const inforItem = `${get(orderItemSku, "item_sku.item.name")} | 
-                ${get(orderItemSku, "item_sku.sku_code")} x${get(
+                const inforItem = `${get(orderItemSku, 'item_sku.item.name')} | 
+                ${get(orderItemSku, 'item_sku.sku_code')} x${get(
                   orderItemSku,
-                  "quantity"
+                  'quantity'
                 )}`;
                 return <p key={index}>{inforItem}</p>;
               })}
@@ -584,9 +638,9 @@ const StaffDetail = () => {
           >
             <div>
               <span>
-                {get(record, "order_item_skus_count")
-                  ? get(record, "order_item_skus_count")
-                  : 0}{" "}
+                {get(record, 'order_item_skus_count')
+                  ? get(record, 'order_item_skus_count')
+                  : 0}{' '}
                 sản phẩm
               </span>
             </div>
@@ -595,11 +649,11 @@ const StaffDetail = () => {
       },
     },
     {
-      title: "Tổng tiền SP",
+      title: 'Tổng tiền SP',
       width: 150,
-      dataIndex: "total_product_cost",
-      key: "total_product_cost",
-      align: "center",
+      dataIndex: 'total_product_cost',
+      key: 'total_product_cost',
+      align: 'center',
       render: (_, record: any) => (
         <div
           onClick={(e) => {
@@ -607,17 +661,17 @@ const StaffDetail = () => {
           }}
         >
           {record.total_product_cost
-            ? parseFloat(record.total_product_cost).toLocaleString() + "đ"
+            ? parseFloat(record.total_product_cost).toLocaleString() + 'đ'
             : 0}
         </div>
       ),
     },
     {
-      title: "Tiền thu COD",
+      title: 'Tiền thu COD',
       width: 150,
-      dataIndex: "total_pay",
-      key: "total_pay",
-      align: "center",
+      dataIndex: 'total_pay',
+      key: 'total_pay',
+      align: 'center',
       render: (_, record: any) => (
         <div
           onClick={(e) => {
@@ -628,17 +682,17 @@ const StaffDetail = () => {
           {record.total_order_value - record.total_transfer
             ? (
                 record.total_order_value - record.total_transfer
-              ).toLocaleString() + "đ"
+              ).toLocaleString() + 'đ'
             : 0}
         </div>
       ),
     },
     {
-      title: "Chuyển khoản",
+      title: 'Chuyển khoản',
       width: 150,
-      dataIndex: "total_transfer",
-      key: "total_transfer",
-      align: "center",
+      dataIndex: 'total_transfer',
+      key: 'total_transfer',
+      align: 'center',
       render: (_, record) => (
         <div
           onClick={(e) => {
@@ -646,25 +700,25 @@ const StaffDetail = () => {
           }}
         >
           {record.total_transfer
-            ? record.total_transfer.toLocaleString() + "đ"
+            ? record.total_transfer.toLocaleString() + 'đ'
             : 0}
         </div>
       ),
     },
     {
-      title: "TG tạo đơn",
+      title: 'TG tạo đơn',
       width: 240,
-      dataIndex: "created_at",
-      key: "created_at",
-      align: "left",
+      dataIndex: 'created_at',
+      key: 'created_at',
+      align: 'left',
       render: (_, record) => (
         <div className="flex flex-col items-start">
           <div className="flex flex-row gap-x-1 text-medium text-[#1D1C2D]">
-            <span>{format(new Date(record.created_at), "HH:mm")} </span>
-            <span>{format(new Date(record.created_at), "dd/MM/yyyy")}</span>
+            <span>{format(new Date(record.created_at), 'HH:mm')} </span>
+            <span>{format(new Date(record.created_at), 'dd/MM/yyyy')}</span>
           </div>
           <div className="text-medium font-semibold">
-            {get(record, "user") ? get(record, "user.name") : " "}
+            {get(record, 'user') ? get(record, 'user.name') : ' '}
           </div>
         </div>
       ),
@@ -697,7 +751,7 @@ const StaffDetail = () => {
                 showUploadList={false}
                 accept="image/*"
                 beforeUpload={(file) => {
-                  if (file.type.startsWith("image")) {
+                  if (file.type.startsWith('image')) {
                     return true;
                   }
 
@@ -705,7 +759,7 @@ const StaffDetail = () => {
                 }}
               >
                 {staff?.avatar ? (
-                  <img
+                  <Image
                     src={staff.avatar}
                     alt="avatar"
                     style={{
@@ -715,7 +769,15 @@ const StaffDetail = () => {
                     }}
                   />
                 ) : (
-                  <DefaultAvatar />
+                  <Image
+                    src={require('../../assets/big-default-avatar.svg')}
+                    style={{
+                      width: 75,
+                      height: 75,
+                      borderRadius: 100,
+                    }}
+                    alt="default-avatar"
+                  />
                 )}
               </Upload>
             </div>
@@ -732,7 +794,7 @@ const StaffDetail = () => {
             <p className="text-medium font-medium">Họ và tên</p>
             <Input
               width={285}
-              onChange={(e: any) => handleChange(e.target.value, "name")}
+              onChange={(e: any) => handleChange(e.target.value, 'name')}
               value={staff?.name}
             />
           </div>
@@ -741,7 +803,7 @@ const StaffDetail = () => {
             <Input
               width={285}
               value={staff?.phone}
-              onChange={(e: any) => handleChange(e.target.value, "phone")}
+              onChange={(e: any) => handleChange(e.target.value, 'phone')}
             />
           </div>
           <div className="flex justify-between mb-[12px] items-center">
@@ -749,7 +811,7 @@ const StaffDetail = () => {
             <Input
               width={285}
               value={staff?.email}
-              onChange={(e: any) => handleChange(e.target.value, "email")}
+              onChange={(e: any) => handleChange(e.target.value, 'email')}
             />
           </div>
           <div className="flex justify-between mb-[12px] items-center">
@@ -757,7 +819,7 @@ const StaffDetail = () => {
             <Radio.Group
               className="w-[286px]"
               value={staff?.sex}
-              onChange={(e: any) => handleChange(e.target.value, "sex")}
+              onChange={(e: any) => handleChange(e.target.value, 'sex')}
             >
               <div className="mr-[95px]">
                 <Radio value="male">Nam</Radio>
@@ -771,7 +833,7 @@ const StaffDetail = () => {
               width={285}
               placeholder="ngày/tháng/năm"
               value={staff?.birthday}
-              onChange={(e: any) => handleChange(e.target.value, "birthday")}
+              onChange={(e: any) => handleChange(e.target.value, 'birthday')}
             />
           </div>
           <div className="w-full my-[24px] bg-slate-200 h-[1px]"></div>
@@ -782,7 +844,7 @@ const StaffDetail = () => {
                 width={285}
                 value={staff?.role_id}
                 options={roles}
-                onChange={(e: any) => handleChange(e, "role_id")}
+                onChange={(e: any) => handleChange(e, 'role_id')}
               />
             </div>
           </div>
@@ -793,7 +855,7 @@ const StaffDetail = () => {
                 width={285}
                 value={staff?.staff_group_id}
                 options={staffGroups}
-                onChange={(e: any) => handleChange(e, "staff_group_id")}
+                onChange={(e: any) => handleChange(e, 'staff_group_id')}
               />
             </div>
           </div>
@@ -804,7 +866,7 @@ const StaffDetail = () => {
                 width={285}
                 value={staff?.warehouse_id}
                 options={warehouses}
-                onChange={(e: any) => handleChange(e, "warehouse_id")}
+                onChange={(e: any) => handleChange(e, 'warehouse_id')}
               />
             </div>
           </div>
@@ -823,7 +885,11 @@ const StaffDetail = () => {
         <div className="flex flex-col w-8/12">
           <div className="bg-white rounded-lg p-[12px]">
             <p className="text-medium font-medium">Chỉ tiêu </p>
-            <Table columns={columns} dataSource={targets} />
+            <Table 
+             columns={columns}
+              //dataSource={targets} 
+              dataSource={targetData}
+             />
             <div className="flex justify-start my-[8px]">
               <p className="text-medoium font-medium mr-[5px]">Tổng đơn hàng</p>
               <p className="text-medoium font-medium text-[#384ADC] mr-[5px]">
@@ -851,7 +917,11 @@ const StaffDetail = () => {
                   onClick={() => setIsShowEditFault(true)}
                 />
               </div>
-              <Table columns={columnErrorDetails} dataSource={staffErrors} />
+              <Table
+               columns={columnErrorDetails}
+              //  dataSource={staffErrors}
+              dataSource={errorData}
+               />
               <ModalEditFault
                 title="Thêm lỗi"
                 listError={listError}
@@ -869,7 +939,7 @@ const StaffDetail = () => {
                 isVisible={isShowBlockModal}
                 onClose={() => {
                   setIsShowBlockModal(false);
-                  handleChange(!staff.is_blocked, "is_blocked");
+                  handleChange(!staff.is_blocked, 'is_blocked');
                 }}
                 titleBody={titleBody}
                 content={content}
@@ -899,7 +969,8 @@ const StaffDetail = () => {
             });
           }}
           columns={orderColumns}
-          dataSource={[...orders]}
+          // dataSource={[...orders]}
+          dataSource={colsData}
           pagination={{
             total: pagination.total,
             defaultPageSize: pagination.pageSize,
@@ -926,4 +997,4 @@ const StaffDetail = () => {
     </div>
   );
 };
-ReactDOM.render(<StaffDetail />, document.getElementById("root"));
+export default StaffDetail;

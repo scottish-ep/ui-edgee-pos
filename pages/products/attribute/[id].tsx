@@ -66,7 +66,7 @@ const AttributeDetail = () => {
       align: 'left',
       render: (_, record: any) => (
         <Input
-          value={record?.label}
+          defaultValue={record?.label}
           width={488}
           className="border-[#DADADD] border-1 border-solid rounded-[4px] "
           inputClassName="pl-[12px] pt-[12px] pr-[8px] pb-[8px]"

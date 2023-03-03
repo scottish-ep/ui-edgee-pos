@@ -215,6 +215,7 @@ const AttributeSetting = () => {
           }}
           // rowSelection={rowSelection}
           columns={columns}
+          dataSource={attrList}
           // dataSource={[...attributes]}  
           pagination={{
             total: pagination.total,

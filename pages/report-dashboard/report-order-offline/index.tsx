@@ -2,27 +2,27 @@
 import { Checkbox, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
-import Button from "../../components/Button/Button";
-import DatePicker from "../../components/DatePicker/DatePicker";
-import Icon from "../../components/Icon/Icon";
-import Select from "../../components/Select/Select";
-import TitlePage from "../../components/TitlePage/Titlepage";
-import { listDayCompare } from "../../const/constant";
+import Button from "../../../components/Button/Button";
+import DatePicker from "../../../components/DatePicker/DatePicker";
+import Icon from "../../../components/Icon/Icon";
+import Select from "../../../components/Select/Select";
+import TitlePage from "../../../components/TitlePage/Titlepage";
+import { listDayCompare } from "../../../const/constant";
 import classNames from "classnames";
 import type { ColumnsType } from "antd/es/table";
-import InputRangePicker from "../../components/DateRangePicker/DateRangePicker";
+import InputRangePicker from "../../../components/DateRangePicker/DateRangePicker";
 
-import styles from "../../styles/Report.module.css";
-import ReportPieChart from "./ReportChart/PieChart/ReportPieChart";
-import LineChart from "./ReportChart/LineChart/ReportLineChart";
-import { IOrder } from "./report.type";
-import WarehouseApi from "../../services/warehouses";
-import ReportOrderApi from "../../services/report/report-order";
-import { OrderStatusEnum } from "../../enums/enums";
+import styles from "../../../styles/Report.module.css";
+import ReportPieChart from "../ReportChart/PieChart/ReportPieChart";
+import LineChart from "../ReportChart/LineChart/ReportLineChart";
+import { IOrder } from "../report.type";
+import WarehouseApi from "../../../services/warehouses";
+import ReportOrderApi from "../../../services/report/report-order";
+import { OrderStatusEnum } from "../../../enums/enums";
 import { get, isArray } from "lodash";
-import TableEmpty from "../../components/TableEmpty";
-import { IsProduct } from "../products/product.type";
-import ReportProductApi from "../../services/report/report-product";
+import TableEmpty from "../../../components/TableEmpty";
+import { IsProduct } from "../../products/product.type";
+import ReportProductApi from "../../../services/report/report-product";
 
 const ReportOrderOffline = () => {
   const [isCompare, setIsCompare] = useState(false);
@@ -104,6 +104,15 @@ const ReportOrderOffline = () => {
       )
     );
   };
+
+  const colsData: IsProduct[] = Array(50) 
+  .fill({
+    code: "MH1929",
+    name: "Test",
+    quantity: 110,
+    revenue: 1000,
+  })
+  .map((item, index) => ({...item, id: index++}))
 
   const columns: ColumnsType<IsProduct> = [
     {
@@ -208,7 +217,8 @@ const ReportOrderOffline = () => {
           loading={loadingProduct}
           className="table-layout1"
           columns={columns}
-          dataSource={[...topProduct]}
+          // dataSource={[...topProduct]}
+          dataSource={colsData}
           pagination={{
             defaultPageSize: pagination.pageSize,
             showSizeChanger: true,
@@ -227,4 +237,4 @@ const ReportOrderOffline = () => {
   );
 };
 
-ReactDOM.render(<ReportOrderOffline />, document.getElementById("root"));
+export default ReportOrderOffline;

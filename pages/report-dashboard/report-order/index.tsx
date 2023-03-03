@@ -2,26 +2,27 @@
 import { Checkbox, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
-import Button from "../../components/Button/Button";
-import DatePicker from "../../components/DatePicker/DatePicker";
-import ModalConfig from "./Modal/ModalConfig";
-import Icon from "../../components/Icon/Icon";
-import Select from "../../components/Select/Select";
-import TitlePage from "../../components/TitlePage/Titlepage";
-import { listDayCompare } from "../../const/constant";
+import { wareHouseList, warehousesList } from "../../../const/constant";
+import Button from "../../../components/Button/Button";
+import DatePicker from "../../../components/DatePicker/DatePicker";
+import ModalConfig from "../Modal/ModalConfig";
+import Icon from "../../../components/Icon/Icon";
+import Select from "../../../components/Select/Select";
+import TitlePage from "../../../components/TitlePage/Titlepage";
+import { listDayCompare } from "../../../const/constant";
 import classNames from "classnames";
 import type { ColumnsType } from "antd/es/table";
-import InputRangePicker from "../../components/DateRangePicker/DateRangePicker";
+import InputRangePicker from "../../../components/DateRangePicker/DateRangePicker";
 
-import styles from "../../styles/Report.module.css";
-import ReportPieChart from "./ReportChart/PieChart/ReportPieChart";
-import LineChart from "./ReportChart/LineChart/ReportLineChart";
-import { IOrder, IStaff } from "./report.type";
-import WarehouseApi from "../../services/warehouses";
-import ReportOrderApi from "../../services/report/report-order";
-import { OrderStatusEnum } from "../../enums/enums";
+import styles from "../../../styles/Report.module.css";
+import ReportPieChart from "../ReportChart/PieChart/ReportPieChart";
+import LineChart from "../ReportChart/LineChart/ReportLineChart";
+import { IOrder, IStaff } from "../report.type";
+import WarehouseApi from "../../../services/warehouses";
+import ReportOrderApi from "../../../services/report/report-order";
+import { OrderStatusEnum } from "../../../enums/enums";
 import { isArray } from "lodash";
-import ReportStaffApi from "../../services/report/report-staff";
+import ReportStaffApi from "../../../services/report/report-staff";
 
 const ReportOrder = () => {
   const defaultPagination = {
@@ -59,16 +60,16 @@ const ReportOrder = () => {
     OrderStatusEnum.PICKUP_RECEIVED
   );
   const [orderInfor, setOrderInfor] = useState<any>({
-    totalOrderCreated: 0,
-    totalOrderReturn: 0,
-    totalOrderCanceled: 0,
-    totalOrderSuccess: 0,
-    revenueOrderSuccess: 0,
+    totalOrderCreated: 1000,
+    totalOrderReturn: 1000,
+    totalOrderCanceled: 1000,
+    totalOrderSuccess: 1000,
+    revenueOrderSuccess: 1000,
   });
   const [orderByChannels, setOrderByChannels] = useState<any>([
-    { name: "Tại quầy", value: 0 },
-    { name: "Onine", value: 0 },
-    { name: "Trên app", value: 0 },
+    { name: "Tại quầy", value: 100 },
+    { name: "Onine", value: 200 },
+    { name: "Trên app", value: 30 },
   ]);
   const [orderPercentage, setorderPercentage] = useState<any>({
     success: 100,
@@ -218,6 +219,17 @@ const ReportOrder = () => {
     },
   ];
 
+  const staffColData: IStaff[] = Array(10)
+  .fill({
+    name: "test",
+    orders_count: "10",
+    orders_sum_item_skus: 10,
+    orders_sum_total_cost: 1000,
+  })
+  .map((item, index) => ({...item, id: index++}))
+
+
+
   const staffColumns: ColumnsType<IStaff> = [
     {
       title: "Mã nhân viên",
@@ -280,6 +292,18 @@ const ReportOrder = () => {
       },
     },
   ];
+
+  const orderColData = Array(10)
+  .fill({
+    transfer_fee: "100",
+    order_type: 2,
+    total_pay: "100",
+    total_order_value: "12",
+    total_transfer: "12",
+    total_prepaid: "12",
+    total_prepaid_percent: "9",
+    total_product_cost: "40",
+  })
 
   const orderColumns: ColumnsType<any> = [
     {
@@ -358,8 +382,8 @@ const ReportOrder = () => {
           >
             Xuất file
           </Button> */}
-          <div className="flex items-center">
-            <div className="text-medium font-semibold mr-[8px]">
+          <div className="flex items-center justify-end">
+            <div className=" min-w-max text-medium font-semibold mr-[8px]">
               Hiển thị theo thời gian
             </div>
             <InputRangePicker
@@ -458,7 +482,7 @@ const ReportOrder = () => {
         <ReportPieChart title="Đơn hàng theo kênh bán" data={orderByChannels} />
       </div>
       <LineChart
-        warehouses={warehouses}
+        warehouses={warehousesList}
         onChangeWarehouse={(e) => handleOnChangeWarehouse(e)}
         onChangeStatus={(e) => setSelectedStatusOrder(e)}
         selectedStatusOrder={selectedStatusOrder}
@@ -489,10 +513,11 @@ const ReportOrder = () => {
           </div>
         </div>
         <Table
-          loading={loadingStaff}
+          // loading={loadingStaff}
           className="table-layout2 table-has-total"
           columns={staffColumns}
-          dataSource={[...staffs]}
+          // dataSource={[...staffs]}
+          dataSource={staffColData}
           pagination={{
             position: ["bottomCenter"],
             total: paginationStaff.total,
@@ -593,10 +618,11 @@ const ReportOrder = () => {
           </div>
         </div>
         <Table
-          loading={loadingOrder}
+          // loading={loadingOrder}
           className="table-layout2 table-has-total"
           columns={orderColumns}
-          dataSource={[...orders]}
+          // dataSource={[...orders]}
+          dataSource={orderColData}
           pagination={{
             total: paginationOrder.total,
             defaultPageSize: paginationOrder.pageSize,

@@ -2,17 +2,17 @@
 import { Table } from "antd";
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
-import Button from "../../components/Button/Button";
-import Icon from "../../components/Icon/Icon";
-import TitlePage from "../../components/TitlePage/Titlepage";
-import { ITartget } from "./staff.type";
+import Button from "../../../components/Button/Button";
+import Icon from "../../../components/Icon/Icon";
+import TitlePage from "../../../components/TitlePage/Titlepage";
+import { ITartget } from "../staff.type";
 import type { ColumnsType } from "antd/es/table";
-import { StatusColorEnum, StatusList } from "../../types";
-import TargetApi from "../../services/targets";
+import { StatusColorEnum, StatusList } from "../../../types";
+import TargetApi from "../../../services/targets";
 import { get } from "lodash";
 import { format } from "date-fns";
-import { calcTimeTarget } from "../../utils/utils";
-import { TargetStatusEnum } from "../../enums/enums";
+import { calcTimeTarget } from "../../../utils/utils";
+import { TargetStatusEnum } from "../../../enums/enums";
 
 const ListTarget = () => {
   const defaultPagination = {

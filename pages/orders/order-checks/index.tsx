@@ -1,37 +1,37 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from "react";
-import ReactDOM from "react-dom";
-import { message, Table } from "antd";
-import type { ColumnsType } from "antd/es/table";
-import { format, parseISO } from "date-fns";
+import React, { useEffect, useState } from 'react';
+import ReactDOM from 'react-dom';
+import { message, Table } from 'antd';
+import type { ColumnsType } from 'antd/es/table';
+import { format, parseISO } from 'date-fns';
 
 import {
   wareHouseList,
   warehouses,
   statusOrderChecksOptions,
   orderChecksList,
-} from "../../../const/constant";
-import { StatusColorEnum, StatusEnum, StatusList } from "../../../types";
-import Tabs from "../../../components/Tabs";
-import TitlePage from "../../../components/TitlePage/Titlepage";
-import Select from "../../../components/Select/Select";
-import Button from "../../../components/Button/Button";
-import Icon from "../../../components/Icon/Icon";
-import Input from "../../../components/Input/Input";
-import DatePicker from "../../../components/DateRangePicker/DateRangePicker";
-import DropdownStatus from "../../../components/DropdownStatus";
-import ModalRemove from "../../../components/ModalRemove/ModalRemove";
-import { onCoppy } from "../../../utils/utils";
-import TableEmpty from "../../../components/TableEmpty";
-import { IOrderChecks } from "../orders.type";
-import ModalAddOrderChecks from "./ModalAddOrderChecks";
-import PaginationCustom from "../../../components/PaginationCustom";
-import { useDebounce } from "usehooks-ts";
-import OrderCheckCommandApi from "../../../services/order-check-command";
-import DateRangePickerCustom from "../../../components/DateRangePicker/DateRangePickerCustom";
-import { RangePickerProps } from "antd/lib/date-picker";
-import vi from "date-fns/locale/vi";
-import { uuid } from "uuidv4";
+} from '../../../const/constant';
+import { StatusColorEnum, StatusEnum, StatusList } from '../../../types';
+import Tabs from '../../../components/Tabs';
+import TitlePage from '../../../components/TitlePage/Titlepage';
+import Select from '../../../components/Select/Select';
+import Button from '../../../components/Button/Button';
+import Icon from '../../../components/Icon/Icon';
+import Input from '../../../components/Input/Input';
+import DatePicker from '../../../components/DateRangePicker/DateRangePicker';
+import DropdownStatus from '../../../components/DropdownStatus';
+import ModalRemove from '../../../components/ModalRemove/ModalRemove';
+import { onCoppy } from '../../../utils/utils';
+import TableEmpty from '../../../components/TableEmpty';
+import { IOrderChecks } from '../orders.type';
+import ModalAddOrderChecks from './ModalAddOrderChecks';
+import PaginationCustom from '../../../components/PaginationCustom';
+import { useDebounce } from 'usehooks-ts';
+import OrderCheckCommandApi from '../../../services/order-check-command';
+import DateRangePickerCustom from '../../../components/DateRangePicker/DateRangePickerCustom';
+import { RangePickerProps } from 'antd/lib/date-picker';
+import vi from 'date-fns/locale/vi';
+import { uuid } from 'uuidv4';
 
 const OrderChecksList = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
@@ -49,36 +49,36 @@ const OrderChecksList = () => {
 
   const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(10);
-  const [searchPhrase, setSearchPhrase] = useState<string>("");
-  const [creator, setCreator] = useState<string>("");
-  const [reload, setReload] = useState<string>("");
+  const [searchPhrase, setSearchPhrase] = useState<string>('');
+  const [creator, setCreator] = useState<string>('');
+  const [reload, setReload] = useState<string>('');
   const [totalItems, setTotalItems] = useState<number>(0);
   const debouncedValue = useDebounce<string>(searchPhrase, 500);
   const debounceCreator = useDebounce<string>(creator, 500);
-  const [status, setStatus] = useState<string>("Tất cả");
-  const [dateFrom, setDateFrom] = useState<string>("");
-  const [dateTo, setDateTo] = useState<string>("");
+  const [status, setStatus] = useState<string>('Tất cả');
+  const [dateFrom, setDateFrom] = useState<string>('');
+  const [dateTo, setDateTo] = useState<string>('');
 
   const [tabStatus, setTabStatus] = useState([
-    { name: "Tất cả", count: 0 },
-    { name: "Mới", count: 0 },
-    { name: "Hoàn tất", count: 0 },
+    { name: 'Tất cả', count: 0 },
+    { name: 'Mới', count: 0 },
+    { name: 'Hoàn tất', count: 0 },
   ]);
 
   useEffect(() => {
-    const element = document.getElementById("loading__animation");
+    const element = document.getElementById('loading__animation');
     if (element) {
       element.remove();
     }
   }, []);
 
-  const onDateChange: RangePickerProps["onChange"] = (dates, dateStrings) => {
+  const onDateChange: RangePickerProps['onChange'] = (dates, dateStrings) => {
     if (dates) {
       setDateFrom(dateStrings?.[0]);
       setDateTo(dateStrings?.[1]);
     } else {
-      setDateFrom("");
-      setDateTo("");
+      setDateFrom('');
+      setDateTo('');
     }
   };
 
@@ -108,9 +108,9 @@ const OrderChecksList = () => {
     setOrderChecks(data);
     setTotalItems(totalItems);
     setTabStatus([
-      { name: "Tất cả", count: countAll },
-      { name: "Mới", count: countNewItems },
-      { name: "Hoàn tất", count: countCompleteItems },
+      { name: 'Tất cả', count: countAll },
+      { name: 'Mới', count: countNewItems },
+      { name: 'Hoàn tất', count: countCompleteItems },
     ]);
     setLoading(false);
   };
@@ -124,27 +124,39 @@ const OrderChecksList = () => {
     onChange: onSelectChange,
   };
 
+  const colsData: IOrderChecks[] = Array(50) 
+  .fill({
+    code: "ADK123",
+    created_by: "Tester",
+    created_at: Date.now(),
+    transport_company: "Dream",
+    order_check_number: 13,
+    status: 'Mới',
+    note: "Nope"
+  })
+  .map((item, index) => ({...item, id: index++}))
+
   const columns: ColumnsType<IOrderChecks> = [
     {
-      title: "Mã phiên",
+      title: 'Mã phiên',
       width: 100,
-      dataIndex: "id",
-      key: "id",
-      align: "center",
+      dataIndex: 'id',
+      key: 'id',
+      align: 'center',
       render: (_, record) => (
         <span
           className="text-medium text-[#EF4444] font-semibold"
-          onClick={(e) => onCoppy(e, record?.code || "")}
+          onClick={(e) => onCoppy(e, record?.code || '')}
         >
           {record?.id}
         </span>
       ),
     },
     {
-      title: "NV xử lý / Thời gian",
+      title: 'NV xử lý / Thời gian',
       width: 250,
-      dataIndex: "name",
-      key: "name",
+      dataIndex: 'name',
+      key: 'name',
       render: (_, record) => (
         <div className="flex flex-col gap-y-1">
           <span className="text-medium text-[#384ADC] font-semibold">
@@ -152,20 +164,20 @@ const OrderChecksList = () => {
           </span>
           <span className="text-medium text-[#5F5E6B] font-medium">
             {record?.created_at
-              ? format(new Date(record?.created_at), "HH:mm - dd/MM/yyyy", {
+              ? format(new Date(record?.created_at), 'HH:mm - dd/MM/yyyy', {
                   locale: vi,
                 })
-              : ""}
+              : ''}
           </span>
         </div>
       ),
     },
     {
-      title: "Đơn vị vận chuyển",
+      title: 'Đơn vị vận chuyển',
       width: 100,
-      dataIndex: "shippingUnit",
-      key: "shippingUnit",
-      align: "center",
+      dataIndex: 'shippingUnit',
+      key: 'shippingUnit',
+      align: 'center',
       render: (_, record) => (
         <span className="text-medium font-medium text-[#2E2D3D]">
           {record?.transport_company}
@@ -173,11 +185,11 @@ const OrderChecksList = () => {
       ),
     },
     {
-      title: "Số ĐH đối soát",
+      title: 'Số ĐH đối soát',
       width: 100,
-      dataIndex: "quantity",
-      key: "quantity",
-      align: "center",
+      dataIndex: 'quantity',
+      key: 'quantity',
+      align: 'center',
       render: (_, record) => (
         <span className="text-medium font-medium text-[#2E2D3D]">
           {record?.order_check_number || 0}
@@ -185,15 +197,15 @@ const OrderChecksList = () => {
       ),
     },
     {
-      title: "Trạng thái",
+      title: 'Trạng thái',
       width: 100,
-      dataIndex: "status",
-      key: "status",
-      align: "center",
+      dataIndex: 'status',
+      key: 'status',
+      align: 'center',
       render: (_, record) => (
         <span
           className={`text-medium font-semibold ${
-            record?.status === "Mới" ? "text-[#10B981]" : "text-[#384ADC]"
+            record?.status === 'Mới' ? 'text-[#10B981]' : 'text-[#384ADC]'
           }`}
         >
           {record?.status}
@@ -201,11 +213,11 @@ const OrderChecksList = () => {
       ),
     },
     {
-      title: "Ghi chú",
+      title: 'Ghi chú',
       width: 200,
-      dataIndex: "note",
-      key: "note",
-      align: "left",
+      dataIndex: 'note',
+      key: 'note',
+      align: 'left',
       render: (_, record) => (
         <span className="text-medium font-medium text-[#2E2D3D]">
           {record?.note}
@@ -217,7 +229,7 @@ const OrderChecksList = () => {
   const onDeleteMany = async () => {
     const { data } = await OrderCheckCommandApi.deleteMany(selectedRowKeys);
     if (data) {
-      message.success("Xóa thành công");
+      message.success('Xóa thành công');
     }
     setReload(uuid);
   };
@@ -292,14 +304,15 @@ const OrderChecksList = () => {
         onRow={(record) => {
           return {
             onClick: () => {
-              window.location.href = `/order-management/check-orders/detail?id=${record?.id}`;
+              window.location.href = `/orders/order-checks/${record?.id}`;
             },
           };
         }}
         loading={loading}
         rowSelection={rowSelection}
         columns={columns}
-        dataSource={orderChecks}
+        // dataSource={orderChecks}
+        dataSource={colsData}
         pagination={false}
         scroll={{ x: 50 }}
       />
@@ -330,4 +343,4 @@ const OrderChecksList = () => {
   );
 };
 
-ReactDOM.render(<OrderChecksList />, document.getElementById("root"));
+export default OrderChecksList;

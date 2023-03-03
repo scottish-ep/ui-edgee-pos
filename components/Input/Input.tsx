@@ -7,10 +7,11 @@ interface InputProps extends InputAntdProps {
   label?: string;
   className?: string;
   inputClassName?: string;
+  ref?: any;
 }
 
 const Input = (props: InputProps) => {
-  const { width, label, className, inputClassName, ...rest } = props;
+  const { width, label, className, ref, inputClassName, ...rest } = props;
 
   return (
     <div className={classNames("flex flex-col", className)}>

@@ -7,28 +7,28 @@ import get from "lodash/get";
 import { format } from "date-fns";
 import Image from "next/image";
 import { Checkbox, Form } from "antd";
-import Tabs from "../../components/Tabs";
-import TitlePage from "../../components/TitlePage/Titlepage";
-import Select from "../../components/Select/Select";
-import Button from "../../components/Button/Button";
-import Icon from "../../components/Icon/Icon";
-import Input from "../../components/Input/Input";
-import DatePicker from "../../components/DatePicker/DatePicker";
-import DropdownStatus from "../../components/DropdownStatus";
-import ModalSettingTarget from "./Modal/modal-setting-target";
-import { StatusColorEnum, StatusEnum, StatusList } from "../../types";
-import InputRangePicker from "../../components/DateRangePicker/DateRangePicker";
+import Tabs from "../../../components/Tabs";
+import TitlePage from "../../../components/TitlePage/Titlepage";
+import Select from "../../../components/Select/Select";
+import Button from "../../../components/Button/Button";
+import Icon from "../../../components/Icon/Icon";
+import Input from "../../../components/Input/Input";
+import DatePicker from "../../../components/DatePicker/DatePicker";
+import DropdownStatus from "../../../components/DropdownStatus";
+import ModalSettingTarget from "../Modal/modal-setting-target";
+import { StatusColorEnum, StatusEnum, StatusList } from "../../../types";
+import InputRangePicker from "../../../components/DateRangePicker/DateRangePicker";
 
 import classNames from "classnames";
 
 import styles from "../../styles/DetailCustomer.module.css";
 
-import { ITartgetManageProps } from "./staff.type";
-import { productTypeList } from "../../const/constant";
-import TargetApi from "../../services/targets";
-import StaffGroupApi from "../../services/staff-groups";
-import { isArray } from "../../utils/utils";
-import WarehouseApi from "../../services/warehouses";
+import { ITartgetManageProps } from "../staff.type";
+import { productTypeList } from "../../../const/constant";
+import TargetApi from "../../../services/targets";
+import StaffGroupApi from "../../../services/staff-groups";
+import { isArray } from "../../../utils/utils";
+import WarehouseApi from "../../../services/warehouses";
 import moment from "moment";
 
 const EditTargetManagement = () => {

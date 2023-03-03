@@ -10,6 +10,7 @@ interface ButtonProps extends ButtonAntdProps {
   variant?:
     | "primary"
     | "outlined"
+    | "third"
     | "no-outlined"
     | "danger-outlined"
     | "blue-outlined"
