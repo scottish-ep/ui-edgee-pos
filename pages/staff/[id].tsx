@@ -213,7 +213,7 @@ const StaffDetail = () => {
     warehouse_id: 3,
     is_blocked: false,
   });
-  const [errorRecord, git add setErrorRecord] = useState<any>();
+  const [errorRecord, setErrorRecord] = useState<any>();
   const [isShowDeleteModal, setIsShowDeleteModal] = useState(false);
   const [isShowBlockModal, setIsShowBlockModal] = useState(false);
   const [staffGroups, setStaffGroups] = useState<any[]>([]);
