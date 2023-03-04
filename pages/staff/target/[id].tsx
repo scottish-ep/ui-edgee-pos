@@ -1,10 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import ReactDOM from "react-dom";
 import { Switch, Table } from "antd";
+import dayjs from "dayjs";
 import type { ColumnsType } from "antd/es/table";
 import get from "lodash/get";
 import { format } from "date-fns";
+import { warehouses } from "../../../const/constant";
 import Image from "next/image";
 import { Checkbox, Form } from "antd";
 import Tabs from "../../../components/Tabs";
@@ -21,7 +23,7 @@ import InputRangePicker from "../../../components/DateRangePicker/DateRangePicke
 
 import classNames from "classnames";
 
-import styles from "../../styles/DetailCustomer.module.css";
+import styles from "../../../styles/DetailCustomer.module.css";
 
 import { ITartgetManageProps } from "../staff.type";
 import { productTypeList } from "../../../const/constant";
@@ -38,12 +40,23 @@ const EditTargetManagement = () => {
     total: 0,
     pageSize: 10,
   };
-  const pathNameArr = window.location.pathname.split("/");
+
+
+  let pathNameArr: any = [''];
+  useRef(() => {
+    pathNameArr = window.location.pathname.split('/');
+  });
+  // const pathNameArr = window.location.pathname.split("/");
   const id = pathNameArr[pathNameArr.length - 1];
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<any>({});
-  const [staffGroupOptions, setStaffGroupOptions] = useState<any[]>([]);
+  const [staffGroupOptions, setStaffGroupOptions] = useState<any[]>([
+    {
+      label: "Tat ca",
+      value: "all"
+    }
+  ]);
   const [warehouses, setWarehouses] = useState([]);
   const [pagination, setPagination] = useState<{
     current: number;
@@ -102,10 +115,10 @@ const EditTargetManagement = () => {
       total_order_handle_percent: data.total_order_handle_percent,
       total_revenue_percent: data.total_revenue_percent,
       staff_group_ids: isArray(data.salegroup_relations)
-        ? data.salegroup_relations.map((item) => item.staff_group_id)
+        ? data.salegroup_relations.map((item: any) => item.staff_group_id)
         : [],
       warehouse_ids: isArray(data.warehouse_relations)
-        ? data.warehouse_relations.map((item) => item.warehouse_id)
+        ? data.warehouse_relations.map((item: any) => item.warehouse_id)
         : [],
       time: [moment(data.from), moment(data.to)],
     };
@@ -114,6 +127,10 @@ const EditTargetManagement = () => {
       form.setFieldsValue(rawData);
     }
   };
+
+  const detail = {
+    name: "Hoan thanh chi tieu thang 10",
+  }
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     console.log("selectedRowKeys changed: ", selectedRowKeys);
@@ -125,6 +142,16 @@ const EditTargetManagement = () => {
     onChange: onSelectChange,
   };
 
+  const colData: ITartgetManageProps[] = Array(10)
+  .fill({
+    name: "Yen Nhi",
+    role: "CEO",
+    order: 10,
+    kpiorder: 100,
+    profit: 200000,
+    kpiprofit: 2000000,
+  })
+  .map((item, index) => ({...item, id: index}))
   const columns: ColumnsType<ITartgetManageProps> = [
     {
       title: "",
@@ -286,7 +313,7 @@ const EditTargetManagement = () => {
     >
       <div className="flex items-center justify-between mb-[12px] flex-wrap">
         <div className="flex flex-col justify-start">
-          <TitlePage title="Chi tiết chỉ tiêu" href="/targets" />
+          <TitlePage title="Chi tiết chỉ tiêu" href="/staff/target" />
         </div>
         <div className="flex gap-[8px] flex-wrap">
           <Button
@@ -301,7 +328,7 @@ const EditTargetManagement = () => {
             width={158}
             color="white"
             icon={<Icon icon="settings-1" size={24} />}
-            onClick={() => (window.location.href = "/targets/edit/" + id)}
+            onClick={() => (window.location.href = "/staff/target/edit/" + id)}
           >
             Cài đặt chỉ tiêu
           </Button>
@@ -341,7 +368,7 @@ const EditTargetManagement = () => {
                   },
                 ]}
               >
-                <Input disabled width="100%" />
+                <Input disabled width="100%" value={detail.name}/>
               </Form.Item>
             </div>
           </div>
@@ -364,10 +391,11 @@ const EditTargetManagement = () => {
                 ]}
               >
                 <Select
+                  // options={warehouses}
                   options={warehouses}
                   mode="multiple"
                   placeholder="Chọn kho"
-                  defaultValue={[]}
+                  defaultValue={warehouses[0]}
                   style={{ width: "100%" }}
                   disabled
                   maxTagCount="responsive"
@@ -395,6 +423,7 @@ const EditTargetManagement = () => {
               >
                 <InputRangePicker
                   disabled
+                  defaultValue={[dayjs('2015/01/01', "DD/MM/YYYY"), dayjs('2015/01/01', "DD/MM/YYYY")]}
                   placeholder={["Ngày tạo bắt đầu", "Ngày tạo kết thúc"]}
                   width={"100%"}
                   prevIcon={<Icon size={24} icon="calendar" />}
@@ -424,7 +453,7 @@ const EditTargetManagement = () => {
                   options={staffGroupOptions}
                   mode="multiple"
                   placeholder="Chọn nhóm"
-                  defaultValue={[]}
+                  defaultValue={staffGroupOptions[0]}
                   maxTagCount="responsive"
                   style={{ width: "100%" }}
                   disabled
@@ -464,7 +493,7 @@ const EditTargetManagement = () => {
                     },
                   ]}
                 >
-                  <Input disabled width="100%" suffix={<span>%</span>} />
+                  <Input disabled width="100%" value={"10"} suffix={<span>%</span>} />
                 </Form.Item>
               </div>
               <div className={styles.row}>
@@ -481,7 +510,7 @@ const EditTargetManagement = () => {
                     },
                   ]}
                 >
-                  <Input disabled width="100%" suffix={<span>%</span>} />
+                  <Input disabled width="100%" value={"10"}  suffix={<span>%</span>} />
                 </Form.Item>
               </div>
             </div>
@@ -505,7 +534,12 @@ const EditTargetManagement = () => {
         />
       </div>
       <div className="w-full">
-        <Table columns={columns} dataSource={[]} scroll={{ x: 50 }} />
+        <Table 
+        columns={columns} 
+        // dataSource={[]} 
+        dataSource={colData}
+        scroll={{ x: 50 }} 
+        />
       </div>
       <ModalSettingTarget
         title="Cài đặt chỉ tiêu"
@@ -517,4 +551,4 @@ const EditTargetManagement = () => {
   );
 };
 
-ReactDOM.render(<EditTargetManagement />, document.getElementById("root"));
+export default EditTargetManagement;

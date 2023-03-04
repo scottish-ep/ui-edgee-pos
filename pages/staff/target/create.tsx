@@ -1,39 +1,24 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from "react";
-import ReactDOM from "react-dom";
-import { notification, Switch, Table } from "antd";
+import { Form, notification, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import get from "lodash/get";
-import { format } from "date-fns";
-import Image from "next/image";
-import { Checkbox, Form } from "antd";
-import Tabs from "../../../components/Tabs";
-import TitlePage from "../../../components/TitlePage/Titlepage";
-import Select from "../../../components/Select/Select";
+import { useEffect, useState } from "react";
 import Button from "../../../components/Button/Button";
+import InputRangePicker from "../../../components/DateRangePicker/DateRangePicker";
 import Icon from "../../../components/Icon/Icon";
 import Input from "../../../components/Input/Input";
-import DatePicker from "../../../components/DatePicker/DatePicker";
-import DropdownStatus from "../../../components/DropdownStatus";
-import ModalSettingTarget from "../Modal/modal-setting-target";
-import { StatusColorEnum, StatusEnum, StatusList } from "../../../types";
-import InputRangePicker from "../../../components/DateRangePicker/DateRangePicker";
+import Select from "../../../components/Select/Select";
+import TitlePage from "../../../components/TitlePage/Titlepage";
 
 import classNames from "classnames";
 
-import styles from "../../styles/DetailCustomer.module.css";
+import styles from "../../../styles/DetailCustomer.module.css";
 
-import { ITartgetManageProps } from "../staff.type";
-import { productTypeList, groupStaff } from "../../../const/constant";
-import WarehouseApi from "../../../services/warehouses";
 import StaffGroupApi from "../../../services/staff-groups";
-import { isArray } from "../../../utils/utils";
 import TargetApi from "../../../services/targets";
-import moment from "moment";
+import WarehouseApi from "../../../services/warehouses";
+import { isArray } from "../../../utils/utils";
 
-const EditTargetManagement = () => {
-  const pathNameArr = window.location.pathname.split("/");
-  const id = pathNameArr[pathNameArr.length - 1];
+const CreateTargetManagement = () => {
   const [loading, setLoading] = useState(false);
   const [staffGroups, setStaffGroups] = useState<any[]>([]);
   const [staffGroupOptions, setStaffGroupOptions] = useState<any[]>([
@@ -59,42 +44,8 @@ const EditTargetManagement = () => {
       element.remove();
     }
     getStaffGroups();
-    getDetail();
     getAllWarehouses();
   }, []);
-
-  const getDetail = async () => {
-    const data = await TargetApi.getDetail(id);
-    let rawData: any = {
-      name: data.name,
-      total_order_handle_percent: data.total_order_handle_percent,
-      total_revenue_percent: data.total_revenue_percent,
-      staff_group_ids: isArray(data.salegroup_relations)
-        ? data.salegroup_relations.map((item) => item.staff_group_id)
-        : [],
-      warehouse_ids: isArray(data.warehouse_relations)
-        ? data.warehouse_relations.map((item) => item.warehouse_id)
-        : [],
-      time: [moment(data.from), moment(data.to)],
-    };
-    let rawStaffGroups: any[] = [];
-    isArray(data.salegroup_relations)
-      ? data.salegroup_relations.map((item: any) => {
-          rawStaffGroups.push({
-            id: item.staff_group_id,
-            name: item.salegroups.name,
-            label: item.salegroups.name,
-            value: item.staff_group_id,
-            total_order_handle: item.total_order_handle,
-            total_revenue: item.total_revenue,
-          });
-        })
-      : [];
-    if (data) {
-      setStaffGroups(rawStaffGroups);
-      form.setFieldsValue(rawData);
-    }
-  };
 
   const getAllWarehouses = async () => {
     const data = await WarehouseApi.getWarehouse();
@@ -115,15 +66,14 @@ const EditTargetManagement = () => {
       isArray(data) &&
       data.map((item: any) => ({
         ...item,
-        label: item.name,
-        value: item.id,
+        value: item.name,
         total_order_handle: 0,
         total_revenue: 0,
       }));
     setStaffGroupOptions(staffGroupOptions.concat(rawStaffGroupOptions));
   };
 
-  const handleChange = (e, record, keyName) => {
+  const handleChange = (e: any, record: any, keyName: any) => {
     const newStaffGroups = staffGroups.map((v: any) => {
       if (v.id === record.id) {
         let newValue = record;
@@ -134,49 +84,28 @@ const EditTargetManagement = () => {
     setStaffGroups([...newStaffGroups]);
   };
 
-  const handleSelectSaleGroups = (e) => {
+  const handleSelectSaleGroups = (e: any) => {
     let newSelectSaleGroups: any[] = [];
-    let rawSelectSaleGroups: any[] = [];
     if (e.includes("Tất cả nhóm")) {
       form.setFieldValue("staff_group_ids", staffGroupOptions);
-      rawSelectSaleGroups = staffGroupOptions.filter(
+      newSelectSaleGroups = staffGroupOptions.filter(
         (item) => item.value !== "Tất cả nhóm"
       );
     } else {
-      rawSelectSaleGroups = staffGroupOptions.filter(
+      newSelectSaleGroups = staffGroupOptions.filter(
         (item) => e.includes(item.value) && item.value !== "Tất cả nhóm"
       );
     }
-    rawSelectSaleGroups.map((item) => {
-      const itemExists = staffGroups.find(
-        (v: any) => get(v, "value") === item.value
-      );
-      if (itemExists) {
-        newSelectSaleGroups.push(itemExists);
-      } else {
-        newSelectSaleGroups.push(item);
-      }
-    });
     setStaffGroups(newSelectSaleGroups);
   };
 
-  const handleSelectWarehouses = (e) => {
+  const handleSelectWarehouses = (e: any) => {
     if (e.includes("Tất cả kho")) {
       form.setFieldValue("warehouse_ids", warehouses);
     }
   };
 
-  const handleChangePercent = (value: any, key: string) => {
-    if (key === "total_order_handle_percent") {
-      form.setFieldValue("total_revenue_percent", 100 - value);
-    } else {
-      form.setFieldValue("total_order_handle_percent", 100 - value);
-    }
-  };
-
   const handleSubmit = async (e: any) => {
-    console.log("e", e);
-    console.log("staffGroups", staffGroups);
     let warehouseIds: any[] = [];
     let saleGroups: any[] = [];
     if (isArray(e.warehouse_ids)) {
@@ -191,6 +120,18 @@ const EditTargetManagement = () => {
         }
       });
     }
+    if (isArray(e.staff_group_ids)) {
+      staffGroupOptions.map((item: any) => {
+        if (
+          item.value !== "Tất cả nhóm" &&
+          e.staff_group_ids.includes(item.value)
+        ) {
+          saleGroups.push({
+            ...item,
+          });
+        }
+      });
+    }
 
     let body: any = {
       name: e.name,
@@ -199,14 +140,22 @@ const EditTargetManagement = () => {
       total_revenue_percent: e.total_revenue_percent,
       total_order_handle_percent: e.total_order_handle_percent,
       warehouse_ids: warehouseIds,
-      salegroup_ids: staffGroups,
+      salegroup_ids: saleGroups,
     };
-    console.log("body", body);
-    const data = await TargetApi.updateTarget(id, body);
+    const data = await TargetApi.addTarget(body);
     if (data) {
       notification.success({
-        message: "Cập nhật chỉ tiêu thành công!",
+        message: "Tạo chỉ tiêu thành công!",
       });
+      window.location.href = "/targets/edit/" + data.id;
+    }
+  };
+
+  const handleChangePercent = (value: any, key: string) => {
+    if (key === "total_order_handle_percent") {
+      form.setFieldValue("total_revenue_percent", 100 - value);
+    } else {
+      form.setFieldValue("total_order_handle_percent", 100 - value);
     }
   };
 
@@ -478,4 +427,4 @@ const EditTargetManagement = () => {
   );
 };
 
-ReactDOM.render(<EditTargetManagement />, document.getElementById("root"));
+export default CreateTargetManagement;

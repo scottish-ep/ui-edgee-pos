@@ -53,6 +53,14 @@ const ListTarget = () => {
     setLoading(false);
   };
 
+  const colsData: ITartget[] = Array(50)
+  .fill({
+    name: "Hoan Thanh 100 bai",
+    from : Date.now(),
+    to: Date.now(),
+  })
+  .map((item, index) => ({...item, id: index++}))
+
   const columns: ColumnsType<ITartget> = [
     {
       title: "Tên chỉ tiêu",
@@ -95,30 +103,28 @@ const ListTarget = () => {
         return <span className={`font-semibold text-[${color}]`}>{label}</span>;
       },
     },
-    {
-      title: "",
-      width: 50,
-      key: "id",
-      align: "center",
-      render: (_, record: any) => {
-        const { status } = calcTimeTarget(
-          new Date(record.from),
-          new Date(record.to)
-        );
-        return (
-          status !== TargetStatusEnum.COMPLETED && (
-            <div
-              onClick={() =>
-                (window.location.href = "/targets/detail/" + record.id)
-              }
-              className="cursor-pointer"
-            >
-              <Icon icon="edit-2" />
-            </div>
-          )
-        );
-      },
-    },
+    // {
+    //   title: "",
+    //   width: 50,
+    //   key: "id",
+    //   align: "center",
+    //   render: (_, record: any) => {
+    //     const { status } = calcTimeTarget(
+    //       new Date(record.from),
+    //       new Date(record.to)
+    //     );
+    //     return (
+    //       status !== TargetStatusEnum.COMPLETED && (
+    //         <div
+    //           onClick={() => window.location.href = `/staff/target/edit/${record.id}`}
+    //           className="cursor-pointer"
+    //         >
+    //           <Icon icon="edit-2" />
+    //         </div>
+    //       )
+    //     );
+    //   },
+    // },
   ];
 
   return (
@@ -131,7 +137,7 @@ const ListTarget = () => {
             width={151}
             color="white"
             suffixIcon={<Icon icon="add" size={24} />}
-            onClick={() => (window.location.href = "/targets/create")}
+            onClick={() => (window.location.href = "/staff/target/create")}
           >
             Thêm mới
           </Button>
@@ -153,8 +159,16 @@ const ListTarget = () => {
       </div>
       <Table
         loading={loading}
+        onRow={(record) => {
+          return {
+            onClick: () => {
+              window.location.href = `/staff/target/${record.id}`;
+            },
+          };
+        }}
         columns={columns}
-        dataSource={[...targets]}
+        // dataSource={[...targets]}
+        dataSource={colsData}
         pagination={{
           total: pagination.total,
           defaultPageSize: pagination.pageSize,
@@ -169,10 +183,11 @@ const ListTarget = () => {
             pageSize: e.pageSize || 10,
           });
         }}
+
         scroll={{ y: 500 }}
       />
     </div>
   );
 };
 
-ReactDOM.render(<ListTarget />, document.getElementById("root"));
+export default ListTarget;
