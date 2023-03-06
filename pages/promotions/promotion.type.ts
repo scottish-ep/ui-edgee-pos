@@ -18,10 +18,32 @@ export interface IProductOfCombo {
 }
 
 export interface ICombo {
-  id: string;
+  img: string;
+  id: string | number;
   code: string;
   is_active: boolean;
-  apply: boolean;
+  apply?: boolean;
+  name: string;
+  channel: string;
+  channel_lang: string;
+  price: number;
+  quantity: number;
+  start_date: Date | number;
+  end_date: Date | number;
+  created_user?: any;
+  createdAt: Date | number;
+  updatedAt: Date | number;
+  productList: IProductOfCombo[];
+  warehouseList: number[];
+  [x: string]: any
+}
+
+export interface IPromotionManage {
+  img?: string;
+  id: string | number;
+  code: string;
+  is_active: boolean;
+  apply?: boolean;
   name: string;
   channel: string;
   channel_lang: string;
@@ -130,4 +152,19 @@ export interface IPromotionsDetail {
   // productList: IProductOfPromotions[];
   // categoryList: ICategoryOfPromotions[];
   [x: string]: any
+}
+
+export interface IPromotionOnAppDetail {
+  id: string | number;
+  img?: string;
+  name: string;
+  start_date?: any;
+  end_date?: any;
+  applicate_object?: any[];
+  payment_method?: any[];
+  promotion_type: any[];
+  decrease_value: number;
+  minimum_value: number;
+  maximum_value: number;
+  content_promotion?: string;
 }

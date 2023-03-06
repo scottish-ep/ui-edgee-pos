@@ -2,8 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom";
 import PromotionsForm from "./PromotionsForm/PromotionsForm";
 
-const PromotionsCreate: React.FC = () => {
+const PromotionsCreate = () => {
   return <PromotionsForm />;
 };
 
-ReactDOM.render(<PromotionsCreate />, document.getElementById("root"));
+export default PromotionsCreate;

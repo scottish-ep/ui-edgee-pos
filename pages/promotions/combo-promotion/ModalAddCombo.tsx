@@ -1,21 +1,21 @@
-import { Radio, Switch, Tag } from "antd";
-import React, { useEffect, useState, useCallback } from "react";
-import Button from "../../../components/Button/Button";
-import DatePicker from "../../../components/DateRangePicker/DateRangePicker";
-import Icon from "../../../components/Icon/Icon";
-import Input from "../../../components/Input/Input";
-import Modal from "../../../components/Modal/Modal/Modal";
-import Select from "../../../components/Select/Select";
-import { ICombo, IProductOfCombo } from "../promotion.type";
-import type { CustomTagProps } from "rc-select/lib/BaseSelect";
-import { searchTypeList } from "../../../const/constant";
-import ProductTable from "./ProductTable";
-import { IOption } from "../../../types/permission";
-import { Form, notification, Spin } from "antd";
-import PromotionComboApi from "../../../services/promotion-combos";
-import type { SelectProps } from "antd";
-import moment from "moment";
-import {debounce} from "lodash";
+import { Radio, Switch, Tag } from 'antd';
+import React, { useEffect, useState, useCallback } from 'react';
+import Button from '../../../components/Button/Button';
+import DatePicker from '../../../components/DateRangePicker/DateRangePicker';
+import Icon from '../../../components/Icon/Icon';
+import Input from '../../../components/Input/Input';
+import Modal from '../../../components/Modal/Modal/Modal';
+import Select from '../../../components/Select/Select';
+import { ICombo, IProductOfCombo } from '../promotion.type';
+import type { CustomTagProps } from 'rc-select/lib/BaseSelect';
+import { searchTypeList } from '../../../const/constant';
+import ProductTable from './ProductTable';
+import { IOption } from '../../../types/permission';
+import { Form, notification, Spin } from 'antd';
+import PromotionComboApi from '../../../services/promotion-combos';
+import type { SelectProps } from 'antd';
+import moment from 'moment';
+import { debounce } from 'lodash';
 
 interface ModalAddComboProps {
   selectWarehouseOptions: IOption[];
@@ -38,11 +38,11 @@ const ModalAddCombo: React.FC<ModalAddComboProps> = (props) => {
     selectWarehouseOptions,
   } = props;
   const [productList, setProductList] = useState<IProductOfCombo[]>([]);
-  const [searchType, setSearchType] = useState("product");
+  const [searchType, setSearchType] = useState('product');
   const [loading, setLoading] = useState(false);
   const [updatedKey, setUpdatedKey] = useState(0);
 
-  const dateFormat = "YYYY-MM-DD";
+  const dateFormat = 'YYYY-MM-DD';
   const [form] = Form.useForm();
 
   const onCloseForm = () => {
@@ -53,18 +53,18 @@ const ModalAddCombo: React.FC<ModalAddComboProps> = (props) => {
     onClose();
   };
 
-  const initFields = () => {
+  const initFields = useCallback(() => {
     const allWh = selectWarehouseOptions.reduce(
       (init: any, item: any) => [...init, item.id],
       []
     );
     form.setFieldsValue({
-      channel: "offline",
+      channel: 'offline',
       status: false,
-      date: [moment(), moment().add(7, "d")],
+      date: [moment(), moment().add(7, 'd')],
       warehouse_ids: allWh,
     });
-  };
+  }, [form, selectWarehouseOptions]);
 
   useEffect(() => {
     setProductList(rowSelected?.productList || []);
@@ -78,9 +78,9 @@ const ModalAddCombo: React.FC<ModalAddComboProps> = (props) => {
         warehouse_ids: rowSelected?.warehouseList,
       });
     }
-  }, [rowSelected, selectWarehouseOptions]);
+  }, [rowSelected, selectWarehouseOptions, form, initFields]);
 
-  const [data, setData] = useState<SelectProps["options"]>([]);
+  const [data, setData] = useState<SelectProps['options']>([]);
   const [value, setValue] = useState<string>();
   const [fetching, setFetching] = useState(false);
 
@@ -94,14 +94,11 @@ const ModalAddCombo: React.FC<ModalAddComboProps> = (props) => {
     }
   };
 
-  const debounceSearchString = useCallback(
-    debounce(async (nextValue) => {
-      if (nextValue !== '') {
-        await handleFindSku(nextValue, searchType)
-      }
-    }, 500),
-    [searchType]
-  );
+  const debounceSearchString = debounce(async (nextValue) => {
+    if (nextValue !== '') {
+      await handleFindSku(nextValue, searchType);
+    }
+  }, 500);
 
   const handleChange = (newValue: string) => {
     setValue(newValue);
@@ -111,35 +108,36 @@ const ModalAddCombo: React.FC<ModalAddComboProps> = (props) => {
     let formValue = form.getFieldsValue();
     const dataParams = {
       channel: formValue.channel,
-      type: searchType === "product" ? "item" : "item_sku",
+      type: searchType === 'product' ? 'item' : 'item_sku',
       name: searchString,
     };
     const { data } = await PromotionComboApi.findSku(dataParams);
     setData(data);
   };
 
-  const handleSelect = async (value) => {
+  const handleSelect = async (value: any) => {
     if (searchType === 'product') {
       let formValue = form.getFieldsValue();
       const dataParams = {
         channel: formValue.channel,
         type: 'item_chosen',
-        name: value
-      }
+        name: value,
+      };
       const dataSkuItemChosen = await PromotionComboApi.findSku(dataParams);
       let newProductList = productList;
-      dataSkuItemChosen.data.map(item => {
+      dataSkuItemChosen.data.map((item: any) => {
         const isExisted: any = productList.filter(
-          (productItem: IProductOfCombo) => productItem.item_relation_id === item.item_relation_id
-        )
+          (productItem: IProductOfCombo) =>
+            productItem.item_relation_id === item.item_relation_id
+        );
         if (isExisted.length === 0) {
           newProductList.push(item);
         } else {
           notification.error({
-            'message': 'Sản phẩm này đã có trong combo!'
-          })
+            message: 'Sản phẩm này đã có trong combo!',
+          });
         }
-      })
+      });
       setProductList(newProductList);
       let newKey = Math.floor(Math.random() * 100);
       setUpdatedKey(newKey);
@@ -147,14 +145,14 @@ const ModalAddCombo: React.FC<ModalAddComboProps> = (props) => {
       handleSelectItemSku(value);
     }
     resetSearchData();
-  }
+  };
 
   const resetSearchData = () => {
     setValue(undefined);
     setData(undefined);
-  }
+  };
 
-  const handleSelectItemSku = (value) => {
+  const handleSelectItemSku = (value: any) => {
     const newComboItem: any = data?.filter(
       (item) => item.item_relation_id == value
     );
@@ -168,7 +166,7 @@ const ModalAddCombo: React.FC<ModalAddComboProps> = (props) => {
         setProductList(productList);
       } else {
         notification.error({
-          message: "Sản phẩm này đã có trong combo!",
+          message: 'Sản phẩm này đã có trong combo!',
         });
       }
     }
@@ -183,7 +181,7 @@ const ModalAddCombo: React.FC<ModalAddComboProps> = (props) => {
     setLoading(true);
     if (productList.length === 0) {
       notification.error({
-        message: "Vui lòng thêm ít nhất 1 sản phẩm",
+        message: 'Vui lòng thêm ít nhất 1 sản phẩm',
       });
       setLoading(false);
       return;
@@ -196,7 +194,7 @@ const ModalAddCombo: React.FC<ModalAddComboProps> = (props) => {
     if (status === true && endDate < moment()) {
       notification.error({
         message:
-          "Combo đã hết hạn áp dụng. Vui lòng chỉnh sửa thời gian trước khi bật áp dụng",
+          'Combo đã hết hạn áp dụng. Vui lòng chỉnh sửa thời gian trước khi bật áp dụng',
       });
       setLoading(false);
       return;
@@ -207,8 +205,8 @@ const ModalAddCombo: React.FC<ModalAddComboProps> = (props) => {
       .then(async () => {
         formValue = {
           ...formValue,
-          start_date: moment(formValue.date[0]).format("YYYY-MM-DD"),
-          end_date: endDate.format("YYYY-MM-DD"),
+          start_date: moment(formValue.date[0]).format('YYYY-MM-DD'),
+          end_date: endDate.format('YYYY-MM-DD'),
         };
         const dataSend = {
           ...formValue,
@@ -223,7 +221,7 @@ const ModalAddCombo: React.FC<ModalAddComboProps> = (props) => {
             );
           if (success) {
             notification.success({
-              message: "Cập nhật combo thành công!",
+              message: 'Cập nhật combo thành công!',
             });
             handleSuccess();
           } else {
@@ -232,12 +230,11 @@ const ModalAddCombo: React.FC<ModalAddComboProps> = (props) => {
             });
           }
         } else {
-          const { data, success, message } = await PromotionComboApi.addPromotionCombo(
-            dataSend
-          );
+          const { data, success, message } =
+            await PromotionComboApi.addPromotionCombo(dataSend);
           if (success) {
             notification.success({
-              message: "Tạo combo thành công!",
+              message: 'Tạo combo thành công!',
             });
             handleSuccess();
           } else {
@@ -324,7 +321,7 @@ const ModalAddCombo: React.FC<ModalAddComboProps> = (props) => {
             rules={[
               {
                 required: true,
-                message: "Tên combo là bắt buộc!",
+                message: 'Tên combo là bắt buộc!',
               },
             ]}
           >
@@ -345,13 +342,13 @@ const ModalAddCombo: React.FC<ModalAddComboProps> = (props) => {
             rules={[
               {
                 required: true,
-                message: "Thời gian combo là bắt buộc!",
+                message: 'Thời gian combo là bắt buộc!',
               },
             ]}
           >
             <DatePicker
               width={397}
-              placeholder={["Ngày/tháng/năm - ", "Ngày tháng/năm"]}
+              placeholder={['Ngày/tháng/năm - ', 'Ngày tháng/năm']}
               format={dateFormat}
             />
           </Form.Item>
@@ -424,7 +421,7 @@ const ModalAddCombo: React.FC<ModalAddComboProps> = (props) => {
             rules={[
               {
                 required: true,
-                message: "Giá combo là bắt buộc!",
+                message: 'Giá combo là bắt buộc!',
               },
             ]}
           >
