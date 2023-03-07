@@ -2,8 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom";
 import LivestreamAppForm from "./LivestreamAppForm/LivestreamAppForm";
 
-const LivestreamAppCreate: React.FC = () => {
+const LivestreamAppCreate = () => {
   return <LivestreamAppForm />;
 };
 
-ReactDOM.render(<LivestreamAppCreate />, document.getElementById("root"));
+export default LivestreamAppCreate;

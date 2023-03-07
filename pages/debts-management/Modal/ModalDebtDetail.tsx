@@ -1,24 +1,24 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import Icon from "../../../components/Icon/Icon";
-import React, { useEffect, useState } from "react";
-import ReactDOM from "react-dom";
-import Modal from "../../../components/Modal/Modal/Modal";
-import Button from "../../../components/Button/Button";
-import { ReactNode } from "react";
-import Select from "../../../components/Select/Select";
-import { message, Table } from "antd";
-import { ColumnsType } from "antd/es/table";
-import { StatusColorEnum, StatusEnum, StatusList } from "../../../types";
-import { listDebtDetail } from "../../../const/constant";
-import TextArea from "antd/lib/input/TextArea";
-import Upload from "../../../components/Upload/Upload";
-import { IDebt, IDebtItem } from "../listdebt.type";
-import { format } from "date-fns";
-import { colorStatus } from "../ListDebt";
-import DebtApi from "../../../services/debt";
-import { IOption } from "../../../types/permission";
-import ImageApi from "../../../services/images";
-import { uuid } from "uuidv4";
+import Icon from '../../../components/Icon/Icon';
+import React, { useEffect, useState } from 'react';
+import ReactDOM from 'react-dom';
+import Modal from '../../../components/Modal/Modal/Modal';
+import Button from '../../../components/Button/Button';
+import { ReactNode } from 'react';
+import Select from '../../../components/Select/Select';
+import { message, Table } from 'antd';
+import { ColumnsType } from 'antd/es/table';
+import { StatusColorEnum, StatusEnum, StatusList } from '../../../types';
+import { listDebtDetail } from '../../../const/constant';
+import TextArea from 'antd/lib/input/TextArea';
+import Upload from '../../../components/Upload/Upload';
+import { IDebt, IDebtItem } from '../listdebt.type';
+import { format } from 'date-fns';
+// import { colorStatus } from '..';
+import DebtApi from '../../../services/debt';
+import { IOption } from '../../../types/permission';
+import ImageApi from '../../../services/images';
+import { uuid } from 'uuidv4';
 interface ModalDebtDetailProps {
   isVisible: boolean;
   title?: string;
@@ -37,7 +37,7 @@ const ModalDebtDetail = (props: ModalDebtDetailProps) => {
     isVisible,
     onClose,
     onOpen,
-    iconClose = "Đóng",
+    iconClose = 'Đóng',
     debtSelected = null,
     onReload,
     onShowModalAdd,
@@ -46,42 +46,57 @@ const ModalDebtDetail = (props: ModalDebtDetailProps) => {
   const [userList, setUserList] = useState<Array<IOption>>([]);
   const [fileList, setFileList] = useState<any[]>([]);
   const [fileTemp, setFileTemp] = useState<any>();
-  const [note, setNote] = useState<string>("");
+  const [note, setNote] = useState<string>('');
   const [debtItems, setDebtItems] = useState<Array<IDebtItem>>([]);
   const [images, setImages] = useState<Array<string>>([]);
-  const [reload, setReload] = useState<string>("");
+  const [reload, setReload] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [disabledBtn, setDisabledBtn] = useState<boolean>(false);
   const [debt, setDebt] = useState<IDebt | null>(debtSelected);
   const [debtTotal, setDebtTotal] = useState<any>(0);
 
+  const colorStatus = [
+    {
+      key: 'Chờ duyệt',
+      value: '#8B5CF6',
+    },
+    {
+      key: 'Đã duyệt',
+      value: '#0EA5E9',
+    },
+    {
+      key: 'Hoàn tất',
+      value: '#10B981',
+    },
+  ];
+
   const columns: ColumnsType<IDebtItem> = [
     {
-      title: "Thời gian",
+      title: 'Thời gian',
       width: 150,
-      dataIndex: "time",
-      key: "dataIndex",
-      fixed: "left",
-      align: "center",
+      dataIndex: 'time',
+      key: 'dataIndex',
+      fixed: 'left',
+      align: 'center',
       render: (_, record) => (
         <span className="text-medium text-[#2E2D3D] font-medium">
-          {format(new Date(record?.created_at), "HH:mm - dd/MM/yyyy")}
+          {format(new Date(record?.created_at), 'HH:mm - dd/MM/yyyy')}
         </span>
       ),
     },
     {
-      title: "Giao dịch",
+      title: 'Giao dịch',
       width: 150,
-      dataIndex: "deal",
-      key: "dataIndex",
-      align: "left",
+      dataIndex: 'deal',
+      key: 'dataIndex',
+      align: 'left',
       render: (_, record) => (
         <span
           className={`text-medium ${
-            record?.item_type === "debt" ? "text-[#F97316]" : "text-[#6366F1]"
+            record?.item_type === 'debt' ? 'text-[#F97316]' : 'text-[#6366F1]'
           } flex  font-medium`}
         >
-          {record?.item_type === "debt" ? (
+          {record?.item_type === 'debt' ? (
             <Icon icon="debt-arrow" size={24} className="mr-[10px]" />
           ) : (
             <Icon icon="arrow-up" size={24} className="mr-[10px]" />
@@ -91,11 +106,11 @@ const ModalDebtDetail = (props: ModalDebtDetailProps) => {
       ),
     },
     {
-      title: "Hình thức",
+      title: 'Hình thức',
       width: 136,
-      dataIndex: "method",
-      key: "dataIndex",
-      align: "center",
+      dataIndex: 'method',
+      key: 'dataIndex',
+      align: 'center',
       render: (_, record) => (
         <span className="text-medium text-[#2E2D3D] font-medium">
           {record?.payment_type}
@@ -103,11 +118,11 @@ const ModalDebtDetail = (props: ModalDebtDetailProps) => {
       ),
     },
     {
-      title: "Nội dung",
+      title: 'Nội dung',
       width: 250,
-      dataIndex: "content",
-      key: "dataIndex",
-      align: "left",
+      dataIndex: 'content',
+      key: 'dataIndex',
+      align: 'left',
       render: (_, record) => (
         <span className="text-medium text-[#2E2D3D] font-medium">
           {record?.note}
@@ -115,26 +130,26 @@ const ModalDebtDetail = (props: ModalDebtDetailProps) => {
       ),
     },
     {
-      title: "Trạng thái",
+      title: 'Trạng thái',
       width: 136,
-      dataIndex: "status",
-      key: "dataIndex",
-      align: "left",
+      dataIndex: 'status',
+      key: 'dataIndex',
+      align: 'left',
       render: (_, record) => (
         <>
-          {record?.status === "Chờ duyệt" ? (
+          {record?.status === 'Chờ duyệt' ? (
             <div className="custom__status__sele">
               <Select
                 className="w-[100%]"
                 defaultValue="Chờ duyệt"
                 options={[
                   {
-                    label: "Chờ duyệt",
-                    value: "Chờ duyệt",
+                    label: 'Chờ duyệt',
+                    value: 'Chờ duyệt',
                   },
                   {
-                    label: "Đã duyệt",
-                    value: "Đã duyệt",
+                    label: 'Đã duyệt',
+                    value: 'Đã duyệt',
                   },
                 ]}
                 onChange={(value) => handleUpdateStatus(value, record?.id)}
@@ -154,15 +169,15 @@ const ModalDebtDetail = (props: ModalDebtDetailProps) => {
       ),
     },
     {
-      title: "",
+      title: '',
       width: 24,
-      dataIndex: "remove",
-      key: "remove",
-      align: "right",
+      dataIndex: 'remove',
+      key: 'remove',
+      align: 'right',
       render: (_, record) => {
         return (
           <div>
-            {record.status != "Đã duyệt" ? (
+            {record.status != 'Đã duyệt' ? (
               <div
                 className="flex items-center justify-content-end d-block"
                 onClick={() => handleRemoveDebtItem(record?.id)}
@@ -215,11 +230,11 @@ const ModalDebtDetail = (props: ModalDebtDetailProps) => {
   useEffect(() => {
     if (debt) {
       console.log(
-        "🚀 ~ file: ModalDebtDetail.tsx:120 ~ useEffect ~ debt",
+        '🚀 ~ file: ModalDebtDetail.tsx:120 ~ useEffect ~ debt',
         debt
       );
 
-      setNote(debt?.note || "");
+      setNote(debt?.note || '');
       let arr: any = [];
       {
         debt?.images?.map((item, index) => {
@@ -242,7 +257,7 @@ const ModalDebtDetail = (props: ModalDebtDetailProps) => {
   const getDebtItems = async () => {
     setLoading(true);
     const { data } = await DebtApi.getDebtItems(debt?.id);
-    console.log("🚀 ~ file: ModalAddDebt.tsx:141 ~ getDebtItems ~ data", data);
+    console.log('🚀 ~ file: ModalAddDebt.tsx:141 ~ getDebtItems ~ data', data);
     if (data) {
       setDebtItems(data);
     }
@@ -288,11 +303,11 @@ const ModalDebtDetail = (props: ModalDebtDetailProps) => {
 
     let params = {
       images,
-      type: "update_image",
+      type: 'update_image',
     };
     const { data } = await DebtApi.updateDebt(debt?.id, params);
     if (data) {
-      message.success("Cập nhật thành công");
+      message.success('Cập nhật thành công');
       setReload(uuid());
       onReload?.(uuid());
     }
@@ -300,7 +315,7 @@ const ModalDebtDetail = (props: ModalDebtDetailProps) => {
 
   const handleUploadImage = async (options: any) => {
     console.log(
-      "🚀 ~ file: ModalAddDebt.tsx:178 ~ handleUploadImage ~ options",
+      '🚀 ~ file: ModalAddDebt.tsx:178 ~ handleUploadImage ~ options',
       options
     );
     const { onSuccess, onError, file, onProgress } = options;
@@ -310,22 +325,22 @@ const ModalDebtDetail = (props: ModalDebtDetailProps) => {
         setFileTemp(data.url);
       }
     } catch (err) {
-      console.log("Error: ", err);
-      const error = new Error("Some error");
+      console.log('Error: ', err);
+      const error = new Error('Some error');
       onError({ err });
     }
   };
 
-  const handleChangeImage = async (e) => {
+  const handleChangeImage = async (e: any) => {
     console.log(
-      "🚀 ~ file: ModalDebtDetail.tsx:212 ~ handleChangeImage ~ e",
+      '🚀 ~ file: ModalDebtDetail.tsx:212 ~ handleChangeImage ~ e',
       e
     );
     let filter = fileList.filter(
-      (v: any) => !v.status || v.status !== "removed"
+      (v: any) => !v.status || v.status !== 'removed'
     );
     setFileList(filter);
-    if (e?.file?.status === "removed") {
+    if (e?.file?.status === 'removed') {
       let images: Array<string> = [];
       filter?.map((item) => {
         images.push(item?.url);
@@ -340,11 +355,11 @@ const ModalDebtDetail = (props: ModalDebtDetailProps) => {
     };
     const { data } = await DebtApi.updateDebt(debt?.id, params);
     console.log(
-      "🚀 ~ file: ModalDebtDetail.tsx:192 ~ handleUpdateNote ~ data",
+      '🚀 ~ file: ModalDebtDetail.tsx:192 ~ handleUpdateNote ~ data',
       data
     );
     if (data) {
-      message.success("Cập nhật thành công");
+      message.success('Cập nhật thành công');
       setReload(uuid());
       onReload?.(uuid());
     }
@@ -370,7 +385,7 @@ const ModalDebtDetail = (props: ModalDebtDetailProps) => {
         <div className="flex justify-between w-full mb-[12px]">
           <div
             className="w-[48%] bg-white rounded-lg"
-            style={{ padding: "12px" }}
+            style={{ padding: '12px' }}
           >
             <div className="flex items-center justify-between mb-[16px]">
               <div className="text-medium font-medium">Mã công nợ</div>
@@ -379,7 +394,7 @@ const ModalDebtDetail = (props: ModalDebtDetailProps) => {
             <div className="flex items-center justify-between mb-[16px]">
               <div className="text-medium font-medium">Ngày tạo</div>
               <div className="text-medium font-medium">
-                {format(new Date(debt?.created_at || ""), "HH:mm - dd/MM/yyyy")}
+                {format(new Date(debt?.created_at || ''), 'HH:mm - dd/MM/yyyy')}
               </div>
             </div>
             {/* <div className="flex flex-col  justify-left mb-[16px]">
@@ -395,7 +410,7 @@ const ModalDebtDetail = (props: ModalDebtDetailProps) => {
           </div>
           <div
             className="w-[48%] bg-white rounded-lg"
-            style={{ padding: "12px" }}
+            style={{ padding: '12px' }}
           >
             <div className="flex items-center justify-between mb-[16px]">
               <div className="text-medium font-medium">
@@ -417,7 +432,7 @@ const ModalDebtDetail = (props: ModalDebtDetailProps) => {
               </div>
               <div
                 className="text-medium font-medium"
-                style={{ color: "#F97316" }}
+                style={{ color: '#F97316' }}
               >
                 {parseFloat(debtTotal || 0).toLocaleString()} đ
               </div>
@@ -435,12 +450,12 @@ const ModalDebtDetail = (props: ModalDebtDetailProps) => {
         <div className="w-full flex flex-col mt-[12px] p-[12px] bg-white rounded-lg">
           <div className="flex w-full">
             <div className="text-medium font-medium w-[60%] min-w-[60%] mr-[12px]">
-              <div className="flex items-center justify-content-between">
+              <div className="flex items-center justify-between">
                 <div className="mb-[12px]">Ghi chú</div>
 
                 <div
                   onClick={handleUpdateNote}
-                  className="d-block mb-[12px] color-384ADC cursor-pointer font-medium"
+                  className="d-block mb-[12px]  text-[#384ADC] cursor-pointer font-medium"
                 >
                   Lưu
                 </div>

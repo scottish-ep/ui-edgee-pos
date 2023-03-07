@@ -44,6 +44,15 @@ const LivestreamAppList: React.FC = () => {
     getLiveStreamList();
   }, [pagination.page, pagination.pageSize, searchPhrase, startDate, endDate]);
 
+  const colData: ILivestreamApp[] = Array(50)
+  .fill({
+    name: "test1",
+    quantity: 1,
+    status: "Hoàn tất",
+    ended_at: Date.now(),
+  })
+  .map((item, index) => ({...item, id: index++}))
+
   const columns: ColumnsType<ILivestreamApp> = [
     {
       title: "#",
@@ -124,7 +133,7 @@ const LivestreamAppList: React.FC = () => {
     },
   ];
 
-  const handleSelectDateRange = (value) => {
+  const handleSelectDateRange = (value: any) => {
     if (value) {
       setStartDate(value[0].format("YYYY-MM-DD"));
       setEndDate(value[1].format("YYYY-MM-DD"));
@@ -150,6 +159,7 @@ const LivestreamAppList: React.FC = () => {
     });
     setLoading(false);
   };
+  // {console.log('livesteam', liveStreamApps)}
 
   return (
     <div className="w-full">
@@ -202,16 +212,18 @@ const LivestreamAppList: React.FC = () => {
         onRow={(record) => {
           return {
             onClick: () => {
-              window.location.href = "/livestream/app/live/" + record.id;
+              window.location.href = `/livestreams/livestream-app/${record.id}`
             },
           };
         }}
         loading={loading}
         columns={columns}
-        dataSource={liveStreamApps}
+        // dataSource={liveStreamApps}
+        dataSource={colData}
         pagination={false}
         scroll={{ x: 50, y: 1000 }}
       />
+      
       <PaginationCustom
         defaultPageSize={pagination.pageSize}
         total={pagination.total}
@@ -234,4 +246,4 @@ const LivestreamAppList: React.FC = () => {
   );
 };
 
-ReactDOM.render(<LivestreamAppList />, document.getElementById("root"));
+export default LivestreamAppList;

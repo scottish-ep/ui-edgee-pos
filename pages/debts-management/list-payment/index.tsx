@@ -1,42 +1,42 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
-import TitlePage from "../../components/TitlePage/Titlepage";
-import Button from "../../components/Button/Button";
-import Icon from "../../components/Icon/Icon";
-import Input from "../../components/Input/Input";
-import DatePicker from "../../components/DatePicker/DatePicker";
-import Select from "../../components/Select/Select";
-import { productTypeList } from "../../const/constant";
-import Tabs from "../../components/Tabs";
+import TitlePage from "../../../components/TitlePage/Titlepage";
+import Button from "../../../components/Button/Button";
+import Icon from "../../../components/Icon/Icon";
+import Input from "../../../components/Input/Input";
+import DatePicker from "../../../components/DatePicker/DatePicker";
+import Select from "../../../components/Select/Select";
+import { productTypeList } from "../../../const/constant";
+import Tabs from "../../../components/Tabs";
 import type { ColumnsType } from "antd/es/table";
 import { message, Table } from "antd";
-import { StatusColorEnum, StatusEnum, StatusList } from "../../types";
+import { StatusColorEnum, StatusEnum, StatusList } from "../../../types";
 import {
   IDebt,
   IRevenueExpenditure,
   ListDebtProps,
   ListPaymentProps,
-} from "./listdebt.type";
+} from "../listdebt.type";
 import classNames from "classnames";
-import DropdownStatus from "../../components/DropdownStatus";
-import { warehouses, statusOptions, paymentList } from "../../const/constant";
-import styles from "../../styles/ListPayment.module.css";
-import ModalPayDetail from "./Modal/ModalPayDetail";
+import DropdownStatus from "../../../components/DropdownStatus";
+import { warehouses, statusOptions, paymentList } from "../../../const/constant";
+import styles from "../../../styles/ListPayment.module.css";
+import ModalPayDetail from "../Modal/ModalPayDetail";
 import { useDebounce } from "usehooks-ts";
-import DebtApi from "../../services/debt";
+import DebtApi from "../../../services/debt";
 import { RangePickerProps } from "antd/lib/date-picker";
-import { IOption } from "../../types/permission";
-import Api from "../../services";
-import PaginationCustom from "../../components/PaginationCustom";
-import TableEmpty from "../../components/TableEmpty";
-import RevenueExpenditureApi from "../../services/revenue-expenditure";
+import { IOption } from "../../../types/permission";
+import Api from "../../../services";
+import PaginationCustom from "../../../components/PaginationCustom";
+import TableEmpty from "../../../components/TableEmpty";
+import RevenueExpenditureApi from "../../../services/revenue-expenditure";
 import moment from "moment";
 import { CSVLink } from "react-csv";
-import DateRangePickerCustom from "../../components/DateRangePicker/DateRangePickerCustom";
-import ModalRemove from "../../components/ModalRemove/ModalRemove";
+import DateRangePickerCustom from "../../../components/DateRangePicker/DateRangePickerCustom";
+import ModalRemove from "../../../components/ModalRemove/ModalRemove";
 import { uuid } from "uuidv4";
-import { isArray, onCoppy } from "../../utils/utils";
+import { isArray, onCoppy } from "../../../utils/utils";
 
 export const colorStatus = [
   {
@@ -109,7 +109,10 @@ const ListPayment = () => {
   const [dataExport, setDataExport] = useState<Array<any>>([]);
   const [users, setUsers] = useState<any>();
   const [userIdSelected, setUserIdSelected] = useState<string>("");
-  const userSelected = window.loggedInUser;
+  let userSelected = '';
+  useRef(() => {
+    userSelected = window.loggedInUser;
+  })
 
   useEffect(() => {
     getUsers();
@@ -124,7 +127,7 @@ const ListPayment = () => {
         label: "--chọn--",
       },
     ];
-    data?.data?.data?.map((item) => {
+    data?.data?.data?.map((item: any) => {
       arr.push({
         label: item?.name,
         value: item?.id,
@@ -198,7 +201,7 @@ const ListPayment = () => {
       },
     ];
 
-    data?.data?.map((item) => {
+    data?.data?.map((item: any) => {
       arr.push({
         label: item?.name,
         value: item?.id,
@@ -251,6 +254,23 @@ const ListPayment = () => {
     total: 0,
     pageSize: 10,
   });
+
+  const colData: IRevenueExpenditure[] = Array(50)
+  .fill({
+    code: "XM102",
+    name: "Tiền điện",
+    created_user: {
+      name: "Yen Nhi",
+    },
+    created_at: Date.now(),
+    money: 100000,
+    payment_type: "online",
+    customer_name: "A Toan",
+    customer_phone: "01029991",
+    status: "Đã chi",
+    note: "Khong co",
+
+  })
 
   const columns: ColumnsType<IRevenueExpenditure> = [
     {
@@ -569,7 +589,8 @@ const ListPayment = () => {
         loading={loading}
         rowSelection={rowSelection}
         columns={columns}
-        dataSource={listPayment}
+        // dataSource={listPayment}
+        dataSource={colData}
         pagination={false}
         scroll={{ x: 50 }}
       />
@@ -642,4 +663,4 @@ const ListPayment = () => {
   );
 };
 
-ReactDOM.render(<ListPayment />, document.getElementById("root"));
+export default ListPayment

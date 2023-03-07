@@ -9,7 +9,7 @@ import Select from 'components/Select/Select';
 import Upload from 'components/Upload/Upload';
 import Image from 'next/image';
 import TitlePage from '../../../../components/TitlePage/Titlepage';
-import styles from 'styles/DetailOrder.module.css';
+import styles from 'styles/Promotion.module.css';
 import classNames from 'classnames';
 interface PromotionOnApp {
   detail?: any;
@@ -20,6 +20,10 @@ const PromotionOnAppForm = (props: PromotionOnApp) => {
   const [activeClass, setActiveClass] = useState(false);
   const [activeLang, setActiveLang] = useState(true);
 
+  let data = {
+    name: 'test',
+    code: '123',
+  };
   const PrefixInput = () => (
     <div className="flex justify-end">
       <span
@@ -67,12 +71,13 @@ const PromotionOnAppForm = (props: PromotionOnApp) => {
     </div>
   );
   const [form] = Form.useForm();
+  console.log('form', form.getFieldsValue());
   return (
     <Form form={form}>
       <div className="w-full">
         <div className="flex justify-between items-center mb-[12px]">
           <TitlePage
-            title="Chi tiết mã khuyến mãi"
+            title={detail ? 'Chi tiết mã khuyến mãi' : 'Tạo mã khuyến mãi'}
             href="/promotions/promotion-on-app"
           />
           <div className="flex justify-between items-center gap-[8px]">
@@ -100,7 +105,7 @@ const PromotionOnAppForm = (props: PromotionOnApp) => {
               <span className="text-sm font-medium text-[#1D1C2D]">
                 TÊN KHUYẾN MÃI
               </span>
-              <PrefixInput/>
+              <PrefixInput />
               {/* <div className="flex justify-end gap-[8px]">
                 <span className="text-xs font-medium">Tiếng Việt</span>
                 <span className="text-xs font-medium">English</span>
@@ -187,7 +192,7 @@ const PromotionOnAppForm = (props: PromotionOnApp) => {
             </div>
           </div>
         </div>
-        <div className="flex justify-between flex-wrap items-center bg-[#fff] mt-[12px] p-[12px]">
+        <div className={styles.item_wrapper}>
           <div className="flex flex-col mb-[12px]">
             <span className="text-sm font-medium text-[#1D1C2D] mb-[12px]">
               ĐỐI TƯỢNG ÁP DỤNG
@@ -244,7 +249,7 @@ const PromotionOnAppForm = (props: PromotionOnApp) => {
             <span className="text-sm font-medium text-[#1D1C2D] mb-[12px]">
               NỘI DUNG KHUYẾN MÃI
             </span>
-            <PrefixInput/>
+            <PrefixInput />
             {/* <div className=" gap-[8px] flex justify-end flex-1">
               <span className="text-xs font-medium">Tiếng Việt</span>
               <span className="text-xs font-medium">English</span>

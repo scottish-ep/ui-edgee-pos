@@ -5,7 +5,7 @@ import LivestreamAppForm from "./LivestreamAppForm/LivestreamAppForm";
 import PromotionProgramApi from "../../../services/promotion-programs";
 import LivestreamApi from "../../../services/livestream";
 
-const LivestreamAppDetail: React.FC = () => {
+const LivestreamAppDetail = () => {
   const [detail, setDetail] = useState(null);
   const pathNameArr = window.location.pathname.split("/");
   const id = pathNameArr[pathNameArr.length - 1];
@@ -31,4 +31,4 @@ const LivestreamAppDetail: React.FC = () => {
   return <LivestreamAppForm detail={detail} />;
 };
 
-ReactDOM.render(<LivestreamAppDetail />, document.getElementById("root"));
+export default LivestreamAppDetail;

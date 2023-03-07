@@ -107,7 +107,7 @@ const ModalPayDetail = (props: ModalPayDetailProps) => {
     const { data } = await DebtApi.getUsers();
     if (data) {
       let arr: Array<IOption> = [];
-      data?.map((item) => {
+      data?.map((item: any) => {
         arr.push({
           label: item?.name,
           value: item?.id,
@@ -133,7 +133,7 @@ const ModalPayDetail = (props: ModalPayDetailProps) => {
     setFileList([]);
   };
 
-  const handleChangeImage = async (e) => {
+  const handleChangeImage = async (e: any) => {
     setFileList(
       fileList.filter((v: any) => !v.status || v.status !== "removed")
     );

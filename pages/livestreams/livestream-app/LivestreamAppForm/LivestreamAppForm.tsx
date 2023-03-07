@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import classNames from "classnames";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Button from "../../../../components/Button/Button";
 import Icon from "../../../../components/Icon/Icon";
 import Input from "../../../../components/Input/Input";
@@ -26,14 +26,21 @@ interface LivestreamAppFormProps {
 const LivestreamAppForm: React.FC<LivestreamAppFormProps> = ({ detail }) => {
   const [isInfo, setIsInfo] = useState(true);
   const [loading, setLoading] = useState<boolean>(false);
-  const selectedUser = window.loggedInUser;
+  // const selectedUser = window.loggedInUser;
+  let selectedUser = '';
+  useRef(() => {
+    selectedUser = window.loggedInUser;
+  });
   const [productList, setProductList] = useState<ILivestreamProduct[]>([]);
   const [commentList, setCommentList] = useState<IComment[]>([]);
   const [form] = Form.useForm();
   const [isShowModalConfirm, setIsShowModalConfirm] = useState(false);
   const [isFilterComment, setIsFilterComment] = useState(false);
 
-  const pathNameArr = window.location.pathname.split("/");
+  let pathNameArr: any = [''];
+  useRef(() => {
+    pathNameArr = window.location.pathname.split('/');
+  });
   const id = pathNameArr[pathNameArr.length - 1];
 
   useEffect(() => {
@@ -89,7 +96,7 @@ const LivestreamAppForm: React.FC<LivestreamAppFormProps> = ({ detail }) => {
   }, [detail]);
 
   useEffect(() => {
-    const keyDownHandler = (event) => {
+    const keyDownHandler = (event: any) => {
       console.log("User pressed: ", event.key);
       if (event.key === "F12") {
         event.preventDefault();
