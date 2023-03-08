@@ -41,6 +41,21 @@ const ModalPayDebt = (props: ModalPayDebtProps) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [disabledBtn, setDisabledBtn] = useState<boolean>(false);
 
+   const colorStatus = [
+    {
+      key: 'Chờ duyệt',
+      value: '#8B5CF6',
+    },
+    {
+      key: 'Đã duyệt',
+      value: '#0EA5E9',
+    },
+    {
+      key: 'Hoàn tất',
+      value: '#10B981',
+    },
+  ];
+
   const methodList = [
     {
       label: "Chuyển khoản",
@@ -52,7 +67,7 @@ const ModalPayDebt = (props: ModalPayDebtProps) => {
     },
   ];
 
-  const handleChangeImage = async (e) => {
+  const handleChangeImage = async (e: any) => {
     setFileList(
       fileList.filter((v: any) => !v.status || v.status !== "removed")
     );
@@ -66,7 +81,7 @@ const ModalPayDebt = (props: ModalPayDebtProps) => {
       "🚀 ~ file: ModalAddDebt.tsx:237 ~ useEffect ~ fileList",
       fileList
     );
-  }, [fileTemp]);
+  }, [fileTemp, fileList]);
 
   const handleUploadImage = async (options: any) => {
     console.log(

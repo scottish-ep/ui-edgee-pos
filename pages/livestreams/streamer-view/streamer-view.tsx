@@ -20,16 +20,16 @@ import {
 import "react-aspect-ratio/aspect-ratio.css";
 import ReactDOM from "react-dom";
 import React, { useEffect, useState } from "react";
-import LivestreamApi from "../../services/livestream";
+import LivestreamApi from "../../../services/livestream";
 import styles from "./styles.module.css";
-import { LivestreamStatusEnum } from "../../enums/enums";
-import { ParticipantView, ParticipantProps } from "./ParticipantView";
-import { CommentsView } from "./CommentsView";
+import { LivestreamStatusEnum } from "../../../enums/enums";
+import { ParticipantView, ParticipantProps } from "../ParticipantView";
+import { CommentsView } from "../CommentsView";
 
-import { ControlsProps, ControlsView } from "./ControlsView";
-import TitlePage from "../../components/TitlePage/Titlepage";
-import Icon from "../../components/Icon/Icon";
-import { isArray } from "../../utils/utils";
+import { ControlsProps, ControlsView } from "../ControlsView";
+import TitlePage from "../../../components/TitlePage/Titlepage";
+import Icon from "../../../components/Icon/Icon";
+import { isArray } from "../../../utils/utils";
 import Socketio from "socket.io-client";
 import Echo from "laravel-echo";
 import { get } from "lodash";

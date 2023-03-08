@@ -27,13 +27,13 @@ const ModalAddOrderChecks: React.FC<ModalAddOrderChecksProps> = (props) => {
   const [transportCompanyIdSelected, setTransportCompanyIdSelected] =
     useState<string>('');
   const [warehouseIdSelected, setWarehouseIdSelected] = useState<string>('');
-  let selectedUser = '';
   const [loadingSubmit, setLoadingSubmit] = useState(false);
   useEffect(() => {
     getAllWarehouse();
     getAllTransportCompanies();
   }, []);
-
+  
+  let selectedUser = '';
   useRef(() => {
     selectedUser = window.loggedInUser;
   });

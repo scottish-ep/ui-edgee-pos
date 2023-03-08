@@ -1,30 +1,29 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import Select from "../../../components/Select/Select";
-import Input from "../../../components/Input/Input";
-import TextArea from "../../../components/TextArea";
-import React, { useEffect, useState, ReactNode } from "react";
-import ReactDOM from "react-dom";
-import Button from "../../../components/Button/Button";
+import Select from '../../../components/Select/Select';
+import Input from '../../../components/Input/Input';
+import TextArea from '../../../components/TextArea';
+import React, { useEffect, useState, ReactNode } from 'react';
+import ReactDOM from 'react-dom';
+import Button from '../../../components/Button/Button';
 import {
   DebtStatus,
   StatusColorEnum,
   StatusEnum,
   StatusList,
-} from "../../../types";
-import Modal from "../../../components/Modal/Modal/Modal";
-import { message, Table } from "antd";
-import Icon from "../../../components/Icon/Icon";
-import { ColumnsType } from "antd/es/table";
-import { listDebtDetail } from "../../../const/constant";
-import Upload from "../../../components/Upload/Upload";
-import SearchBox from "../../../components/SearchBox";
-import { useDebounce } from "usehooks-ts";
-import DebtApi from "../../../services/debt";
-import { ICustomer, IDebt, IDebtItem } from "../listdebt.type";
-import ImageApi from "../../../services/images";
-import { format, parseISO } from "date-fns";
-import { IOption } from "../../../types/permission";
-import { colorStatus } from "../ListDebt";
+} from '../../../types';
+import Modal from '../../../components/Modal/Modal/Modal';
+import { message, Table } from 'antd';
+import Icon from '../../../components/Icon/Icon';
+import { ColumnsType } from 'antd/es/table';
+import { listDebtDetail } from '../../../const/constant';
+import Upload from '../../../components/Upload/Upload';
+import SearchBox from '../../../components/SearchBox';
+import { useDebounce } from 'usehooks-ts';
+import DebtApi from '../../../services/debt';
+import { ICustomer, IDebt, IDebtItem } from '../listdebt.type';
+import ImageApi from '../../../services/images';
+import { format, parseISO } from 'date-fns';
+import { IOption } from '../../../types/permission';
 
 interface ModalAddDebtProps {
   isVisible: boolean;
@@ -37,26 +36,40 @@ interface ModalAddDebtProps {
 }
 
 const ModalAddDebt = (props: ModalAddDebtProps) => {
+  const colorStatus = [
+    {
+      key: 'Chờ duyệt',
+      value: '#8B5CF6',
+    },
+    {
+      key: 'Đã duyệt',
+      value: '#0EA5E9',
+    },
+    {
+      key: 'Hoàn tất',
+      value: '#10B981',
+    },
+  ];
   const columns: ColumnsType<IDebtItem> = [
     {
-      title: "Thời gian",
+      title: 'Thời gian',
       width: 150,
-      dataIndex: "time",
-      key: "time",
-      fixed: "left",
-      align: "center",
+      dataIndex: 'time',
+      key: 'time',
+      fixed: 'left',
+      align: 'center',
       render: (_, record) => (
         <span className="text-medium text-[#2E2D3D] font-medium">
-          {format(parseISO(record.created_at), "dd/MM/yyyy - HH:mm")}
+          {format(parseISO(record.created_at), 'dd/MM/yyyy - HH:mm')}
         </span>
       ),
     },
     {
-      title: "Giao dịch",
+      title: 'Giao dịch',
       width: 150,
-      dataIndex: "deal",
-      key: "deal",
-      align: "left",
+      dataIndex: 'deal',
+      key: 'deal',
+      align: 'left',
       render: (_, record) => (
         <span className="text-medium text-[#2E2D3D] font-medium">
           {record?.total_money || 0} đ
@@ -64,11 +77,11 @@ const ModalAddDebt = (props: ModalAddDebtProps) => {
       ),
     },
     {
-      title: "Hình thức",
+      title: 'Hình thức',
       width: 136,
-      dataIndex: "method",
-      key: "method",
-      align: "center",
+      dataIndex: 'method',
+      key: 'method',
+      align: 'center',
       render: (_, record) => (
         <span className="text-medium text-[#2E2D3D] font-medium">
           {record?.payment_type}
@@ -76,11 +89,11 @@ const ModalAddDebt = (props: ModalAddDebtProps) => {
       ),
     },
     {
-      title: "Nội dung",
+      title: 'Nội dung',
       width: 250,
-      dataIndex: "content",
-      key: "content",
-      align: "left",
+      dataIndex: 'content',
+      key: 'content',
+      align: 'left',
       render: (_, record) => (
         <span className="text-medium text-[#2E2D3D] font-medium">
           {record?.note}
@@ -88,11 +101,11 @@ const ModalAddDebt = (props: ModalAddDebtProps) => {
       ),
     },
     {
-      title: "Trạng thái",
+      title: 'Trạng thái',
       width: 136,
-      dataIndex: "status",
-      key: "status",
-      align: "left",
+      dataIndex: 'status',
+      key: 'status',
+      align: 'left',
       render: (_, record) => (
         <>
           {record?.status === DebtStatus.WAITING ? (
@@ -127,11 +140,11 @@ const ModalAddDebt = (props: ModalAddDebtProps) => {
       ),
     },
     {
-      title: "",
+      title: '',
       width: 24,
-      dataIndex: "remove",
-      key: "remove",
-      align: "right",
+      dataIndex: 'remove',
+      key: 'remove',
+      align: 'right',
       render: (_, record) => {
         return (
           <div>
@@ -153,7 +166,7 @@ const ModalAddDebt = (props: ModalAddDebtProps) => {
   const {
     isVisible,
     title,
-    iconClose = "Đóng",
+    iconClose = 'Đóng',
     onClose,
     onOpen,
     onReload,
@@ -166,13 +179,13 @@ const ModalAddDebt = (props: ModalAddDebtProps) => {
   const [customerSelected, setCustomerSelected] = useState<ICustomer>();
   const [showSearchPopup, setShowSearchPopup] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const [note, setNote] = useState<string>("");
+  const [note, setNote] = useState<string>('');
   const [money, setMoney] = useState<number | string>(0);
   // const [images, setImages] = useState<Array<string>>([]);
   const [fileList, setFileList] = useState<any[]>([]);
   const [fileTemp, setFileTemp] = useState<any>();
-  const [code, setCode] = useState<string>("");
-  const [debtId, setDebtId] = useState<string>("");
+  const [code, setCode] = useState<string>('');
+  const [debtId, setDebtId] = useState<string>('');
   const [totalDebt, setTotalDebt] = useState<any>(0);
   const [userList, setUserList] = useState<Array<IOption>>([]);
   const [userIdSelected, setUserIdSelected] = useState<string | undefined>(
@@ -210,7 +223,7 @@ const ModalAddDebt = (props: ModalAddDebtProps) => {
     const { data, maxId } = await DebtApi.findDebt(id);
     if (data) {
       await getDebtItems(data?.id);
-      setCode(data?.code || "");
+      setCode(data?.code || '');
       setDebtId(data?.id);
       setTotalDebt(data?.debt_total || 0);
     } else {
@@ -279,8 +292,8 @@ const ModalAddDebt = (props: ModalAddDebtProps) => {
               }}
               key={item?.id}
             >
-              {item?.name}{" "}
-              {item?.phone_number ? ` - ${item?.phone_number}` : ""}
+              {item?.name}{' '}
+              {item?.phone_number ? ` - ${item?.phone_number}` : ''}
             </li>
           );
         })}
@@ -290,7 +303,7 @@ const ModalAddDebt = (props: ModalAddDebtProps) => {
 
   const handleChangeImage = async (e: any) => {
     setFileList(
-      fileList.filter((v: any) => !v.status || v.status !== "removed")
+      fileList.filter((v: any) => !v.status || v.status !== 'removed')
     );
   };
 
@@ -306,20 +319,20 @@ const ModalAddDebt = (props: ModalAddDebtProps) => {
       const data = await ImageApi.upload(file);
       setFileTemp(data.url);
     } catch (err) {
-      console.log("Error: ", err);
-      const error = new Error("Some error");
+      console.log('Error: ', err);
+      const error = new Error('Some error');
       onError({ err });
     }
   };
 
   const onSubmit = async () => {
     if (!customerSelected?.id) {
-      message.error("Vui lòng tìm và chọn khách hàng cần thêm công nợ");
+      message.error('Vui lòng tìm và chọn khách hàng cần thêm công nợ');
       return;
     }
 
     if (!money) {
-      message.error("Vui lòng nhập số tiền!");
+      message.error('Vui lòng nhập số tiền!');
       return;
     }
 
@@ -344,9 +357,9 @@ const ModalAddDebt = (props: ModalAddDebtProps) => {
     );
 
     if (error === 0) {
-      message.success(noti || "Thành công");
+      message.success(noti || 'Thành công');
       await getDebtItems(debtId);
-      setNote("");
+      setNote('');
       setMoney(0);
       setFileList([]);
       setTotalDebt(totalMoney || 0);
@@ -383,7 +396,7 @@ const ModalAddDebt = (props: ModalAddDebtProps) => {
                 <div>Không tìm thấy khách hàng</div>
               )
             }
-            value={searchPhrase || ""}
+            value={searchPhrase || ''}
             showPopup={showSearchPopup}
             onClose={() => setShowSearchPopup(false)}
           />
@@ -395,7 +408,7 @@ const ModalAddDebt = (props: ModalAddDebtProps) => {
                 Mã công nợ
               </p>
               <p className="text-medium font-medium text-[#2E2D3D]">
-                {code || "--"}
+                {code || '--'}
               </p>
             </div>
             <div className="flex justify-between mb-[16px]">
@@ -403,7 +416,7 @@ const ModalAddDebt = (props: ModalAddDebtProps) => {
                 Ngày tạo nợ
               </p>
               <p className="text-medium font-medium text-[#2E2D3D]">
-                {format(new Date(), "dd/MM/yyyy - HH:mm")}
+                {format(new Date(), 'dd/MM/yyyy - HH:mm')}
               </p>
             </div>
             {/* <div className="mb-[16px]">
@@ -425,7 +438,7 @@ const ModalAddDebt = (props: ModalAddDebtProps) => {
                 Họ và tên khách hàng
               </p>
               <p className="text-medium font-medium text-[#2E2D3D]">
-                {customerSelected?.name || "--"}
+                {customerSelected?.name || '--'}
               </p>
             </div>
             <div className="mb-[16px] flex justify-between">
@@ -433,7 +446,7 @@ const ModalAddDebt = (props: ModalAddDebtProps) => {
                 Số điện thoại
               </p>
               <p className="text-medium font-medium text-[#2E2D3D]">
-                {customerSelected?.phone_number || "--"}
+                {customerSelected?.phone_number || '--'}
               </p>
             </div>
             <div className="mb-[16px] flex justify-between">

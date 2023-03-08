@@ -199,7 +199,7 @@ const PromotionOnApp = () => {
 
   return (
     <div className="w-full">
-      <div className="flex justify-between">
+      <div className="flex justify-between mb-[24px]">
         <TitlePage title="Mã khuyến mãi trên App" />
         <div className="flex justify-between gap-[8px]">
           <Button
@@ -215,7 +215,7 @@ const PromotionOnApp = () => {
             width={151}
             color="white"
             suffixIcon={<Icon icon="add" size={24} />}
-            // onClick={() => setIsShowModalAddCustomer(true)}
+            onClick={() => window.location.href=`/promotions/promotion-on-app/create`}
           >
             Thêm mới
           </Button>
