@@ -1,34 +1,22 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from "react";
-import ReactDOM from "react-dom";
-import { notification, Switch, Table } from "antd";
+import { Form, notification, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import get from "lodash/get";
-import { format } from "date-fns";
-import Image from "next/image";
-import { Checkbox, Form } from "antd";
-import Tabs from "../../components/Tabs";
-import TitlePage from "../../components/TitlePage/Titlepage";
-import Select from "../../components/Select/Select";
-import Button from "../../components/Button/Button";
-import Icon from "../../components/Icon/Icon";
-import Input from "../../components/Input/Input";
-import DatePicker from "../../components/DatePicker/DatePicker";
-import DropdownStatus from "../../components/DropdownStatus";
-import ModalSettingTarget from "./Modal/modal-setting-target";
-import { StatusColorEnum, StatusEnum, StatusList } from "../../types";
-import InputRangePicker from "../../components/DateRangePicker/DateRangePicker";
+import { useEffect, useState } from "react";
+import Button from "../../../components/Button/Button";
+import InputRangePicker from "../../../components/DateRangePicker/DateRangePicker";
+import Icon from "../../../components/Icon/Icon";
+import Input from "../../../components/Input/Input";
+import Select from "../../../components/Select/Select";
+import TitlePage from "../../../components/TitlePage/Titlepage";
 
 import classNames from "classnames";
 
-import styles from "../../styles/DetailCustomer.module.css";
+import styles from "../../../styles/DetailCustomer.module.css";
 
-import { ITartgetManageProps } from "./staff.type";
-import { productTypeList, groupStaff } from "../../const/constant";
-import WarehouseApi from "../../services/warehouses";
-import StaffGroupApi from "../../services/staff-groups";
-import { isArray } from "../../utils/utils";
-import TargetApi from "../../services/targets";
+import StaffGroupApi from "../../../services/staff-groups";
+import TargetApi from "../../../services/targets";
+import WarehouseApi from "../../../services/warehouses";
+import { isArray } from "../../../utils/utils";
 
 const CreateTargetManagement = () => {
   const [loading, setLoading] = useState(false);
@@ -85,7 +73,7 @@ const CreateTargetManagement = () => {
     setStaffGroupOptions(staffGroupOptions.concat(rawStaffGroupOptions));
   };
 
-  const handleChange = (e, record, keyName) => {
+  const handleChange = (e: any, record: any, keyName: any) => {
     const newStaffGroups = staffGroups.map((v: any) => {
       if (v.id === record.id) {
         let newValue = record;
@@ -96,7 +84,7 @@ const CreateTargetManagement = () => {
     setStaffGroups([...newStaffGroups]);
   };
 
-  const handleSelectSaleGroups = (e) => {
+  const handleSelectSaleGroups = (e: any) => {
     let newSelectSaleGroups: any[] = [];
     if (e.includes("Tất cả nhóm")) {
       form.setFieldValue("staff_group_ids", staffGroupOptions);
@@ -111,7 +99,7 @@ const CreateTargetManagement = () => {
     setStaffGroups(newSelectSaleGroups);
   };
 
-  const handleSelectWarehouses = (e) => {
+  const handleSelectWarehouses = (e: any) => {
     if (e.includes("Tất cả kho")) {
       form.setFieldValue("warehouse_ids", warehouses);
     }
@@ -439,4 +427,4 @@ const CreateTargetManagement = () => {
   );
 };
 
-ReactDOM.render(<CreateTargetManagement />, document.getElementById("root"));
+export default CreateTargetManagement;

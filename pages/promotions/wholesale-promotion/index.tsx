@@ -120,7 +120,7 @@ const WholeSaleList = () => {
 
     let dataExport: any = [];
     let itemSkus: any = [];
-    data?.map((item) => {
+    data?.map((item: any) => {
       dataExport.push({
         id: item?.id,
         is_allow_wholesale: item?.is_allow_wholesale ? "Có" : "Không",
@@ -175,7 +175,7 @@ const WholeSaleList = () => {
       },
     ];
 
-    data?.data?.map((item) => {
+    data?.data?.map((item: any) => {
       arr.push({
         label: item?.name,
         value: item?.id,
@@ -218,6 +218,24 @@ const WholeSaleList = () => {
     }
     setReload(uuid);
   };
+
+  const colData: IItemWholeSale[] = Array(50)
+  .fill({
+    is_allow_wholesale: true,
+    code: "XB88",
+    price: "40000",
+    name: "Ao quan",
+    item: {
+      item_category: {
+        name: "Thoi trang",
+      }
+    },
+    pice: "20000",
+    warehouse_items_sum_quantity: 300,
+    wholesales_count: 3,
+    updated_at : Date.now(),
+  })
+  .map((item, index) => ({...item, id: index++}))
 
   const columns: ColumnsType<IItemWholeSale> = [
     {
@@ -434,7 +452,8 @@ const WholeSaleList = () => {
         loading={loading}
         rowSelection={rowSelection}
         columns={columns}
-        dataSource={[...items]}
+        // dataSource={[...items]}
+        dataSource={colData}
         pagination={false}
         scroll={{ x: 50 }}
       />
@@ -459,4 +478,4 @@ const WholeSaleList = () => {
   );
 };
 
-ReactDOM.render(<WholeSaleList />, document.getElementById("root"));
+export default WholeSaleList

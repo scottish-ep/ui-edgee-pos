@@ -1,12 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import ReactDOM from "react-dom";
 import PromotionsForm from "./PromotionsForm/PromotionsForm";
 import PromotionProgramApi from "../../../services/promotion-programs";
 
 const PromotionsDetail: React.FC = () => {
   const [detail, setDetail] = useState(null);
-  const pathNameArr = window.location.pathname.split("/");
+  let pathNameArr: any = [''];
+  useRef(() => {
+    pathNameArr = window.location.pathname.split('/');
+  });
   const id = pathNameArr[pathNameArr.length - 1];
 
   useEffect(() => {
@@ -36,4 +39,4 @@ const PromotionsDetail: React.FC = () => {
   return <PromotionsForm detail={detail} />;
 };
 
-ReactDOM.render(<PromotionsDetail />, document.getElementById("root"));
+export default PromotionsDetail;

@@ -114,3 +114,17 @@
   margin: 12px 0;
   padding: 8px 0;
 }
+
+.lang_type {
+  background-color: #F5F5F6;
+  border: 1px solid #DADADA;
+  color: #DADADA;
+  cursor: pointer;
+  padding: 4px 12px 0px 12px;
+  border-radius: 4px;;
+}
+
+.lang_type.active_lang {
+  background-color: #fff;
+  color: #384ADC !important;
+}

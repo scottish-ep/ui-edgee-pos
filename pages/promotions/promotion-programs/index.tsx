@@ -35,6 +35,7 @@ const PromotionsList = () => {
   const [endDate, setEndDate] = useState(null);
   // const [promotions, setPromotions] = useState<ICombo[]>([...comboList]);
   const [promotions, setPromotions] = useState<ICombo[]>([]);
+  console.log('promotion', promotions)
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState<string>("");
   const [pagination, setPagination] = useState({
@@ -105,7 +106,7 @@ const PromotionsList = () => {
     setLoading(false);
   };
 
-  const handleSelectDateRange = (value) => {
+  const handleSelectDateRange = (value: any) => {
     if (value) {
       setStartDate(value[0].format("YYYY-MM-DD"));
       setEndDate(value[1].format("YYYY-MM-DD"));
@@ -135,7 +136,7 @@ const PromotionsList = () => {
     onChange: onSelectChange,
   };
 
-  const handleShowPromotion = async (status, dt: any) => {
+  const handleShowPromotion = async (status: any, dt: any) => {
     setListDisabledId(listDisabledId.concat(dt.id));
     await PromotionProgramApi.updatePromotionProgram(dt.id, {
       is_active: status,
@@ -181,6 +182,38 @@ const PromotionsList = () => {
     }
     setDataExport(arr);
   }, [rowSelection?.selectedRowKeys]);
+
+
+  const colData: ICombo[] = Array(50)
+  .fill({
+   channel: "Tai quay",
+   code: "KM0083",
+   createdAt: Date.now(),
+   created_at: Date.now(),
+   created_user: {
+    createdAt: Date.now(),
+    created_at: Date.now(),
+    id: 102,
+    name: "Test"
+   },
+   created_user_id: 102,
+   end_date: Date.now(),
+   is_active: false,
+   item_channel: {
+    code: "OFFLINE",
+    created_at: null,
+    id: 3,
+    label: "Tai quay",
+    updated_at: null,
+   },
+   item_channel_id: 3,
+   name: "Test",
+   start_date: Date.now(),
+   type: "item",
+   updated_at: Date.now(),
+  })
+  .map((item, index) => ({...item, id: index++}))
+
 
   const columns: ColumnsType<ICombo> = [
     {
@@ -375,7 +408,7 @@ const PromotionsList = () => {
           return {
             onClick: () =>
               (window.location.href =
-                "/promotion-programs/detail/" + record.id),
+                `/promotions/promotion-programs/${record.id}`),
           };
         }}
         onChange={(e) => {
@@ -384,7 +417,8 @@ const PromotionsList = () => {
         loading={loading}
         rowSelection={rowSelection}
         columns={columns}
-        dataSource={promotions}
+        // dataSource={promotions}
+        dataSource={colData}
         pagination={false}
         scroll={{ x: 50 }}
       />
@@ -409,4 +443,5 @@ const PromotionsList = () => {
   );
 };
 
-ReactDOM.render(<PromotionsList />, document.getElementById("root"));
+export default PromotionsList;
+  

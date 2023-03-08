@@ -80,7 +80,7 @@ const ComboList = () => {
 
   const getSelectWarehouseOptions = async () => {
     const result = await WarehouseApi.getWarehouse();
-    const listWarehouse = result.map((item) => ({
+    const listWarehouse = result.map((item: any) => ({
       ...item,
       value: item.id,
       label: item.name,
@@ -96,7 +96,7 @@ const ComboList = () => {
     setSelectedRowKeys(newSelectedRowKeys);
   };
 
-  const handleSelectDateRange = (value) => {
+  const handleSelectDateRange = (value: any) => {
     setStartDate(value[0].format("YYYY-MM-DD"));
     setEndDate(value[1].format("YYYY-MM-DD"));
   };
@@ -169,6 +169,30 @@ const ComboList = () => {
       });
     }
   };
+
+  const colData: ICombo[] = Array(50)
+  .fill({
+    status: "new",
+    code: "XM910",
+    name: "Sale 10%",
+    channel_lang: "Online",
+    channel: "online",
+    price: 100000,
+    combo_items_count: 102,
+    start_date: Date.now(),
+    end_date: Date.now(),
+    updated_at: Date.now(),
+    productList: Array(10).fill({
+      item_relation_id: "ABC192",
+      code: "XM129",
+      name: "Nuoc Hoa",
+      category_name: "my pham",
+      price: 1000,
+      quantity: 129,
+    })
+    .map((item, index) => ({...item, id: index++}))
+  })
+  .map((item, index) => ({...item, id: index++}))
 
   const columns: ColumnsType<ICombo> = [
     {
@@ -375,7 +399,8 @@ const ComboList = () => {
         loading={loading}
         rowSelection={rowSelection}
         columns={columns}
-        dataSource={combos}
+        // dataSource={combos}
+        dataSource={colData}
         pagination={false}
         scroll={{ x: 50 }}
       />
@@ -427,4 +452,4 @@ const ComboList = () => {
   );
 };
 
-ReactDOM.render(<ComboList />, document.getElementById("root"));
+export default ComboList;

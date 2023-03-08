@@ -5,9 +5,10 @@ import Input from '../../../components/Input/Input';
 import Upload from '../../../components/Upload/Upload';
 import Modal from '../../../components/Modal/Modal/Modal';
 import { Form } from 'antd';
+import ItemCategoryApi from 'services/item-categories';
 
 interface ModalUpdateCatProps {
-  detail?: boolean;
+  isUpdate?: boolean;
   isVisible: boolean;
   title?: string;
   iconClose?: ReactNode;
@@ -21,7 +22,7 @@ interface ModalUpdateCatProps {
 
 const ModalUpdateCat = (props: ModalUpdateCatProps) => {
   const {
-    detail,
+    isUpdate,
     isVisible,
     title,
     iconClose = 'Đóng',
@@ -40,16 +41,36 @@ const ModalUpdateCat = (props: ModalUpdateCatProps) => {
       <Button variant="outlined" text="Huỷ bỏ" width="48%" onClick={onClose} />
       <Button
         variant="secondary"
-        text={detail ? 'Lưu' : 'Thêm mới'}
+        text={isUpdate ? 'Lưu' : 'Thêm mới'}
         width="48%"
-        onClick={onOpen}
+        // onClick={onOpen}
+        onClick={() => form.submit()}
       />
     </div>
   );
 
-  const handleSubmit = (value: any) => {
-    onOpen && onOpen(value);
-    form.resetFields();
+  const handleSubmit = (event: any) => {
+    const name = form.getFieldValue('name');
+    const image = form.getFieldValue('upload');
+    const itemCategoryId = data?.id;
+    const itemCategory = {
+      name,
+      image
+    };
+    if(!isUpdate) {
+      if(itemCategory.name && itemCategory.image) {
+        ItemCategoryApi.addItemCategory(itemCategory);
+        form.resetFields();
+      }
+    }
+    else {
+      if(itemCategory.name) {
+        ItemCategoryApi.updateItemCategory(itemCategoryId, itemCategory);
+        form.setFieldValue('name', "");
+        form.setFieldValue('upload', undefined);
+        form.resetFields();
+      }
+    }
   };
 
   return (
@@ -67,7 +88,7 @@ const ModalUpdateCat = (props: ModalUpdateCatProps) => {
       <Form onFinish={handleSubmit} form={form} initialValues={data}>
         <div className="mb-[12px]  flex justify-start flex-col">
           <span className="text-[#2E2D3D] text-[18px] font-semibold mb-[28px]">
-            {detail ? 'Chỉnh sửa danh mục' : 'Thêm mới danh mục'}
+            {isUpdate ? 'Chỉnh sửa danh mục' : 'Thêm mới danh mục'}
           </span>
           <div className="mb-[12px]">
             <span className="text-[#1D1C2D] text-[14px] font-medium leading-[21px] mr-[12px]">
@@ -86,8 +107,8 @@ const ModalUpdateCat = (props: ModalUpdateCatProps) => {
           <span className="text-[#1D1C2D] text-[14px] font-medium leading-[21px] mr-[12px] mb-[12px]">
             Tên danh mục
           </span>
-          <Form.Item name="category">
-            <Input width={420} placeholder="Nhập" className="mb-[28px]" />
+          <Form.Item name="name">
+            <Input value={data?.name} width={420} placeholder="Nhập tên danh mục" className="mb-[28px]" />
           </Form.Item>
         </div>
       </Form>

@@ -4,6 +4,7 @@ export interface ITartget {
   name: string;
   time: string;
   status: StatusEnum;
+  id: string | number;
 }
 
 export interface ITartgetManageProps {

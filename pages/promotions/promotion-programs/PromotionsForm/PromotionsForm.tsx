@@ -19,7 +19,7 @@ import ProductTable from "./ProductTable";
 import CategoryTable from "./CategoryTable";
 import InputPrice from "../../../../components/InputPrice/InputPrice";
 import ModalRemove from "../../../../components/ModalRemove/ModalRemove";
-
+import { useRef } from "react";
 interface PromotionsFormProps {
   detail?: IPromotionsDetail | null;
 }
@@ -86,7 +86,10 @@ const PromotionsForm: React.FC<PromotionsFormProps> = ({ detail }) => {
   });
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const selectedUser = window.loggedInUser;
+  let selectedUser = "";
+  useRef(() => {
+     selectedUser = window.loggedInUser;
+  })
   const [selectedChannel, setSelectedChannel] = useState(3);
   const [showPopup, setShowPopup] = useState(false);
 
@@ -119,7 +122,7 @@ const PromotionsForm: React.FC<PromotionsFormProps> = ({ detail }) => {
           (v: any) => {
             let quantity = 0;
             isArray(get(v, "item_sku.warehouse_items")) &&
-              get(v, "item_sku.warehouse_items").map((warehouseItem) => {
+              get(v, "item_sku.warehouse_items").map((warehouseItem: any) => {
                 quantity += warehouseItem.quantity;
               });
             return {
@@ -276,7 +279,7 @@ const PromotionsForm: React.FC<PromotionsFormProps> = ({ detail }) => {
     }
   };
 
-  const handleChangeWarehouse = (value) => {
+  const handleChangeWarehouse = (value: any) => {
     console.log(
       "🚀 ~ file: PromotionsForm.tsx:235 ~ handleChangeWarehouse ~ value",
       value
@@ -311,7 +314,7 @@ const PromotionsForm: React.FC<PromotionsFormProps> = ({ detail }) => {
     }
   };
 
-  const handleChangeChannel = (e) => {
+  const handleChangeChannel = (e: any) => {
     setSelectedChannel(e.target.value);
     form.setFieldsValue({
       ...form.getFieldsValue(),
@@ -384,7 +387,7 @@ const PromotionsForm: React.FC<PromotionsFormProps> = ({ detail }) => {
     }
   };
 
-  const handleSelectDateRange = (value) => {
+  const handleSelectDateRange = (value: any) => {
     setStartDate(value[0]);
     setEndDate(value[1]);
   };
@@ -442,7 +445,7 @@ const PromotionsForm: React.FC<PromotionsFormProps> = ({ detail }) => {
       });
   };
 
-  const handleChangeSync = (value, unit) => {
+  const handleChangeSync = (value: any, unit: any) => {
     console.log(
       "🚀 ~ file: PromotionsForm.tsx:382 ~ handleChangeSync ~ unit",
       unit
@@ -465,7 +468,7 @@ const PromotionsForm: React.FC<PromotionsFormProps> = ({ detail }) => {
     setValue({ price: val, unit, discount_price: 0 });
   };
 
-  const handleAddItems = (item) => {
+  const handleAddItems = (item: any) => {
     if (productList.some((it) => item.id === it.id)) {
       message.error("Sản phẩm đã được thêm!");
       return;
@@ -473,7 +476,7 @@ const PromotionsForm: React.FC<PromotionsFormProps> = ({ detail }) => {
     setProductList([...productList, item]);
   };
 
-  const handleAddCates = (item) => {
+  const handleAddCates = (item: any) => {
     if (categoryList.some((it) => item.id === it.id)) {
       message.error("Danh mục đã được thêm!");
       return;

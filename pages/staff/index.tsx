@@ -1,60 +1,83 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from "react";
-import ReactDOM from "react-dom";
-import { notification, Switch, Table } from "antd";
-import type { ColumnsType } from "antd/es/table";
-import get from "lodash/get";
-import { format } from "date-fns";
-import Image from "next/image";
-import { Checkbox } from "antd";
-import Tabs from "../../components/Tabs";
-import TitlePage from "../../components/TitlePage/Titlepage";
-import { Popover } from "antd";
-import Select from "../../components/Select/Select";
-import Button from "../../components/Button/Button";
-import Icon from "../../components/Icon/Icon";
-import Input from "../../components/Input/Input";
-import DatePicker from "../../components/DatePicker/DatePicker";
-import DropdownStatus from "../../components/DropdownStatus";
-import { StatusColorEnum, StatusEnum, StatusList } from "../../types";
-import ModalSettingGroup from "./Modal/modal-setting-group";
-import ModalSettingFault from "./Modal/modal-setting-fault";
-import ModalSettingStaff from "./Modal/modal-setting-staff";
-import { useDebounce } from "usehooks-ts";
-import classNames from "classnames";
+import React, { useEffect, useRef, useState } from 'react';
+import ReactDOM from 'react-dom';
+import { notification, Switch, Table } from 'antd';
+import type { ColumnsType } from 'antd/es/table';
+import get from 'lodash/get';
+import { format } from 'date-fns';
+import Image from 'next/image';
+import { Checkbox } from 'antd';
+import Tabs from '../../components/Tabs';
+import TitlePage from '../../components/TitlePage/Titlepage';
+import { Popover } from 'antd';
+import Select from '../../components/Select/Select';
+import Button from '../../components/Button/Button';
+import Icon from '../../components/Icon/Icon';
+import Input from '../../components/Input/Input';
+import DatePicker from '../../components/DatePicker/DatePicker';
+import DropdownStatus from '../../components/DropdownStatus';
+import { StatusColorEnum, StatusEnum, StatusList } from '../../types';
+import ModalSettingGroup from './Modal/modal-setting-group';
+import ModalSettingFault from './Modal/modal-setting-fault';
+import ModalSettingStaff from './Modal/modal-setting-staff';
+import { useDebounce } from 'usehooks-ts';
+import classNames from 'classnames';
 
-import styles from "../../styles/ListProduct.module.css";
+import styles from '../../styles/ListProduct.module.css';
 
 // import { IStaffListProps } from "./staff.type";
-import { productTypeList } from "../../const/constant";
-import WarehouseApi from "../../services/warehouses";
-import StaffApi from "../../services/staffs";
-import StaffGroupApi from "../../services/staff-groups";
-import StaffErrorApi from "../../services/staff-errors";
+import { productTypeList } from '../../const/constant';
+import WarehouseApi from '../../services/warehouses';
+import StaffApi from '../../services/staffs';
+import StaffGroupApi from '../../services/staff-groups';
+import StaffErrorApi from '../../services/staff-errors';
 
 const StaffList = () => {
+  const colsData = Array(50).fill({
+    img: require('../../public/yellow-star.svg'),
+    name: 'Testet',
+    staff_code: 'X102011',
+    phone: '029219919',
+    roles: [
+      {
+        name: 'CEO',
+      },
+    ],
+    staff_group: {
+      name: 'FE Team',
+    },
+    warehouses: [
+      {
+        warehouse: {
+          name: 'Kho Mai Linh',
+        },
+      },
+    ],
+    staff_errors_count: 1,
+  })
+  .map((item, index) => ({...item, id: index++}))
   const columns: ColumnsType<any> = [
     {
-      title: "ID",
+      title: 'ID',
       width: 70,
-      key: "id",
-      fixed: "left",
-      align: "center",
+      key: 'id',
+      fixed: 'left',
+      align: 'center',
       render: (_, record) => (
         <p className="text-medium font-medium text-[#5F5E6B]">{record.id}</p>
       ),
     },
     {
-      title: "Tên / mã nhân viên",
+      title: 'Tên / mã nhân viên',
       width: 249,
-      dataIndex: "id",
-      key: "name",
-      fixed: "left",
-      align: "left",
+      dataIndex: 'id',
+      key: 'name',
+      fixed: 'left',
+      align: 'left',
       render: (_, record) => (
         <div className="w-full flex justify-start">
           <div className="w-[36px] relative mr-[8px]">
-            <Image src={record?.img ? record.img : ""} layout="fill" />
+            <Image src={record?.img ? record.img : ''} layout="fill" alt="" />
           </div>
           <div className="flex flex-col justify-start">
             <p className="text-medium font-medium text-[#384ADC]">
@@ -68,11 +91,11 @@ const StaffList = () => {
       ),
     },
     {
-      title: "SĐT",
+      title: 'SĐT',
       width: 105,
-      dataIndex: "phone",
-      key: "name",
-      align: "center",
+      dataIndex: 'phone',
+      key: 'name',
+      align: 'center',
       render: (_, record) => (
         <div>
           <span className="font-medium text-medium">{record.phone}</span>
@@ -80,11 +103,11 @@ const StaffList = () => {
       ),
     },
     {
-      title: "Chức vụ",
+      title: 'Chức vụ',
       width: 175,
-      dataIndex: "role",
-      key: "name",
-      align: "center",
+      dataIndex: 'role',
+      key: 'name',
+      align: 'center',
       render: (_, record) => (
         <div>
           <span className="font-medium text-medium">
@@ -94,25 +117,25 @@ const StaffList = () => {
       ),
     },
     {
-      title: "Nhóm",
+      title: 'Nhóm',
       width: 110,
-      dataIndex: "Fault",
-      key: "name",
-      align: "center",
+      dataIndex: 'Fault',
+      key: 'name',
+      align: 'center',
       render: (_, record) => (
         <div>
           <span className="font-medium text-medium">
-            {record.staff_group ? record.staff_group.name : ""}
+            {record.staff_group ? record.staff_group.name : ''}
           </span>
         </div>
       ),
     },
     {
-      title: "Trực thuộc",
+      title: 'Trực thuộc',
       width: 213,
-      dataIndex: "store",
-      key: "name",
-      align: "center",
+      dataIndex: 'store',
+      key: 'name',
+      align: 'center',
       render: (_, record) => (
         <div>
           <span className="font-medium text-medium">
@@ -124,15 +147,15 @@ const StaffList = () => {
       ),
     },
     {
-      title: "Số lỗi",
+      title: 'Số lỗi',
       width: 70,
-      dataIndex: "role",
-      key: "name",
+      dataIndex: 'role',
+      key: 'name',
       sorter: true,
-      align: "center",
+      align: 'center',
       onHeaderCell: (column) => {
         return {
-          onClick: () => setSort(sort === "DESC" ? "ASC" : "DESC"),
+          onClick: () => setSort(sort === 'DESC' ? 'ASC' : 'DESC'),
         };
       },
       render: (_, record) => (
@@ -167,17 +190,19 @@ const StaffList = () => {
   const [staffs, setStaffs] = useState<any[]>([]);
   const [staffGroups, setStaffGroups] = useState<any[]>([]);
   const [staffErrors, setStaffErrors] = useState<any[]>([]);
-
-  const queryString = window.location.search;
+  let queryString = '';
+  useRef(() => {
+    queryString = window.location.search;
+  });
   const urlParams = new URLSearchParams(queryString);
-  const type = urlParams.get("type");
+  const type = urlParams.get('type');
 
   const [isShowModalSettingGroup, setIsShowModalSettingGroup] = useState(false);
   const [isShowModalSettingFault, setIsShowModalSettingFault] = useState(false);
   const [isShowModalSettingStaff, setIsShowModalSettingStaff] = useState(false);
   const [selectedWarehouse, setSelectedWarehouse] = useState<number>(-1);
   const [selectedGroup, setSelectedGroup] = useState<number>(-1);
-  const [searchPhrase, setSearchPhrase] = useState<string>("");
+  const [searchPhrase, setSearchPhrase] = useState<string>('');
   const debouncedSearchTerm = useDebounce(searchPhrase, 1000);
   const [loading, setLoading] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
@@ -190,16 +215,16 @@ const StaffList = () => {
     pageSize: 10,
     page: 1,
   });
-  const [sort, setSort] = useState("");
+  const [sort, setSort] = useState('');
   const [warehouses, setWarehouses] = useState([
     {
-      label: "Tất cả kho",
+      label: 'Tất cả kho',
       value: -1,
     },
   ]);
 
   useEffect(() => {
-    const element = document.getElementById("loading__animation");
+    const element = document.getElementById('loading__animation');
     if (element) {
       element.remove();
     }
@@ -223,10 +248,10 @@ const StaffList = () => {
     setLoading(true);
     const { data, totalPage, totalItem } = await StaffApi.getStaff({
       populate: [
-        "staff_group:id,name",
-        "roles",
-        "staff_errors:id,staff_id,staff_error_id",
-        "warehouses.warehouse:id,name",
+        'staff_group:id,name',
+        'roles',
+        'staff_errors:id,staff_id,staff_error_id',
+        'warehouses.warehouse:id,name',
       ],
       limit: pagination.pageSize,
       page: pagination.page,
@@ -287,7 +312,7 @@ const StaffList = () => {
     );
   };
 
-  const handleAddStaff = async (params, staffSelected) => {
+  const handleAddStaff = async (params: any, staffSelected: any) => {
     setSubmitLoading(true);
     await StaffApi.addStaff({
       ...params,
@@ -296,7 +321,7 @@ const StaffList = () => {
     await getAllStaffs();
     setSubmitLoading(false);
     notification.success({
-      message: "Add staff success",
+      message: 'Add staff success',
     });
   };
 
@@ -392,7 +417,7 @@ const StaffList = () => {
             }}
             options={[
               {
-                label: "Tất cả nhóm",
+                label: 'Tất cả nhóm',
                 value: -1,
               },
             ].concat(staffGroups)}
@@ -403,7 +428,7 @@ const StaffList = () => {
           placement="bottomRight"
           content={content}
           trigger="click"
-          overlayStyle={{ width: "180px" }}
+          overlayStyle={{ width: '180px' }}
           className="relative"
         >
           <Button width={129} height={45} className="p-0">
@@ -420,7 +445,8 @@ const StaffList = () => {
       <div className="relative">
         <Table
           columns={columns}
-          dataSource={staffs}
+          // dataSource={staffs}
+          dataSource={colsData}
           pagination={{
             total: pagination.total,
             defaultPageSize: pagination.pageSize,
@@ -430,7 +456,7 @@ const StaffList = () => {
           onRow={(record, rowIndex) => {
             return {
               onClick: () => {
-                window.location.href = `/targets/staff-detail/${record.id}`;
+                window.location.href = `/staff/${record.id}`;
               },
             };
           }}
@@ -470,7 +496,7 @@ const StaffList = () => {
         isVisible={isShowModalSettingStaff}
         staffGroups={[
           {
-            label: "Tất cả nhóm",
+            label: 'Tất cả nhóm',
             value: -1,
           },
         ].concat(staffGroups)}
@@ -485,4 +511,4 @@ const StaffList = () => {
   );
 };
 
-ReactDOM.render(<StaffList />, document.getElementById("root"));
+export default StaffList;

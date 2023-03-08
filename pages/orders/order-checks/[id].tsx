@@ -27,7 +27,20 @@ import { CSVLink } from "react-csv";
 
 const OrderChecksDetail: React.FC = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  const [detail, setDetail] = useState<IOrderChecksDetail>();
+  const [detail, setDetail] = useState<IOrderChecksDetail>(
+    {
+      id: "1",
+      created_at: "2020-11-20T10:36:01.516Z.",
+      updated_at: "2020-11-20T10:36:01.516Z.",
+      code: "102",
+      user_name: "tester",
+      transport_company_name: "Cong ty Test",
+      warehoure_name: "Kho test",
+      status: "Hoan Thanh",
+      note: "khong co",
+      warehouse_name: "Kho Mai Linh"
+    }
+  );
   const [orderCheckCommandItems, setOrderCheckCommandItems] =
     useState<Array<IOrderCheckCommandItems>>();
   const [dataExport, setDataExport] = useState<Array<IOrderCheckCommandItems>>(
@@ -45,9 +58,9 @@ const OrderChecksDetail: React.FC = () => {
   const [totalItems, setTotalItems] = useState<number>(0);
   const debouncedValue = useDebounce<string>(searchPhrase, 500);
   const [statusQuery, setStatusQuery] = useState<string>("Tất cả");
-  const [totalCodSystem, setTotalCodSystem] = useState<number>(0);
-  const [totalCodNVC, setTotalCodNVC] = useState<number>(0);
-  const [totalDifferenceMoney, setTotalDifferenceMoney] = useState<number>(0);
+  const [totalCodSystem, setTotalCodSystem] = useState<number>(300000);
+  const [totalCodNVC, setTotalCodNVC] = useState<number>(20000);
+  const [totalDifferenceMoney, setTotalDifferenceMoney] = useState<number>(20000);
   const [pagination, setPagination] = useState<{
     page: number;
     total: number;
@@ -63,75 +76,90 @@ const OrderChecksDetail: React.FC = () => {
   };
 
   const [tabStatus, setTabStatus] = useState([
-    { name: "Tất cả", count: 0 },
-    { name: "Khớp", count: 0 },
-    { name: "Lệch", count: 0 },
+    { name: "Tất cả", count: 10 },
+    { name: "Khớp", count: 20 },
+    { name: "Lệch", count: 30 },
   ]);
 
-  useEffect(() => {
-    const search = window.location.search;
-    const params = new URLSearchParams(search);
-    const idParam = String(params.get("id"));
-    setId(idParam);
-  }, []);
+  const colsData: IOrderCheckCommandItems[] = Array(20)
+  .fill({
+    order_tracking_code: "MX123sa",
+    order_status: "Deliveried",
+    system_cod_fee_vendor: 10000,
+    code_fee_vendor: 10002,
+    system_transport_fee_vendor: 102201,
+    transport_fee_vendor: 12000,
+    system_weight_vendor: 40,
+    weight_vendor: 20,
+    order_check_result: "Done",
+    item_status: "Chưa đối soát",
+  })
+  .map((item, index) => ({...item, order_id: index++}))
 
-  useEffect(() => {
-    if (id) {
-      getOrderCheckCommandDetail();
-    }
-  }, [id]);
+  // useEffect(() => {
+  //   const search = window.location.search;
+  //   const params = new URLSearchParams(search);
+  //   const idParam = String(params.get("id"));
+  //   setId(idParam);
+  // }, []);
 
-  useEffect(() => {
-    if (id) {
-      getOrderCheckCommandItems();
-    }
-  }, [
-    id,
-    pagination.page,
-    pagination.pageSize,
-    debouncedValue,
-    reload,
-    statusQuery,
-  ]);
+  // useEffect(() => {
+  //   if (id) {
+  //     getOrderCheckCommandDetail();
+  //   }
+  // }, [id]);
 
-  const getOrderCheckCommandDetail = async () => {
-    const { data } = await OrderCheckCommandApi.detail(id);
-    setDetail(data);
-  };
+  // useEffect(() => {
+  //   if (id) {
+  //     getOrderCheckCommandItems();
+  //   }
+  // }, [
+  //   id,
+  //   pagination.page,
+  //   pagination.pageSize,
+  //   debouncedValue,
+  //   reload,
+  //   statusQuery,
+  // ]);
 
-  const getOrderCheckCommandItems = async () => {
-    setLoading(true);
-    const {
-      data,
-      countAll,
-      countTrue,
-      countFalse,
-      totalCodSystem,
-      totalCodNVC,
-      totalDifferenceMoney,
-      totalItems,
-      totalPage,
-    } = await OrderCheckCommandApi.getOrderCheckCommandItems(id, {
-      limit: pagination.pageSize,
-      page: pagination.page,
-      code: searchPhrase,
-      status: statusQuery,
-    });
-    setPagination({
-      ...pagination,
-      total: totalPage * pagination.pageSize,
-    });
-    setOrderCheckCommandItems(data);
-    setTabStatus([
-      { name: "Tất cả", count: countAll || 0 },
-      { name: "Khớp", count: countTrue || 0 },
-      { name: "Lệch", count: countFalse || 0 },
-    ]);
-    setLoading(false);
-    setTotalCodSystem(totalCodSystem);
-    setTotalCodNVC(totalCodNVC);
-    setTotalDifferenceMoney(totalDifferenceMoney);
-  };
+  // const getOrderCheckCommandDetail = async () => {
+  //   const { data } = await OrderCheckCommandApi.detail(id);
+  //   setDetail(data);
+  // };
+
+  // const getOrderCheckCommandItems = async () => {
+  //   setLoading(true);
+  //   const {
+  //     data,
+  //     countAll,
+  //     countTrue,
+  //     countFalse,
+  //     totalCodSystem,
+  //     totalCodNVC,
+  //     totalDifferenceMoney,
+  //     totalItems,
+  //     totalPage,
+  //   } = await OrderCheckCommandApi.getOrderCheckCommandItems(id, {
+  //     limit: pagination.pageSize,
+  //     page: pagination.page,
+  //     code: searchPhrase,
+  //     status: statusQuery,
+  //   });
+  //   setPagination({
+  //     ...pagination,
+  //     total: totalPage * pagination.pageSize,
+  //   });
+  //   setOrderCheckCommandItems(data);
+  //   setTabStatus([
+  //     { name: "Tất cả", count: countAll || 0 },
+  //     { name: "Khớp", count: countTrue || 0 },
+  //     { name: "Lệch", count: countFalse || 0 },
+  //   ]);
+  //   setLoading(false);
+  //   setTotalCodSystem(totalCodSystem);
+  //   setTotalCodNVC(totalCodNVC);
+  //   setTotalDifferenceMoney(totalDifferenceMoney);
+  // };
 
   const InfoItem = ({
     title = "--",
@@ -148,40 +176,40 @@ const OrderChecksDetail: React.FC = () => {
     </div>
   );
 
-  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    console.log("selectedRowKeys changed: ", selectedRowKeys);
-    setSelectedRowKeys(newSelectedRowKeys);
-  };
+  // const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+  //   console.log("selectedRowKeys changed: ", selectedRowKeys);
+  //   setSelectedRowKeys(newSelectedRowKeys);
+  // };
 
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-  };
+  // const rowSelection = {
+  //   selectedRowKeys,
+  //   onChange: onSelectChange,
+  // };
 
-  const onSubmit = async () => {
-    const { data } = await OrderCheckCommandApi.update({
-      id,
-      status,
-      note,
-    });
+  // const onSubmit = async () => {
+  //   const { data } = await OrderCheckCommandApi.update({
+  //     id,
+  //     status,
+  //     note,
+  //   });
 
-    if (data) {
-      notification.success({
-        message: "Cập nhật thành công",
-      });
-      window.location.href = "/order-management/check-orders";
-    }
-  };
+  //   if (data) {
+  //     notification.success({
+  //       message: "Cập nhật thành công",
+  //     });
+  //     window.location.href = "/order-management/check-orders";
+  //   }
+  // };
 
-  const handleDelete = async () => {
-    const { data } = await OrderCheckCommandApi.deleteMany([id]);
-    if (data) {
-      notification.success({
-        message: "Xóa thành công",
-      });
-      window.location.href = "/order-management/check-orders";
-    }
-  };
+  // const handleDelete = async () => {
+  //   const { data } = await OrderCheckCommandApi.deleteMany([id]);
+  //   if (data) {
+  //     notification.success({
+  //       message: "Xóa thành công",
+  //     });
+  //     window.location.href = "/order-management/check-orders";
+  //   }
+  // };
 
   const columns: ColumnsType<IOrderCheckCommandItems> = [
     {
@@ -346,37 +374,37 @@ const OrderChecksDetail: React.FC = () => {
     },
   ];
 
-  const handleUpdateStatus = async (stt: string | number) => {
-    handleClick();
-    let hasError = false;
-    let hasUpdate = false;
-    rowSelection?.selectedRowKeys.map((rowId) => {
-      const exist = orderCheckCommandItems?.find((item) => item.id == rowId);
-      if (exist && exist.item_status == "Đã đối soát") {
-        hasError = true;
-      } else {
-        hasUpdate = true;
-      }
-    });
-    if (hasError) {
-      notification.error({
-        message: "Không thể chuyển trạng thái của đơn hàng đã đối soát!",
-      });
-    }
+  // const handleUpdateStatus = async (stt: string | number) => {
+  //   handleClick();
+  //   let hasError = false;
+  //   let hasUpdate = false;
+  //   rowSelection?.selectedRowKeys.map((rowId) => {
+  //     const exist = orderCheckCommandItems?.find((item) => item.id == rowId);
+  //     if (exist && exist.item_status == "Đã đối soát") {
+  //       hasError = true;
+  //     } else {
+  //       hasUpdate = true;
+  //     }
+  //   });
+  //   if (hasError) {
+  //     notification.error({
+  //       message: "Không thể chuyển trạng thái của đơn hàng đã đối soát!",
+  //     });
+  //   }
 
-    const { data } = await OrderCheckCommandApi.updateCommandItemsStatus({
-      ids: rowSelection?.selectedRowKeys || [],
-      status: stt,
-    });
-    if (data) {
-      if (hasUpdate) {
-        notification.success({
-          message: "Cập nhật thành công",
-        });
-      }
-      setReload(uuid());
-    }
-  };
+  //   const { data } = await OrderCheckCommandApi.updateCommandItemsStatus({
+  //     ids: rowSelection?.selectedRowKeys || [],
+  //     status: stt,
+  //   });
+  //   if (data) {
+  //     if (hasUpdate) {
+  //       notification.success({
+  //         message: "Cập nhật thành công",
+  //       });
+  //     }
+  //     setReload(uuid());
+  //   }
+  // };
 
   const headers = [
     { label: "ID", key: "id" },
@@ -394,29 +422,29 @@ const OrderChecksDetail: React.FC = () => {
     { label: "Trạng thái", key: "item_status" },
   ];
 
-  useEffect(() => {
-    let arr: Array<IOrderCheckCommandItems> = [];
+  // useEffect(() => {
+  //   let arr: Array<IOrderCheckCommandItems> = [];
 
-    if (rowSelection?.selectedRowKeys) {
-      orderCheckCommandItems?.map((item) => {
-        if (rowSelection.selectedRowKeys.indexOf(item?.id) != -1) {
-          arr.push(item);
-        }
-      });
-    }
-    setDataExport(arr);
-  }, [rowSelection?.selectedRowKeys]);
+  //   if (rowSelection?.selectedRowKeys) {
+  //     orderCheckCommandItems?.map((item) => {
+  //       if (rowSelection.selectedRowKeys.indexOf(item?.id) != -1) {
+  //         arr.push(item);
+  //       }
+  //     });
+  //   }
+  //   setDataExport(arr);
+  // }, [rowSelection?.selectedRowKeys]);
 
-  if (!detail) {
-    return null;
-  }
+  // if (!detail) {
+  //   return null;
+  // }
 
   return (
     <div className="w-full" ref={refname}>
       {/* Header */}
       <div className="flex gap-2 justify-between mb-5 flex-wrap">
         <TitlePage
-          href="/order-management/check-orders"
+          href="/orders/order-checks"
           title="Chi tiết phiên đối soát"
         />
         <div className="flex gap-x-2 flex-wrap">
@@ -432,7 +460,7 @@ const OrderChecksDetail: React.FC = () => {
             variant="secondary"
             width={166}
             style={{ fontWeight: "bold" }}
-            onClick={onSubmit}
+            // onClick={onSubmit}
           >
             Lưu (F12)
           </Button>
@@ -500,7 +528,7 @@ const OrderChecksDetail: React.FC = () => {
           options={statusOrderChecksOptions}
           icon="refresh"
           disabled={selectedRowKeys.length === 0}
-          onChange={(stt) => handleUpdateStatus(stt)}
+          // onChange={(stt) => handleUpdateStatus(stt)}
         />
         <CSVLink
           headers={headers}
@@ -534,10 +562,11 @@ const OrderChecksDetail: React.FC = () => {
         locale={{
           emptyText: <TableEmpty />,
         }}
-        rowSelection={rowSelection}
+        // rowSelection={rowSelection}
         columns={columns}
         loading={loading}
-        dataSource={orderCheckCommandItems}
+        // dataSource={orderCheckCommandItems}
+        dataSource={colsData}
         pagination={{
           total: pagination.total,
           defaultPageSize: pagination.pageSize,
@@ -592,7 +621,7 @@ const OrderChecksDetail: React.FC = () => {
         onOpen={() => setIsShowModalRemoveOrderChecks(false)}
         titleBody="Xóa phiên đối soát này?"
         content="Thông tin của phiên đối soát sẽ không còn nữa."
-        onOk={handleDelete}
+        // onOk={handleDelete}
       />
     </div>
   );
