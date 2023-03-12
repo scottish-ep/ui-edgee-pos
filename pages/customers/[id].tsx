@@ -73,11 +73,11 @@ const TagRender = (props: TagProps) => {
   const handleClear = () => {
     setName('');
   };
-  // const handleDelete = (id: string) => {
-  //   setItemList((prevItemList) =>
-  //     prevItemList.filter((product) => product.id !== id)
-  //   );
-  // };
+  const handleDelete = (id: string) => {
+    setItemList((prevItemList) =>
+      prevItemList.filter((product) => product.id !== id)
+    );
+  };
   const addInput = (e: any) => {
     handleAdd(e);
     handleClear();

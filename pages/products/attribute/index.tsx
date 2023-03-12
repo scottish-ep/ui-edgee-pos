@@ -208,6 +208,7 @@ const AttributeSetting = () => {
       </div>
       <div className="relative">
         <Table
+        // rowKey={(record) => record.id}
           onChange={(e) => {
             console.log('e', e);
             setPageSize(e.pageSize || 10);

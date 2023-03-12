@@ -19,7 +19,7 @@ const PromotionOnAppForm = (props: PromotionOnApp) => {
   const { detail } = props;
   const [activeClass, setActiveClass] = useState(false);
   const [activeLang, setActiveLang] = useState(true);
-
+  const [activeSecondLang, setActiveSecondLang] = useState(false)
   let data = {
     name: 'test',
     code: '123',
@@ -48,6 +48,32 @@ const PromotionOnAppForm = (props: PromotionOnApp) => {
       </span>
     </div>
   );
+
+
+  const PrefixSecondInput = () => (
+    <div className="flex justify-end">
+      <span
+        className={classNames(
+          'text-xs font-medium',
+          styles.lang_type,
+          activeLang == true ? styles.active_lang : ''
+        )}
+        onClick={() => setActiveSecondLang(!activeSecondLang)}
+      >
+        Tiếng Việt
+      </span>
+      <span
+        className={classNames(
+          'text-xs font-medium',
+          styles.lang_type,
+          activeLang == false ? styles.active_lang : ''
+        )}
+        onClick={() => setActiveSecondLang(!activeSecondLang)}
+      >
+        English
+      </span>
+    </div>
+  );
   const SuffixInput = () => (
     <div className="flex gap-[5px]">
       <div
@@ -70,6 +96,8 @@ const PromotionOnAppForm = (props: PromotionOnApp) => {
       </div>
     </div>
   );
+
+  
   const [form] = Form.useForm();
   console.log('form', form.getFieldsValue());
   return (
@@ -249,7 +277,7 @@ const PromotionOnAppForm = (props: PromotionOnApp) => {
             <span className="text-sm font-medium text-[#1D1C2D] mb-[12px]">
               NỘI DUNG KHUYẾN MÃI
             </span>
-            <PrefixInput />
+            <PrefixSecondInput />
             {/* <div className=" gap-[8px] flex justify-end flex-1">
               <span className="text-xs font-medium">Tiếng Việt</span>
               <span className="text-xs font-medium">English</span>
