@@ -65,7 +65,10 @@ export default function App({ Component, pageProps }: AppProps) {
         {
           label: (
             <div
-              className="flex menu_item"
+              className={classNames(
+                'flex menu_item',
+                router.pathname == '/orders/order-online' ? 'add_bg_white' : ''
+              )}
               onClick={() => (window.location.href = '/orders/order-online')}
             >
               <i className="menu-bullet menu-bullet-dot">
@@ -79,7 +82,10 @@ export default function App({ Component, pageProps }: AppProps) {
         {
           label: (
             <div
-              className="flex menu_item"
+              className={classNames(
+                'flex menu_item',
+                router.pathname == '/orders/order-offline' ? 'add_bg_white' : ''
+              )}
               onClick={() => (window.location.href = '/orders/order-offline')}
             >
               <i className="menu-bullet menu-bullet-dot">
@@ -93,7 +99,10 @@ export default function App({ Component, pageProps }: AppProps) {
         {
           label: (
             <div
-              className="flex menu_item"
+              className={classNames(
+                'flex menu_item',
+                router.pathname == '/orders/order-in-app' ? 'add_bg_white' : ''
+              )}
               onClick={() => (window.location.href = '/orders/order-in-app')}
             >
               <i className="menu-bullet menu-bullet-dot">
@@ -107,7 +116,10 @@ export default function App({ Component, pageProps }: AppProps) {
         {
           label: (
             <div
-              className="flex menu_item"
+              className={classNames(
+                'flex menu_item',
+                router.pathname == '/orders/cancel-reason' ? 'add_bg_white' : ''
+              )}
               onClick={() => (window.location.href = '/orders/cancel-reason')}
             >
               <i className="menu-bullet menu-bullet-dot">
@@ -128,7 +140,12 @@ export default function App({ Component, pageProps }: AppProps) {
         {
           label: (
             <div
-              className="flex menu_item"
+              className={classNames(
+                'flex menu_item',
+                router.pathname == '/livestreams/livestream-app'
+                  ? 'add_bg_white'
+                  : ''
+              )}
               onClick={() =>
                 (window.location.href = '/livestreams/livestream-app')
               }
@@ -151,7 +168,12 @@ export default function App({ Component, pageProps }: AppProps) {
         {
           label: (
             <div
-              className="flex menu_item"
+              className={classNames(
+                'flex menu_item',
+                router.pathname == '/transport/transport-company'
+                  ? 'add_bg_white'
+                  : ''
+              )}
               onClick={() =>
                 (window.location.href = '/transport/transport-company')
               }
@@ -167,7 +189,12 @@ export default function App({ Component, pageProps }: AppProps) {
         {
           label: (
             <div
-              className="flex menu_item"
+              className={classNames(
+                'flex menu_item',
+                router.pathname == '/orders/order-management'
+                  ? 'add_bg_white'
+                  : ''
+              )}
               onClick={() =>
                 (window.location.href = '/orders/order-management')
               }
@@ -183,7 +210,12 @@ export default function App({ Component, pageProps }: AppProps) {
         {
           label: (
             <div
-              className="flex menu_item"
+            className={classNames(
+              'flex menu_item',
+              router.pathname == '/transport/transport-fee'
+                ? 'add_bg_white'
+                : ''
+            )}
               onClick={() =>
                 (window.location.href = '/transport/transport-fee')
               }
@@ -240,7 +272,12 @@ export default function App({ Component, pageProps }: AppProps) {
         {
           label: (
             <div
-              className="flex menu_item"
+              className={classNames(
+                'flex menu_item',
+                router.pathname == '/products/category'
+                  ? 'add_bg_white'
+                  : ''
+              )}
               onClick={() => (window.location.href = '/products/category')}
             >
               <i className="menu-bullet menu-bullet-dot">
@@ -261,7 +298,12 @@ export default function App({ Component, pageProps }: AppProps) {
         {
           label: (
             <div
-              className="flex menu_item"
+              className={classNames(
+                'flex menu_item',
+                router.pathname == '/customers'
+                  ? 'add_bg_white'
+                  : ''
+              )}
               onClick={() => (window.location.href = '/customers')}
             >
               <i className="menu-bullet menu-bullet-dot">
@@ -275,6 +317,12 @@ export default function App({ Component, pageProps }: AppProps) {
         {
           label: (
             <div
+            className={classNames(
+              'flex menu_item',
+              router.pathname == '/customers/customer-type'
+                ? 'add_bg_white'
+                : ''
+            )}
               onClick={() =>
                 (window.location.href = '/customers/customer-type')
               }
@@ -290,7 +338,12 @@ export default function App({ Component, pageProps }: AppProps) {
         {
           label: (
             <div
-              className="flex menu_item"
+              className={classNames(
+                'flex menu_item',
+                router.pathname == '/customers/customer-level'
+                  ? 'add_bg_white'
+                  : ''
+              )}
               onClick={() =>
                 (window.location.href = '/customers/customer-level')
               }
@@ -306,7 +359,12 @@ export default function App({ Component, pageProps }: AppProps) {
         {
           label: (
             <div
-              className="flex menu_item"
+              className={classNames(
+                'flex menu_item',
+                router.pathname == '/customers/customer-source'
+                  ? 'add_bg_white'
+                  : ''
+              )}
               onClick={() =>
                 (window.location.href = '/customers/customer-source')
               }
@@ -322,7 +380,12 @@ export default function App({ Component, pageProps }: AppProps) {
         {
           label: (
             <div
-              className="flex menu_item"
+              className={classNames(
+                'flex menu_item',
+                router.pathname == '/customers/customer-review'
+                  ? 'add_bg_white'
+                  : ''
+              )}
               onClick={() =>
                 (window.location.href = '/customers/customer-review')
               }
@@ -345,7 +408,12 @@ export default function App({ Component, pageProps }: AppProps) {
         {
           label: (
             <div
-              className="flex menu_item"
+              className={classNames(
+                'flex menu_item',
+                router.pathname == '/promotions/promotion-programs'
+                  ? 'add_bg_white'
+                  : ''
+              )}
               onClick={() =>
                 (window.location.href = '/promotions/promotion-programs')
               }
@@ -361,7 +429,12 @@ export default function App({ Component, pageProps }: AppProps) {
         {
           label: (
             <div
-              className="flex menu_item"
+              className={classNames(
+                'flex menu_item',
+                router.pathname == '/promotions/combo-promotion'
+                  ? 'add_bg_white'
+                  : ''
+              )}
               onClick={() =>
                 (window.location.href = '/promotions/combo-promotion')
               }
@@ -377,7 +450,12 @@ export default function App({ Component, pageProps }: AppProps) {
         {
           label: (
             <div
-              className="flex menu_item"
+              className={classNames(
+                'flex menu_item',
+                router.pathname == '/promotions/promotion-on-app'
+                  ? 'add_bg_white'
+                  : ''
+              )}
               onClick={() =>
                 (window.location.href = '/promotions/promotion-on-app')
               }
@@ -393,8 +471,13 @@ export default function App({ Component, pageProps }: AppProps) {
         {
           label: (
             <div
-              className="flex menu_item"
-              onClick={() => (window.location.href = '/promotions/')}
+              className={classNames(
+                'flex menu_item',
+                router.pathname == '/promotions'
+                  ? 'add_bg_white'
+                  : ''
+              )}
+              onClick={() => (window.location.href = '/promotions')}
             >
               <i className="menu-bullet menu-bullet-dot">
                 <span></span>
@@ -414,7 +497,12 @@ export default function App({ Component, pageProps }: AppProps) {
         {
           label: (
             <div
-              className="flex menu_item"
+              className={classNames(
+                'flex menu_item',
+                router.pathname == '/warehouses/warehouse-management'
+                  ? 'add_bg_white'
+                  : ''
+              )}
               onClick={() =>
                 (window.location.href = '/warehouses/warehouse-management')
               }
@@ -430,7 +518,12 @@ export default function App({ Component, pageProps }: AppProps) {
         {
           label: (
             <div
-              className="flex menu_item"
+              className={classNames(
+                'flex menu_item',
+                router.pathname == '/warehouses/import-warehouse'
+                  ? 'add_bg_white'
+                  : ''
+              )}
               onClick={() =>
                 (window.location.href = '/warehouses/import-warehouse')
               }
@@ -446,7 +539,12 @@ export default function App({ Component, pageProps }: AppProps) {
         {
           label: (
             <div
-              className="flex menu_item"
+              className={classNames(
+                'flex menu_item',
+                router.pathname == '/warehouses/transfer-management'
+                  ? 'add_bg_white'
+                  : ''
+              )}
               onClick={() =>
                 (window.location.href = '/warehouses/transfer-management')
               }
@@ -462,7 +560,12 @@ export default function App({ Component, pageProps }: AppProps) {
         {
           label: (
             <div
-              className="flex menu_item"
+              className={classNames(
+                'flex menu_item',
+                router.pathname == '/warehouses/export-management'
+                  ? 'add_bg_white'
+                  : ''
+              )}
               onClick={() =>
                 (window.location.href = '/warehouses/export-management')
               }
@@ -478,7 +581,12 @@ export default function App({ Component, pageProps }: AppProps) {
         {
           label: (
             <div
-              className="flex menu_item"
+              className={classNames(
+                'flex menu_item',
+                router.pathname == '/warehouses/return-management'
+                  ? 'add_bg_white'
+                  : ''
+              )}
               onClick={() =>
                 (window.location.href = '/warehouses/return-management')
               }
@@ -501,7 +609,12 @@ export default function App({ Component, pageProps }: AppProps) {
         {
           label: (
             <div
-              className="flex menu_item"
+              className={classNames(
+                'flex menu_item',
+                router.pathname == '/debts-management/list-paymen'
+                  ? 'add_bg_white'
+                  : ''
+              )}
               onClick={() =>
                 (window.location.href = '/debts-management/list-payment')
               }
@@ -517,7 +630,12 @@ export default function App({ Component, pageProps }: AppProps) {
         {
           label: (
             <div
-              className="flex menu_item"
+              className={classNames(
+                'flex menu_item',
+                router.pathname == '/debts-management'
+                  ? 'add_bg_white'
+                  : ''
+              )}
               onClick={() => (window.location.href = '/debts-management')}
             >
               <i className="menu-bullet menu-bullet-dot">
@@ -538,7 +656,12 @@ export default function App({ Component, pageProps }: AppProps) {
         {
           label: (
             <div
-              className="flex menu_item"
+              className={classNames(
+                'flex menu_item',
+                router.pathname == '/report'
+                  ? 'add_bg_white'
+                  : ''
+              )}
               onClick={() => (window.location.href = '/report')}
             >
               <i className="menu-bullet menu-bullet-dot">
@@ -552,7 +675,12 @@ export default function App({ Component, pageProps }: AppProps) {
         {
           label: (
             <div
-              className="flex menu_item"
+              className={classNames(
+                'flex menu_item',
+                router.pathname == '/report'
+                  ? 'add_bg_white'
+                  : ''
+              )}
               onClick={() => (window.location.href = '/report')}
             >
               <i className="menu-bullet menu-bullet-dot">
@@ -566,7 +694,12 @@ export default function App({ Component, pageProps }: AppProps) {
         {
           label: (
             <div
-              className="flex menu_item"
+              className={classNames(
+                'flex menu_item',
+                router.pathname == '/report'
+                  ? 'add_bg_white'
+                  : ''
+              )}
               onClick={() => (window.location.href = '/report')}
             >
               <i className="menu-bullet menu-bullet-dot">
@@ -580,7 +713,12 @@ export default function App({ Component, pageProps }: AppProps) {
         {
           label: (
             <div
-              className="flex menu_item"
+              className={classNames(
+                'flex menu_item',
+                router.pathname == '/report'
+                  ? 'add_bg_white'
+                  : ''
+              )}
               onClick={() => (window.location.href = '/report')}
             >
               <i className="menu-bullet menu-bullet-dot">
@@ -594,7 +732,12 @@ export default function App({ Component, pageProps }: AppProps) {
         {
           label: (
             <div
-              className="flex menu_item"
+              className={classNames(
+                'flex menu_item',
+                router.pathname == '/report'
+                  ? 'add_bg_white'
+                  : ''
+              )}
               onClick={() => (window.location.href = '/report')}
             >
               <i className="menu-bullet menu-bullet-dot">
@@ -608,7 +751,12 @@ export default function App({ Component, pageProps }: AppProps) {
         {
           label: (
             <div
-              className="flex menu_item"
+              className={classNames(
+                'flex menu_item',
+                router.pathname == '/report'
+                  ? 'add_bg_white'
+                  : ''
+              )}
               onClick={() => (window.location.href = '/report')}
             >
               <i className="menu-bullet menu-bullet-dot">
@@ -622,7 +770,12 @@ export default function App({ Component, pageProps }: AppProps) {
         {
           label: (
             <div
-              className="flex menu_item"
+              className={classNames(
+                'flex menu_item',
+                router.pathname == '/report'
+                  ? 'add_bg_white'
+                  : ''
+              )}
               onClick={() => (window.location.href = '/report')}
             >
               <i className="menu-bullet menu-bullet-dot">
@@ -648,7 +801,12 @@ export default function App({ Component, pageProps }: AppProps) {
         {
           label: (
             <div
-              className="flex menu_item"
+              className={classNames(
+                'flex menu_item',
+                router.pathname == '/report'
+                  ? 'add_bg_white'
+                  : ''
+              )}
               onClick={() => (window.location.href = '/report')}
             >
               <i className="menu-bullet menu-bullet-dot">
@@ -662,7 +820,12 @@ export default function App({ Component, pageProps }: AppProps) {
         {
           label: (
             <div
-              className="flex menu_item"
+              className={classNames(
+                'flex menu_item',
+                router.pathname == '/report'
+                  ? 'add_bg_white'
+                  : ''
+              )}
               onClick={() => (window.location.href = '/report')}
             >
               <i className="menu-bullet menu-bullet-dot">
@@ -676,7 +839,12 @@ export default function App({ Component, pageProps }: AppProps) {
         {
           label: (
             <div
-              className="flex menu_item"
+              className={classNames(
+                'flex menu_item',
+                router.pathname == '/report'
+                  ? 'add_bg_white'
+                  : ''
+              )}
               onClick={() => (window.location.href = '/report')}
             >
               <i className="menu-bullet menu-bullet-dot">
@@ -697,7 +865,12 @@ export default function App({ Component, pageProps }: AppProps) {
         {
           label: (
             <div
-              className="flex menu_item"
+              className={classNames(
+                'flex menu_item',
+                router.pathname == '/report'
+                  ? 'add_bg_white'
+                  : ''
+              )}
               onClick={() => (window.location.href = '/report')}
             >
               <i className="menu-bullet menu-bullet-dot">
@@ -711,7 +884,12 @@ export default function App({ Component, pageProps }: AppProps) {
         {
           label: (
             <div
-              className="flex menu_item"
+              className={classNames(
+                'flex menu_item',
+                router.pathname == '/report'
+                  ? 'add_bg_white'
+                  : ''
+              )}
               onClick={() => (window.location.href = '/report')}
             >
               <i className="menu-bullet menu-bullet-dot">
@@ -725,7 +903,12 @@ export default function App({ Component, pageProps }: AppProps) {
         {
           label: (
             <div
-              className="flex menu_item"
+              className={classNames(
+                'flex menu_item',
+                router.pathname == '/report'
+                  ? 'add_bg_white'
+                  : ''
+              )}
               onClick={() => (window.location.href = '/report')}
             >
               <i className="menu-bullet menu-bullet-dot">
@@ -739,7 +922,12 @@ export default function App({ Component, pageProps }: AppProps) {
         {
           label: (
             <div
-              className="flex menu_item"
+              className={classNames(
+                'flex menu_item',
+                router.pathname == '/report'
+                  ? 'add_bg_white'
+                  : ''
+              )}
               onClick={() => (window.location.href = '/report')}
             >
               <i className="menu-bullet menu-bullet-dot">
@@ -753,7 +941,12 @@ export default function App({ Component, pageProps }: AppProps) {
         {
           label: (
             <div
-              className="flex menu_item"
+              className={classNames(
+                'flex menu_item',
+                router.pathname == '/report'
+                  ? 'add_bg_white'
+                  : ''
+              )}
               onClick={() => (window.location.href = '/report')}
             >
               <i className="menu-bullet menu-bullet-dot">
@@ -767,7 +960,12 @@ export default function App({ Component, pageProps }: AppProps) {
         {
           label: (
             <div
-              className="flex menu_item"
+              className={classNames(
+                'flex menu_item',
+                router.pathname == '/report'
+                  ? 'add_bg_white'
+                  : ''
+              )}
               onClick={() => (window.location.href = '/report')}
             >
               <i className="menu-bullet menu-bullet-dot">
