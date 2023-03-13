@@ -47,13 +47,13 @@ const ProductCategory = (props: any) => {
   const [createUpdateCategory, setCreateUpdateCategory] = useState<IsProduct|any>();
   const [itemCategories, setItemCategories] = useState<IsProduct[]>([]);
 
-  const items: IsProduct[] = [
-    { order_id: 1, img: require('../../../public/clothes.svg'), name: 'Áo' },
-    { order_id: 1, img: require('../../../public/clothes.svg'), name: 'Áo' },
-    { order_id: 1, img: require('../../../public/clothes.svg'), name: 'Áo' },
-    { order_id: 1, img: require('../../../public/clothes.svg'), name: 'Áo' },
-    { order_id: 1, img: require('../../../public/clothes.svg'), name: 'Áo' },
-  ];
+  // const items: IsProduct[] = [
+  //   { order_id: 1, img: require('../../../public/clothes.svg'), name: 'Áo' },
+  //   { order_id: 1, img: require('../../../public/clothes.svg'), name: 'Áo' },
+  //   { order_id: 1, img: require('../../../public/clothes.svg'), name: 'Áo' },
+  //   { order_id: 1, img: require('../../../public/clothes.svg'), name: 'Áo' },
+  //   { order_id: 1, img: require('../../../public/clothes.svg'), name: 'Áo' },
+  // ];
 
   const columns: ColumnsType<IsProduct> = [
     {

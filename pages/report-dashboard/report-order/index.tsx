@@ -1,380 +1,338 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Checkbox, Table } from "antd";
+import { Button, Checkbox } from "antd";
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
-import { wareHouseList, warehousesList } from "../../../const/constant";
-import Button from "../../../components/Button/Button";
-import DatePicker from "../../../components/DatePicker/DatePicker";
-import ModalConfig from "../Modal/ModalConfig";
 import Icon from "../../../components/Icon/Icon";
-import Select from "../../../components/Select/Select";
 import TitlePage from "../../../components/TitlePage/Titlepage";
-import { listDayCompare } from "../../../const/constant";
 import classNames from "classnames";
+import { Switch, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
+import get from "lodash/get";
 import InputRangePicker from "../../../components/DateRangePicker/DateRangePicker";
 
 import styles from "../../../styles/Report.module.css";
-import ReportPieChart from "../ReportChart/PieChart/ReportPieChart";
-import LineChart from "../ReportChart/LineChart/ReportLineChart";
-import { IOrder, IStaff } from "../report.type";
+import { IsProduct } from "../../products/product.type";
+import { isArray } from "../../../utils/utils";
+import TableEmpty from "../../../components/TableEmpty";
+import ReportExpenseApi from "../../../services/report/report-expenses";
+import Select from "../../../components/Select/Select";
+import ReportRevenuaApi from "../../../services/report/report-revenue";
 import WarehouseApi from "../../../services/warehouses";
 import ReportOrderApi from "../../../services/report/report-order";
-import { OrderStatusEnum } from "../../../enums/enums";
-import { isArray } from "lodash";
-import ReportStaffApi from "../../../services/report/report-staff";
+import ModalConfig from "../ModalConfig/ModalConfig.tsx";
 
-const ReportOrder = () => {
-  const defaultPagination = {
-    current: 1,
-    page: 1,
-    total: 0,
-    pageSize: 10,
-  };
+const ReportRevenue = () => {
   const [isCompare, setIsCompare] = useState(false);
-  const [filter, setFilter] = useState<any>({});
-  const [revenueOverview, setRevenueOverview] = useState<any>({});
-  const [isShowModalConfig, setIsShowModalConfig] = useState(true)
   const [loading, setLoading] = useState(false);
-  const [pagination, setPagination] = useState({
-    total: 0,
-    pageSize: 10,
-  });
-  const [warehouses, setWarehouse] = useState<
-    {
-      label: string;
-      value: string | number;
-      id: number;
-    }[]
-  >([]);
-  const [selectedWarehouses, setSelectWarehouses] = useState<
-    {
-      label: string;
-      value: string | number;
-      id: number;
-    }[]
-  >([]);
-  const [reportProductSalgeByWarehouse, setReportProductSalgeByWarehouse] =
-    useState<any[]>([]);
-  const [selectedStatusOrder, setSelectedStatusOrder] = useState(
-    OrderStatusEnum.PICKUP_RECEIVED
-  );
-  const [orderInfor, setOrderInfor] = useState<any>({
-    totalOrderCreated: 1000,
-    totalOrderReturn: 1000,
-    totalOrderCanceled: 1000,
-    totalOrderSuccess: 1000,
-    revenueOrderSuccess: 1000,
-  });
-  const [orderByChannels, setOrderByChannels] = useState<any>([
-    { name: "Tại quầy", value: 100 },
-    { name: "Onine", value: 200 },
-    { name: "Trên app", value: 30 },
-  ]);
-  const [orderPercentage, setorderPercentage] = useState<any>({
-    success: 100,
-    return: 0,
-  });
+  const [channel, setChannel] = useState("ALL");
+  const [reportOrder, setReportOrder] = useState<any>([]);
+  const [selectdWarehouse, setSelectWarehouse] = useState("");
+  const [warehouses, setWarehouses] = useState<any>([]);
+  const [showModal, setShowModal] = useState(false);
 
-  // Staff report
-  const [loadingStaff, setLoadingStaff] = useState(false);
-  const [paginationStaff, setPaginationStaff] = useState(defaultPagination);
-  const [orderTypeOptions, setOrderTypeOptions] = useState<any[]>([
+  const channelOptions: any[] = [
     {
-      label: "Nhân viên bán hàng tại quầy",
-      value: 2,
-    },
-    {
-      label: "Nhân viên bán hàng online",
-      value: 1,
-    },
-  ]);
-  const [selectedOrderType, setSelectedOrderType] = useState(1);
-  const [staffs, setStaffs] = useState<any[]>([]);
-
-  // Order report
-  const [loadingOrder, setLoadingOrder] = useState(false);
-  const [paginationOrder, setPaginationOrder] = useState(defaultPagination);
-  const [orders, setOrders] = useState<any[]>([]);
-  const [orderChannelOptions, setOrderChannelOptions] = useState<any[]>([
-    {
-      label: "Tất cả",
-      value: "",
+      label: "Online + In_app",
+      value: "ALL",
     },
     {
       label: "Online",
-      value: 1,
-    },
-    {
-      label: "Tại quầy",
-      value: 2,
+      value: "ONLINE",
     },
     {
       label: "In app",
-      value: 3,
-    },
-  ]);
-  const [selectedOrderChannel, setSelectedOrderChannel] = useState("");
-
-  useEffect(() => {
-    getReportOrderOverview();
-  }, [filter]);
-
-  useEffect(() => {
-    const element = document.getElementById("loading__animation");
-    if (element) {
-      element.remove();
-    }
-    getTotalOrderByWarehouse();
-  }, [selectedStatusOrder]);
-
-  useEffect(() => {
-    setLoadingStaff(true);
-    getDataStaffSaleOrder();
-  }, [selectedOrderType]);
-
-  useEffect(() => {
-    setLoadingOrder(true);
-    getDataOrderByChannels();
-  }, [selectedOrderChannel, filter.to, filter.from]);
-
-  const getReportOrderOverview = async () => {
-    const data = await ReportOrderApi.orderOverview(filter);
-    if (data) {
-      setOrderInfor(data.orderInfor);
-      setorderPercentage(data.orderPercentage);
-      setOrderByChannels([
-        { name: "Tại quầy", value: parseFloat(data.orderByChannels.offline) },
-        { name: "Onine", value: parseFloat(data.orderByChannels.online) },
-        { name: "Trên app", value: parseFloat(data.orderByChannels.in_app) },
-      ]);
-    }
-    setRevenueOverview(data);
-  };
-
-  const getTotalOrderByWarehouse = async () => {
-    const data = await ReportOrderApi.totalOrderByWarehouse({
-      status: selectedStatusOrder,
-    });
-    if (data) {
-      setReportProductSalgeByWarehouse(data.reportTotalOrderByWarehouse);
-      const listWarehouse =
-        isArray(data.warehouseTotalOrder) &&
-        data.warehouseTotalOrder.map((item: any) => ({
-          ...item,
-          value: item.id,
-          valueReport: item.totalOrder,
-          label: item.name,
-        }));
-      setWarehouse(listWarehouse);
-      setSelectWarehouses(listWarehouse);
-    }
-  };
-
-  const getDataStaffSaleOrder = async () => {
-    const { data, totalOrders, totalPage } =
-      await ReportStaffApi.getStaffSaleOrder({
-        order_type: selectedOrderType,
-      });
-    setStaffs(data);
-    setPaginationStaff({
-      ...paginationStaff,
-      total: totalOrders,
-    });
-    setLoadingStaff(false);
-  };
-
-  const getDataOrderByChannels = async () => {
-    const { data, totalOrders, totalPage } =
-      await ReportOrderApi.getOrderByChannel({
-        order_type: selectedOrderChannel,
-        from: filter.from,
-        to: filter.to,
-      });
-    setOrders(data);
-    setPaginationOrder({
-      ...paginationOrder,
-      total: totalOrders,
-    });
-    setLoadingOrder(false);
-  };
-
-  const handleOnChangeWarehouse = (e: any) => {
-    const newSelectedWarehouses = warehouses.filter((item: any) => item.id == e);
-    newSelectedWarehouses && setSelectWarehouses(newSelectedWarehouses);
-  };
-
-  const statusOrder = [
-    {
-      label: "Đã nhận",
-      value: OrderStatusEnum.PICKUP_RECEIVED,
-    },
-    {
-      label: "Đã huỷ",
-      value: OrderStatusEnum.PICKUP_RETURNED,
-    },
-    {
-      label: "Đã hoàn",
-      value: OrderStatusEnum.CANCELLED,
+      value: "IN_APP",
     },
   ];
+  const [pagination, setPagination] = useState({
+    page: 1,
+    total: 0,
+    pageSize: 10,
+  });
+  const [filter, setFilter] = useState<any>({});
 
-  const staffColData: IStaff[] = Array(10)
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const size = urlParams.get("size");
+    const currentPage = urlParams.get("page");
+    setPagination({
+      ...pagination,
+      pageSize: size ? parseInt(size) : 10,
+      page: currentPage ? parseInt(currentPage) : 1,
+    });
+    getListWarehouse();
+  }, []);
+
+  useEffect(() => {
+    getReportOrder();
+  }, [filter, pagination.page, pagination.pageSize, channel]);
+
+  const getReportOrder = async () => {
+    setLoading(true);
+    const { data } = await ReportOrderApi.reportOrder({
+      ...filter,
+      ...pagination,
+      channel: channel,
+    });
+    setReportOrder(data);
+    setLoading(false);
+  };
+
+  const getListWarehouse = async () => {
+    const data = await WarehouseApi.getWarehouse();
+    const listWarehouseManagement =
+      isArray(data) &&
+      data.map((item: any) => ({
+        label: item.name,
+        value: item.id,
+      }));
+    setWarehouses(
+      [
+        {
+          label: "Tất cả",
+          value: "",
+        },
+      ].concat(listWarehouseManagement)
+    );
+  };
+
+  const colData = Array(50)
   .fill({
-    name: "test",
-    orders_count: "10",
-    orders_sum_item_skus: 10,
-    orders_sum_total_cost: 1000,
+    name: "Tran Huyen",
+    assume: {
+      total_order_lock: 10,
+      total_revenue: 10000,
+      total_item_price: 45000,
+      total_transfer: 24000,
+      total_discount: 23000,
+      total_transport_fee: 154000,
+      total_items: 200,
+    },
+    assume_by_status: {
+      order_sended: 20,
+      order_canceled: 30,
+      pickup_received: 50,
+      order_return_partial: 35,
+      order_return: 46,
+      order_pickup_received: 20,
+      order_pickup_sent: 60,
+    },
   })
   .map((item, index) => ({...item, id: index++}))
 
-
-
-  const staffColumns: ColumnsType<IStaff> = [
-    {
-      title: "Mã nhân viên",
-      width: 133,
-      key: "id",
-      align: "center",
-      render: (_, record) => {
-        return <div className="font-medium">{record.id}</div>;
-      },
-    },
+  const columns: ColumnsType<any> = [
     {
       title: "Tên nhân viên",
-      width: 339,
+      width: 400,
       key: "name",
-      align: "left",
+      align: "center",
       render: (_, record) => {
         return (
-          <div className="font-semibold text-[#384ADC]">{record.name}</div>
+          <div className="text-[#384ADC] font-semibold">{record.name}</div>
         );
       },
     },
     {
-      title: "Số lượng đơn hàng",
-      width: 240,
-      key: "orders_count",
+      title: "Số lượng",
       align: "center",
-      sorter: (a: any, b: any) => a?.orders_count - b?.orders_count,
-      render: (_, record: any) => {
-        return (
-          <div className="font-medium">
-            {parseFloat(record.orders_count).toLocaleString() || 0}
-          </div>
-        );
-      },
-    },
-    {
-      title: "Số lượng SP bán ra",
-      width: 240,
-      key: "orderSales",
-      sorter: (a: any, b: any) =>
-        a.orders_sum_item_skus - b.orders_sum_item_skus,
-      align: "center",
-      render: (_, record: any) => {
-        return <div className="font-medium">{record.orders_sum_item_skus}</div>;
-      },
+      children: [
+        {
+          title: "Đơn chốt",
+          dataIndex: "total_order_lock",
+          key: "total_order_lock",
+          width: 150,
+          render: (_, record: any) => {
+            return <div>{get(record, "assume.total_order_lock")}</div>;
+          },
+          sorter: (a, b) =>
+            a.assume?.total_order_lock - b.assume?.total_order_lock,
+        },
+        {
+          title: "Đơn đã gửi",
+          dataIndex: "order_sended",
+          key: "order_sended",
+          width: 150,
+          render: (_, record: any) => {
+            return <div>{get(record, "assume_by_status.order_sended")}</div>;
+          },
+          sorter: (a, b) =>
+            a.assume_by_status?.order_sended - b.assume_by_status?.order_sended,
+        },
+        {
+          title: "Đơn hủy",
+          dataIndex: "order_canceled",
+          key: "order_canceled",
+          width: 150,
+          render: (_, record: any) => {
+            return <div>{get(record, "assume_by_status.order_canceled")}</div>;
+          },
+          sorter: (a, b) =>
+            a.assume_by_status?.order_canceled -
+            b.assume_by_status?.order_canceled,
+        },
+        {
+          title: "Đơn nhận",
+          dataIndex: "order_pickup_received",
+          key: "order_pickup_received",
+          width: 150,
+          render: (_, record: any) => {
+            return (
+              <div>{get(record, "assume_by_status.order_pickup_received")}</div>
+            );
+          },
+          sorter: (a, b) =>
+            a.assume_by_status?.order_pickup_received -
+            b.assume_by_status?.order_pickup_received,
+        },
+        {
+          title: "Đơn hoàn",
+          dataIndex: "order_return",
+          key: "order_return",
+          width: 150,
+          render: (_, record: any) => {
+            return (
+              <div>
+                {get(record, "assume_by_status.order_return_partial") +
+                  get(record, "assume_by_status.order_return")}
+              </div>
+            );
+          },
+          sorter: (a, b) =>
+            a.assume_by_status?.order_return_partial -
+            b.assume_by_status?.order_return_partial,
+        },
+        {
+          title: "Đơn đang giao",
+          dataIndex: "order_pickup_sent",
+          key: "order_pickup_sent",
+          width: 150,
+          render: (_, record: any) => {
+            return (
+              <div>{get(record, "assume_by_status.order_pickup_sent")}</div>
+            );
+          },
+          sorter: (a, b) =>
+            a.assume_by_status?.order_pickup_sent -
+            b.assume_by_status?.order_pickup_sent,
+        },
+      ],
     },
     {
       title: "Doanh thu",
-      width: 240,
-      key: "orders_sum_total_cost",
-      sorter: (a: any, b: any) =>
-        a.orders_sum_total_cost - b.orders_sum_total_cost,
+      width: 230,
+      key: "revenue",
       align: "center",
-      render: (_, record: any) => {
+      render: (record: any) => {
         return (
-          <div className="font-medium">
-            {parseFloat(record.orders_sum_total_cost).toLocaleString() || 0}đ
+          <div>
+            {(
+              parseFloat(get(record, "assume.total_revenue")) || 0
+            ).toLocaleString() + "đ"}
           </div>
         );
       },
+      sorter: (a, b) => a.assume?.total_revenue - b.assume?.total_revenue,
     },
-  ];
-
-  const orderColData = Array(10)
-  .fill({
-    transfer_fee: "100",
-    order_type: 2,
-    total_pay: "100",
-    total_order_value: "12",
-    total_transfer: "12",
-    total_prepaid: "12",
-    total_prepaid_percent: "9",
-    total_product_cost: "40",
-  })
-
-  const orderColumns: ColumnsType<any> = [
+    {
+      title: "Doanh số tiền hàng",
+      width: 150,
+      key: "item_price",
+      align: "center",
+      render: (record: any) => {
+        return (
+          <div>
+            {(
+              parseFloat(get(record, "assume.total_item_price")) || 0
+            ).toLocaleString() + "đ"}
+          </div>
+        );
+      },
+      sorter: (a, b) => a.assume?.total_item_price - b.assume?.total_item_price,
+    },
+    {
+      title: "Tiền chuyển khoản",
+      width: 230,
+      key: "transfer",
+      align: "center",
+      render: (record: any) => {
+        return (
+          <div>
+            {(
+              parseFloat(get(record, "assume.total_transfer")) || 0
+            ).toLocaleString() + "đ"}
+          </div>
+        );
+      },
+      sorter: (a, b) => a.assume?.total_transfer - b.assume?.total_transfer,
+    },
+    {
+      title: "Tiền chiết khấu",
+      width: 230,
+      key: "discount",
+      align: "center",
+      render: (record: any) => {
+        return (
+          <div>
+            {(
+              parseFloat(get(record, "assume.total_discount")) || 0
+            ).toLocaleString() + "đ"}
+          </div>
+        );
+      },
+      sorter: (a, b) => a.assume?.total_discount - b.assume?.total_discount,
+    },
     {
       title: "Phí vận chuyển",
-      width: 133,
-      key: "transfer_fee",
+      width: 230,
+      key: "transport_fee",
       align: "center",
-      render: (_, record: any) => {
+      render: (record: any) => {
         return (
-          <div className="font-medium">
-            {parseFloat(record.transfer_fee || 0).toLocaleString()}
+          <div>
+            {(
+              parseFloat(get(record, "assume.total_transport_fee")) || 0
+            ).toLocaleString() + "đ"}
           </div>
         );
       },
+      sorter: (a, b) =>
+        a.assume?.total_transport_fee - b.assume?.total_transport_fee,
     },
     {
-      title: "Tiền mặt",
-      width: 133,
-      key: "cod",
+      title: "SL sản phẩm",
+      width: 230,
+      key: "total_items",
       align: "center",
-      render: (_, record: any) => {
-        let totalCOD = 0;
-        if (record.order_type == 2) {
-          totalCOD += parseFloat(record.total_pay || 0);
-        } else {
-          totalCOD =
-            parseFloat(record.total_order_value || 0) -
-            parseFloat(record.total_transfer || 0);
-        }
-        return <div className="font-medium">{totalCOD.toLocaleString()}</div>;
+      render: (record: any) => {
+        return <div>{parseFloat(get(record, "assume.total_items")) || 0}</div>;
       },
-    },
-    {
-      title: "Chiết khấu",
-      width: 133,
-      key: "discounrPrice",
-      align: "center",
-      render: (_, record: any) => {
-        let discounrPrice = 0;
-        if (parseFloat(record.total_prepaid) > 0) {
-          discounrPrice = parseFloat(record.total_prepaid);
-        } else if (parseFloat(record.total_prepaid_percent)) {
-          discounrPrice =
-            (parseFloat(record.total_product_cost) / 100) *
-            parseFloat(record.total_prepaid_percent);
-        }
-        return (
-          <div className="font-medium">{discounrPrice.toLocaleString()}</div>
-        );
-      },
-    },
-    {
-      title: "Doanh thu",
-      width: 133,
-      key: "discounrPrice",
-      align: "center",
-      render: (_, record: any) => {
-        return (
-          <div className="font-medium">
-            {parseFloat(record.total_order_value || 0).toLocaleString()}
-          </div>
-        );
-      },
+      sorter: (a, b) => a.assume?.total_items - b.assume?.total_items,
     },
   ];
+
+  const handleSearchByDate = (value: any) => {
+    if (value) {
+      const from = value[0].format("YYYY-MM-DD HH:mm:ss");
+      const to = value[1].format("YYYY-MM-DD HH:mm:ss");
+      setFilter({
+        ...filter,
+        from,
+        to,
+      });
+    } else {
+      setFilter({
+        ...filter,
+        from: "",
+        to: "",
+      });
+    }
+  };
 
   return (
     <div className="w-full">
       <div className="flex items-center justify-between mb-[12px] flex-wrap">
-        <TitlePage title="Báo cáo doanh thu" />
-        <div className="flex items-center gap-[24px]">
+        <TitlePage title="Báo cáo đơn hàng" />
+        <div className="flex items-center gap-[24px] px-[12px]">
           {/* <Button
             variant="outlined"
             width={109}
@@ -382,21 +340,21 @@ const ReportOrder = () => {
           >
             Xuất file
           </Button> */}
-          <div className="flex items-center justify-end">
-            <div className=" min-w-max text-medium font-semibold mr-[8px]">
+          <div className="flex items-center">
+            <div className="text-medium font-semibold mr-[8px] min-w-fit">
               Hiển thị theo thời gian
             </div>
             <InputRangePicker
               placeholder={["Ngày bắt đầu", "Ngày kết thúc"]}
-              width={306}
               prevIcon={<Icon size={24} icon="calendar" />}
-              onChange={(e: any) =>
-                setFilter({
-                  ...filter,
-                  from: e[0].format("YYYY-MM-DD"),
-                  to: e[1].format("YYYY-MM-DD"),
-                })
-              }
+              onChange={(value: any) => {
+                setPagination({
+                  page: 1,
+                  total: 0,
+                  pageSize: pagination.pageSize || 10,
+                });
+                handleSearchByDate(value);
+              }}
             />
           </div>
           {/* <div className="flex items-center gap-[8px]">
@@ -412,240 +370,81 @@ const ReportOrder = () => {
           </div> */}
         </div>
       </div>
-      <div className="flex gap-[12px] mb-[12px]">
-        <div className="w-1/2 gap-[12px] flex flex-col">
-          <div className={classNames(styles.div_container, "flex-1")}>
-            <div className={styles.row}>
-              <div className="text-big text-[#384ADC] font-semibold">
-                Tổng đơn hàng đã tạo
-              </div>
-              <div className="text-2xl font-bold">
-                {orderInfor.totalOrderCreated}
-              </div>
-            </div>
-            <div className={styles.row}>
-              <div className="font-semibold">Lợi nhuận</div>
-              <div className="text-[#10B981] text-2xl font-bold">
-                {(orderInfor.revenueOrderSuccess &&
-                  orderInfor.revenueOrderSuccess.toLocaleString()) ||
-                  0}
-                đ
-              </div>
-            </div>
-            <div className={styles.row}>
-              <div className="font-semibold">Chuyển hoàn</div>
-              <div className="text-[#F97316] text-big font-bold">
-                {orderInfor.totalOrderReturn}
-              </div>
-            </div>
-            <div className={styles.row}>
-              <div className="font-semibold">Đơn huỷ</div>
-              <div className="text-[#EF4444] text-big font-bold">
-                {orderInfor.totalOrderCanceled}
-              </div>
-            </div>
-          </div>
-          <div className={classNames(styles.div_container, "flex-1")}>
-            <div className={styles.row}>
-              <div className="text-big text-[#384ADC] font-semibold">
-                Tỉ lệ đơn hàng
-              </div>
-              <div className="flex gap-[34px]">
-                <div className="flex gap-[12px]">
-                  <div className="text-[#10B981] font-semibold">Chốt đơn</div>
-                  <div>{orderPercentage.success}%</div>
-                </div>
-                <div className="flex gap-[12px]">
-                  <div className="text-[#8B5CF6] font-semibold">Đơn hoàn</div>
-                  <div>{orderPercentage.return}%</div>
-                </div>
-              </div>
-            </div>
-            <div className={styles.column_percent}>
-              <div
-                style={{
-                  width: `${orderPercentage.success}%`,
-                  backgroundColor: "#10B981",
-                  height: "100%",
-                }}
-              />
-              <div
-                style={{
-                  width: `${orderPercentage.return}%`,
-                  backgroundColor: "#8B5CF6",
-                  height: "100%",
-                }}
-              />
-            </div>
-          </div>
+      <div className="flex item-center justify-between mt-[18px]">
+        <div>
+          <Select
+            onChange={(e) => {
+              setPagination({
+                ...pagination,
+                page: pagination.page || 1,
+                pageSize: pagination.pageSize || 10,
+              });
+              setChannel(e);
+            }}
+            options={channelOptions}
+            width={248}
+            value={channel}
+          />
         </div>
-        <ReportPieChart title="Đơn hàng theo kênh bán" data={orderByChannels} />
+        <div className="gap-[12px] flex items-center">
+          <div className="flex items-center">
+            <div className="font-medium mr-[12px] text-medium">Chọn kho</div>
+            <Select
+              placeholder="Chọn kho"
+              style={{ width: 248 }}
+              options={warehouses}
+              onChange={(e) => {
+                setFilter({
+                  ...filter,
+                  warehouse_id: e,
+                });
+                setSelectWarehouse(e);
+              }}
+              value={selectdWarehouse}
+            />
+          </div>
+          <Button onClick={() => setShowModal(true)}>Cấu hình</Button>
+        </div>
       </div>
-      <LineChart
-        warehouses={warehousesList}
-        onChangeWarehouse={(e) => handleOnChangeWarehouse(e)}
-        onChangeStatus={(e) => setSelectedStatusOrder(e)}
-        selectedStatusOrder={selectedStatusOrder}
-        keys={selectedWarehouses.map((item: any) => item.name)}
-        statusOrder={statusOrder}
-        dataLineChart={reportProductSalgeByWarehouse}
-        data={warehouses}
-        unit="đơn hàng"
-      />
       <div className={classNames(styles.div_container, "mt-[12px]")}>
-        <div className="flex items-center justify-between mb-[24px] flex-wrap">
-          <div className="text-[#384ADC] font-semibold text-big">
-            Doanh thu theo nhân viên
-          </div>
-          <div className="flex items-center gap-[24px]">
-            <div className="flex items-center">
-              <div className="mr-[12px]">Chọn loại nhân viên</div>
-              <Select
-                options={orderTypeOptions}
-                style={{ width: 248 }}
-                value={selectedOrderType}
-                onChange={(value) => setSelectedOrderType(value)}
-              />
-            </div>
-            {/* <span className="cursor-pointer">
-              <Icon icon="export" />
-            </span> */}
-          </div>
-        </div>
         <Table
-          // loading={loadingStaff}
-          className="table-layout2 table-has-total"
-          columns={staffColumns}
-          // dataSource={[...staffs]}
-          dataSource={staffColData}
+          className="table__st1"
+          rowKey={(record) => record.id}
+          locale={
+            !loading
+              ? {
+                  emptyText: <TableEmpty />,
+                }
+              : { emptyText: <></> }
+          }
+          loading={loading}
+          columns={columns}
+          // dataSource={reportOrder}
+          dataSource={colData}
           pagination={{
-            position: ["bottomCenter"],
-            total: paginationStaff.total,
-            defaultPageSize: paginationStaff.pageSize,
+            total: pagination.total,
+            defaultPageSize: pagination.pageSize,
             showSizeChanger: true,
             pageSizeOptions: [10, 20, 50, 100],
           }}
+          scroll={{ x: 50 }}
           onChange={(e) => {
-            setPaginationStaff({
-              ...paginationStaff,
-              current: e.current || 1,
-              page: e.current || 1,
-              pageSize: e.pageSize || 10,
+            setPagination({
+              ...pagination,
+              page: pagination.page || 1,
+              pageSize: pagination.pageSize || 10,
             });
-          }}
-          summary={(pageData) => {
-            let totalOrder: any = 0;
-            let totalSaleOrder: any = 0;
-            let totalMoneyEarn: any = 0;
-
-            pageData.forEach((data: any) => {
-              const {
-                orders_count,
-                orders_sum_item_skus,
-                orders_sum_total_cost,
-              } = data;
-              totalOrder = totalOrder + parseFloat(orders_count || 0);
-              totalSaleOrder =
-                totalSaleOrder + parseFloat(orders_sum_item_skus || 0);
-              totalMoneyEarn =
-                totalMoneyEarn + parseFloat(orders_sum_total_cost || 0);
-              totalMoneyEarn + parseFloat(orders_sum_total_cost);
-            });
-
-            return (
-              <>
-                <Table.Summary.Row>
-                  <Table.Summary.Cell index={0} colSpan={2}>
-                    <div className="text-[#1D1C2D] text-center font-bold">
-                      Tổng
-                    </div>
-                  </Table.Summary.Cell>
-                  <Table.Summary.Cell index={2}>
-                    <div className="text-[#FF970D] font-semibold text-center">
-                      {parseFloat(totalOrder).toLocaleString()}
-                    </div>
-                  </Table.Summary.Cell>
-                  <Table.Summary.Cell index={3}>
-                    <div className="text-[#FF970D] font-semibold text-center">
-                      {parseFloat(totalSaleOrder).toLocaleString()}
-                    </div>
-                  </Table.Summary.Cell>
-                  <Table.Summary.Cell index={4}>
-                    <div className="text-[#FF970D] font-semibold text-center">
-                      {parseFloat(totalMoneyEarn).toLocaleString()}đ
-                    </div>
-                  </Table.Summary.Cell>
-                </Table.Summary.Row>
-              </>
+            window.history.replaceState(
+              null,
+              "",
+              `?size=${e.pageSize}&page=${e.current}`
             );
           }}
         />
       </div>
-      <div className={classNames(styles.div_container, "mt-[12px]")}>
-        <div className="flex items-center justify-between mb-[24px] flex-wrap">
-          <div className="text-[#384ADC] font-semibold text-big">
-            Đơn hàng theo kênh bán
-          </div>
-          <div className="flex gap-[24px]">
-            <div className="flex items-center">
-              <div className="mr-[12px]">Chọn kênh</div>
-              <Select
-                options={orderChannelOptions}
-                style={{ width: 248 }}
-                value={selectedOrderChannel}
-                onChange={(e) => {
-                  setSelectedOrderChannel(e);
-                }}
-              />
-            </div>
-            <div className="flex items-center">
-              <div className="text-medium font-semibold mr-[8px]">
-                Hiển thị theo thời gian
-              </div>
-              <InputRangePicker
-                placeholder={["Ngày bắt đầu", "Ngày kết thúc"]}
-                width={306}
-                prevIcon={<Icon size={24} icon="calendar" />}
-                onChange={(e: any) =>
-                  setFilter({
-                    ...filter,
-                    from: e[0].format("YYYY-MM-DD"),
-                    to: e[1].format("YYYY-MM-DD"),
-                  })
-                }
-              />
-            </div>
-          </div>
-        </div>
-        <Table
-          // loading={loadingOrder}
-          className="table-layout2 table-has-total"
-          columns={orderColumns}
-          // dataSource={[...orders]}
-          dataSource={orderColData}
-          pagination={{
-            total: paginationOrder.total,
-            defaultPageSize: paginationOrder.pageSize,
-            showSizeChanger: true,
-            pageSizeOptions: [10, 20, 50, 100],
-          }}
-          onChange={(e) => {
-            setPaginationOrder({
-              ...paginationOrder,
-              current: e.current || 1,
-              page: e.current || 1,
-              pageSize: e.pageSize || 10,
-            });
-          }}
-        />
-      </div>
-      <ModalConfig
-        title="Cấu hình"
-        onClose={() => setIsShowModalConfig(false)}
-        isVisible={isShowModalConfig}
-        />
+      <ModalConfig onClose={() => setShowModal(false)} isVisible={showModal} />
     </div>
   );
 };
 
-export default ReportOrder;
+export default ReportRevenue;

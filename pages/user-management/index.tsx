@@ -1,35 +1,35 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from "react";
-import { ReactNode } from "react";
-import ReactDOM from "react-dom";
-import { useDebounce } from "usehooks-ts";
-import { Table, Switch, notification } from "antd";
-import type { ColumnsType } from "antd/es/table";
-import get from "lodash/get";
-import TitlePage from "../../components/TitlePage/Titlepage";
-import { isArray, onCoppy } from "../../utils/utils";
-import { formatCustomers } from "../../utils/utils";
-import { LevelCustomer } from "../../enums/enums";
-import Select from "../../components/Select/Select";
-import Button from "../../components/Button/Button";
-import Icon from "../../components/Icon/Icon";
-import Input from "../../components/Input/Input";
-import InputRangePicker from "../../components/DateRangePicker/DateRangePicker";
-import Checkbox from "../../components/CheckboxList/CheckboxList";
-import NoData from "../../assets/no-data.svg";
-import { warehouses } from "../../const/constant";
-import DatePicker from "../../components/DatePicker/DatePicker";
-import PaginationCustom from "../../components/PaginationCustom";
-import UserModal from "./components/UserModal";
-import { IUser } from "../../types/users";
-import UserApi from "../../services/users";
-import { usersList } from "../../dummy-data/dummyData";
-import Image from "next/image";
-import PermissionApi from "../../services/permission";
-import { IOption } from "../../types/permission";
-import ModalRemove from "../../components/ModalRemove/ModalRemove";
+import React, { useEffect, useState } from 'react';
+import { ReactNode } from 'react';
+import ReactDOM from 'react-dom';
+import { useDebounce } from 'usehooks-ts';
+import { Table, Switch, notification } from 'antd';
+import type { ColumnsType } from 'antd/es/table';
+import get from 'lodash/get';
+import TitlePage from '../../../components/TitlePage/Titlepage';
+import { isArray, onCoppy } from '../../../utils/utils';
+import { formatCustomers } from '../../../utils/utils';
+import { LevelCustomer } from '../../../enums/enums';
+import Select from '../../../components/Select/Select';
+import Button from '../../../components/Button/Button';
+import Icon from '../../../components/Icon/Icon';
+import Input from '../../../components/Input/Input';
+import InputRangePicker from '../../../components/DateRangePicker/DateRangePicker';
+import Checkbox from '../../../components/CheckboxList/CheckboxList';
+import NoData from '../../../public/no-data.svg';
+import { warehouses } from '../../../const/constant';
+import DatePicker from '../../../components/DatePicker/DatePicker';
+import PaginationCustom from '../../../components/PaginationCustom';
+import UserModal from '../../users/components/UserModal';
+import { IUser } from '../../../types/users';
+import UserApi from '../../../services/users';
+import { usersList } from '../../../dummy-data/dummyData';
+import Image from 'next/image';
+import PermissionApi from '../../../services/permission';
+import { IOption } from '../../../types/permission';
+import ModalRemove from '../../../components/ModalRemove/ModalRemove';
 
-const ListCombo = () => {
+const UserManagement = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [users, setUsers] = useState<IUser[]>([]);
   const [pageSize, setPageSize] = useState<number>(10);
@@ -43,11 +43,15 @@ const ListCombo = () => {
   const [isShowModalRemove, setIsShowModalRemove] = useState(false);
 
   const [filter, setFilter] = useState<any>({});
-  const [searchPhrase, setSearchPhrase] = useState<string>("");
+  const [searchPhrase, setSearchPhrase] = useState<string>('');
   const debouncedValue = useDebounce<string>(searchPhrase, 500);
 
   useEffect(() => {
-    const element = document.getElementById("loading__animation");
+    document.title = 'Danh sách người dùng hệ thống';
+  });
+
+  useEffect(() => {
+    const element = document.getElementById('loading__animation');
     if (element) {
       element.remove();
     }
@@ -58,10 +62,10 @@ const ListCombo = () => {
     setLoading(true);
     const result = await UserApi.getListStaff({
       populate: [
-        "user_role_companies:id,role_id,user_id",
-        "user_role_companies.role:id,name",
-        "staff_group:id,name",
-        "warehouses:id,staff_id,warehouse_id",
+        'user_role_companies:id,role_id,user_id',
+        'user_role_companies.role:id,name',
+        'staff_group:id,name',
+        'warehouses:id,staff_id,warehouse_id',
       ],
       filter,
       name: searchPhrase,
@@ -76,7 +80,7 @@ const ListCombo = () => {
 
   const getSelectPermissionOptions = async () => {
     const result = await PermissionApi.list();
-    const listPermission = result.map((item) => ({
+    const listPermission = result.map((item: any) => ({
       ...item,
       value: item.id,
       label: item.name,
@@ -85,7 +89,7 @@ const ListCombo = () => {
   };
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    console.log("selectedRowKeys changed: ", selectedRowKeys);
+    console.log('selectedRowKeys changed: ', selectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
   };
 
@@ -108,7 +112,7 @@ const ListCombo = () => {
     );
     if (data) {
       notification.success({
-        message: "Xóa người dùng thành công!",
+        message: 'Xóa người dùng thành công!',
       });
       getListStaff();
     }
@@ -120,16 +124,33 @@ const ListCombo = () => {
   };
 
   const onChange = (record?: any) => {
-    console.log("record", record);
+    console.log('record', record);
   };
+
+  const colData: IUser[] = Array(20)
+    .fill({
+      isBlock: false,
+      avatar: require('public/yellow-star.svg'),
+      email: 'a@gmail.com',
+      phone: '0199910020',
+      name: 'Tester',
+      user_role_companies: [
+        {
+          role: {
+            name: 'CEO',
+          },
+        },
+      ],
+    })
+    .map((item, index) => ({ ...item, id: index++ }));
 
   const columns: ColumnsType<IUser> = [
     {
-      title: "Chặn",
+      title: 'Chặn',
       width: 110,
-      dataIndex: "isBlock",
-      key: "isBlock",
-      align: "center",
+      dataIndex: 'isBlock',
+      key: 'isBlock',
+      align: 'center',
       render: (_, record) => {
         return (
           <Switch
@@ -141,31 +162,38 @@ const ListCombo = () => {
       },
     },
     {
-      title: "ID",
+      title: 'ID',
       width: 120,
-      key: "ID",
-      align: "center",
+      key: 'ID',
+      align: 'center',
       render: (_, record) => <div className="font-semibold">{record?.id}</div>,
     },
     {
-      title: "Tên người dùng",
+      title: 'Tên người dùng',
       width: 200,
-      dataIndex: "name",
-      key: "name",
+      dataIndex: 'name',
+      key: 'name',
       render: (_, record) => (
         <div className="font-semibold flex items-center gap-x-[8px] text-[#384ADC]">
           {record?.avatar && (
-            <img className="rounded__img" src={record?.avatar} alt="" />
+            <div className="relative w-[36px] h-[36px]">
+              <Image
+                className="rounded__img"
+                src={record?.avatar}
+                alt=""
+                fill
+              />
+            </div>
           )}
           {record?.name}
         </div>
       ),
     },
     {
-      title: "SĐT",
-      dataIndex: "phone",
-      key: "phone",
-      align: "left",
+      title: 'SĐT',
+      dataIndex: 'phone',
+      key: 'phone',
+      align: 'left',
       render: (_, record) => (
         <div
           className="font-medium"
@@ -178,29 +206,29 @@ const ListCombo = () => {
       ),
     },
     {
-      title: "Email",
+      title: 'Email',
       width: 200,
-      dataIndex: "email",
-      key: "email",
-      align: "left",
+      dataIndex: 'email',
+      key: 'email',
+      align: 'left',
       render: (_, record) => <div className="font-medium">{record?.email}</div>,
     },
     {
-      title: "Chức vụ",
-      dataIndex: "position",
-      key: "position",
-      align: "center",
+      title: 'Chức vụ',
+      dataIndex: 'position',
+      key: 'position',
+      align: 'center',
       render: (_, record) => (
         <div className="font-medium">
-          {get(record, "user_role_companies[0].role.name")}
+          {get(record, 'user_role_companies[0].role.name')}
         </div>
       ),
     },
     {
-      title: "Thao tác",
-      dataIndex: "action",
-      key: "action",
-      align: "right",
+      title: 'Thao tác',
+      dataIndex: 'action',
+      key: 'action',
+      align: 'right',
       render: (_, record) => (
         <div className="flex items-center justify-end gap-[16px]">
           <div
@@ -253,7 +281,13 @@ const ListCombo = () => {
             suffixIcon={<Icon icon="add" size={24} />}
             onClick={() => {
               setOpenModal(true);
-              setUserSelected(null);
+              setUserSelected({
+                id: Math.floor(Math.random() * 10000000).toString(),
+                name: '',
+                email: '',
+                phone: '',
+                isBlock: false,
+              });
             }}
           >
             Thêm mới
@@ -306,14 +340,15 @@ const ListCombo = () => {
       <Table
         loading={loading}
         columns={columns}
-        dataSource={users}
+        // dataSource={users}
+        dataSource={colData}
         pagination={false}
         scroll={{ x: 50 }}
         rowKey={(record) => record.id}
         locale={{
           emptyText: (
-            <div className="text-center flex items-center justify-center py-[20px]">
-              <NoData />
+            <div className="text-center w-[36px] h-[36px] flex items-center justify-center py-[20px]">
+              <Image src={require('public/no-data.svg')} fill alt="no-data" />
             </div>
           ),
         }}
@@ -338,4 +373,4 @@ const ListCombo = () => {
   );
 };
 
-ReactDOM.render(<ListCombo />, document.getElementById("root"));
+export default UserManagement;

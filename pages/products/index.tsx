@@ -51,7 +51,7 @@ const ListProduct = (props: any) => {
   const [createdAtFrom, setCreatedAtFrom] = useState(null);
   const [createdAtTo, setCreatedAtTo] = useState(null);
   const [isShowModalConfirm, setIsShowModalConfirm] = useState(false);
-  const [isShowModalProductCat, setIsShowModalProductCat] = useState(false);
+  const [isShowModalProductCat, setIsShowModalProductCat] = useState(true);
 
   const [optionPrint, setOptionPrint] = useState<any[]>([
     {

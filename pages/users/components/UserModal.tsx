@@ -75,6 +75,7 @@ const UserModal = (props: ModalProps) => {
 
   useEffect(() => {
     setGender(userSelected?.gender || 1);
+    console.log('modal', userSelected)
     setIsSpecialPermissions(userSelected?.isSpecialPermissions || false);
     setIsBlock(userSelected?.isBlock || false);
     setName(userSelected?.name || "");
@@ -99,7 +100,7 @@ const UserModal = (props: ModalProps) => {
 
   const getSelectWarehouseOptions = async () => {
     const result = await WarehouseApi.getWarehouse();
-    const listWarehouse = result.map((item) => ({
+    const listWarehouse = result.map((item: any) => ({
       ...item,
       value: item.id,
       label: item.name,
@@ -110,7 +111,7 @@ const UserModal = (props: ModalProps) => {
 
   const getSelectSaleGroupOptions = async () => {
     const result = await StaffGroupApi.getStaffGroup();
-    const listSaleGroup = result.map((item) => ({
+    const listSaleGroup = result.map((item: any) => ({
       ...item,
       value: item.id,
       label: item.name,
@@ -121,7 +122,7 @@ const UserModal = (props: ModalProps) => {
 
   const getSelectPermissionOptions = async () => {
     const result = await PermissionApi.list();
-    const listPermission = result.map((item) => ({
+    const listPermission = result.map((item: any) => ({
       ...item,
       value: item.id,
       label: item.name,
