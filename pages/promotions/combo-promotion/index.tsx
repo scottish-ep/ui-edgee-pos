@@ -391,6 +391,7 @@ const ComboList = () => {
         onRow={(record) => {
           return {
             onClick: () => {
+              console.log('row', rowSelected)
               setRowSelected(record);
               setIsShowModalAddEditCombo(true);
             },

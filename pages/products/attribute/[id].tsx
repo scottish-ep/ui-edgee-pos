@@ -11,8 +11,8 @@ import ModalConfirm from 'components/Modal/ModalConfirm/ModalConfirm';
 import ItemAttributeApi from 'services/item-attributes';
 import { useRouter } from 'next/router';
 const AttributeDetail = () => {
-  const pageTitle = "Cài Đặt Thuộc Tính";
-  const [attribute, setAttribute] = useState<IsProduct|any>();
+  const pageTitle = 'Cài Đặt Thuộc Tính';
+  const [attribute, setAttribute] = useState<IsProduct | any>();
   const [isShowModalDeleteAttr, setIsShowModalDeleteAttr] = useState(false);
   const [form] = Form.useForm();
 
@@ -100,12 +100,11 @@ const AttributeDetail = () => {
     res.then((data: any) => {
       setAttribute(data);
     });
-
   };
 
   const hanldeDeleteItemAttribute = () => {
     ItemAttributeApi.deleteManyItemAttributes([AttributeId]);
-    window.location.href = "/products/attribute";
+    window.location.href = '/products/attribute';
   };
 
   useEffect(() => {
@@ -120,7 +119,10 @@ const AttributeDetail = () => {
     <div className="w-full">
       <div className="flex justify-between items-center">
         <div className="flex justify-between min-w-[230px]  items-center ">
-          <div className='cursor-pointer' onClick={() => (window.location.href = `/products/attribute`)}>
+          <div
+            className="cursor-pointer"
+            onClick={() => (window.location.href = `/products/attribute`)}
+          >
             <Icon icon="back1" size={36} />
           </div>
           <TitlePage title="Cập nhật thuộc tính" />
@@ -150,11 +152,18 @@ const AttributeDetail = () => {
         </div>
       </div>
       <div className="w-full flex justify-between bg-[#fff] p-[12px] gap-[16px] rounded-[4px] mt-[19px] mb-[24px]">
-        <Input label="Mã thuộc tính *" width={640} value={attribute?.code}/>
-        <Input label="Tên thuộc tính *" width={640} value={attribute?.name}/>
+        <Input label="Mã thuộc tính *" width={640} value={attribute?.code} />
+        <Input label="Tên thuộc tính *" width={640} value={attribute?.name} />
       </div>
       <div className="relative">
-        {columns&&<Table columns={columns} dataSource={attrList} pagination={false} />}
+        {columns && (
+          <Table
+            rowKey={(record) => record.id}
+            columns={columns}
+            dataSource={attrList}
+            pagination={false}
+          />
+        )}
       </div>
       <div className="text-[#384ADC] mt-[24px] text-[15px] font-semibold cursor-pointer">
         + Thêm mới

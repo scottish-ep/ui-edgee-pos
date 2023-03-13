@@ -113,3 +113,9 @@ export interface IContainerManagementDetail {
   category_ids: string[];
   orders: IOrderOfContainerManagement[];
 }
+
+
+export interface IOrderCancel {
+  id: string | number;
+  name: string;
+}

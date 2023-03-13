@@ -1200,7 +1200,7 @@ const ListOrderOffline = () => {
           onRow={(record) => {
             return {
               onClick: () => {
-                window.location.href = `/order-management/edit/order-offline/${record.id}`;
+                window.location.href = `/orders/order-offline/${record.order_id}`;
               },
             };
           }}

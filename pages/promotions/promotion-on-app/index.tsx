@@ -245,7 +245,7 @@ const PromotionOnApp = () => {
         />
         <DateRangePickerCustom width={306} onChange={handleSelectDateRange} />
         <Button
-          variant="no-outlined"
+          variant="outlined"
           prefixIcon={<Icon icon="trash" size={24} />}
           width={166}
         >

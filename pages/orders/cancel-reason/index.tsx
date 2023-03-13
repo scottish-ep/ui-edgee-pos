@@ -3,22 +3,53 @@ import Icon from 'components/Icon/Icon';
 import Button from 'components/Button/Button';
 import { ColumnsType } from 'antd/es/table';
 import TitlePage from 'components/TitlePage/Titlepage';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { IOrderCancel } from '../orders.type';
 import ModalCancel from '../container-management/ModalCancel';
 const CancelReason = () => {
-
-  const [isShowModalCancel, setIsShowModalCancel] = useState(false)
-  const data = Array(10)
+  const [isShowModalCancel, setIsShowModalCancel] = useState(false);
+  const [rowSelected, setRowSelected] = useState<IOrderCancel>();
+  const [itemList, setItemList] = useState<IOrderCancel[]>(
+    Array(10)
+      .fill({
+        name: 'Sai số lượng',
+      })
+      .map((item, index) => ({ ...item, id: index++ }))
+  );
+  const data: IOrderCancel[] = Array(3)
     .fill({
       name: 'Sai số lượng',
     })
     .map((item, index) => ({ ...item, id: index++ }));
 
-    const detail = {
-      name: "Huy",
-    }
+  const detail = {
+    name: 'Huy',
+  };
 
-  const columns: ColumnsType<any> = [
+  useEffect(() => {
+    document.title = 'Các lý do hủy';
+  });
+
+  // useEffect(() => {
+  //   setItemList(data);
+  // }, [data]);
+
+  const handleAdd = (e: any) => {
+    setItemList((current: any) => [
+      ...current,
+      { id: Math.floor(Math.random() * 10000000).toString(), name: '' },
+    ]);
+  };
+
+  const handleDelete = (id: string | number) => {
+    setItemList((prevItemList) =>
+      prevItemList.filter((reason) => reason.id !== id)
+    );
+    console.log('id', id);
+    console.log('item', itemList);
+  };
+
+  const columns: ColumnsType<IOrderCancel> = [
     {
       title: '#',
       key: 'id',
@@ -45,16 +76,19 @@ const CancelReason = () => {
       render: (_, record) => (
         <div className="flex justify-end gap-[15px]">
           <div
-          // onClick={(e) => {
-          //   setHaveDetail(record.name);
-          //   setIsShowModalCustomerSource(true);
-          //   console.log('detail', haveDetail);
-          // }}
-          onClick={() => setIsShowModalCancel(true)}
+            // onClick={(e) => {
+            //   setHaveDetail(record.name);
+            //   setIsShowModalCustomerSource(true);
+            //   console.log('detail', haveDetail);
+            // }}
+            onClick={() => {
+              setRowSelected(record);
+              setIsShowModalCancel(true);
+            }}
           >
             <Icon icon="edit-2" size={24} />
           </div>
-          <div>
+          <div onClick={() => handleDelete(record.id)}>
             <Icon icon="trash" size={24} />
           </div>
         </div>
@@ -63,16 +97,19 @@ const CancelReason = () => {
   ];
 
   return (
-    <div className='w-full'>
-      <div className='flex justify-between mb-[24px]'>
-        <TitlePage title="Các lý do hủy"/>\
-        <div className='flex justify-between gap-[20px]'>
-        <Button
+    <div className="w-full">
+      <div className="flex justify-between mb-[24px]">
+        <TitlePage title="Các lý do hủy" />\
+        <div className="flex justify-between gap-[20px]">
+          <Button
             variant="primary"
             width={151}
             color="white"
             prefixIcon={<Icon icon="add" size={24} />}
-            onClick={() => setIsShowModalCancel(true)}
+            onClick={() => {
+              setRowSelected({ name: '', id: '' });
+              setIsShowModalCancel(true);
+            }}
             // onClick={() => setIsShowModalAddContainerManagement(true)}
           >
             Thêm mới
@@ -93,12 +130,32 @@ const CancelReason = () => {
           </Button>
         </div>
       </div>
-      <div className='relative'>
-        <Table pagination={false} columns={columns} dataSource={data} />
+      <div className="relative">
+        <Table
+          rowKey={(record) => record.id}
+          pagination={false}
+          columns={columns}
+          dataSource={[...itemList]}
+          // onRow={(record) => {
+          //   return {
+          //     onClick: () => {
+          //       setRowSelected(record);
+          //     },
+          //   };
+          // }}
+        />
       </div>
       <ModalCancel
-        detail={detail}
-        onClose={() => setIsShowModalCancel(false)}
+        rowSelected={rowSelected}
+        title={
+          rowSelected?.name !== '' ? 'Cập nhật lí do hủy' : 'Thêm mới lí do hủy'
+        }
+        itemList={[...itemList]}
+        setItemList={setItemList}
+        onClose={() => {
+          setRowSelected(undefined);
+          setIsShowModalCancel(false);
+        }}
         isVisible={isShowModalCancel}
       />
     </div>
