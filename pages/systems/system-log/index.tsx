@@ -1,40 +1,45 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from "react";
-import ReactDOM from "react-dom";
-import { notification, Popover, Table } from "antd";
-import type { ColumnsType } from "antd/es/table";
-import { format } from "date-fns";
+import React, { useEffect, useState } from 'react';
+import ReactDOM from 'react-dom';
+import { notification, Popover, Table } from 'antd';
+import type { ColumnsType } from 'antd/es/table';
+import { format } from 'date-fns';
+import { useRouter } from 'next/router';
+import { actionList, moduleList, systemLogList } from '../../../const/constant';
+import TitlePage from '../../../components/TitlePage/Titlepage';
+import Button from '../../../components/Button/Button';
+import Icon from '../../../components/Icon/Icon';
+import Input from '../../../components/Input/Input';
+import TableEmpty from '../../../components/TableEmpty';
+import { ActionSystemLogEnum, ISystemLog } from '../system.type';
+import Select from '../../../components/Select/Select';
+import ModalRemove from '../../../components/ModalRemove/ModalRemove';
+import PaginationCustom from '../../../components/PaginationCustom';
+import UserActivityLogApi from '../../../services/user-activity-logs';
+import { useDebounce } from 'usehooks-ts';
+import { get } from 'lodash';
+import { handleDirect, isArray, onCoppy } from '../../../utils/utils';
+import { ModuleLogAction } from '../../../enums/enums';
+import { RangePickerProps } from 'antd/lib/date-picker';
+import DateRangePickerCustom from '../../../components/DateRangePicker/DateRangePickerCustom';
+import queryString from 'query-string';
+import { uuid } from 'uuidv4';
+import OrderApi from '../../../services/orders';
+import ItemApi from '../../../services/items';
 
-import { actionList, moduleList } from "../../../const/constant";
-import TitlePage from "../../../components/TitlePage/Titlepage";
-import Button from "../../../components/Button/Button";
-import Icon from "../../../components/Icon/Icon";
-import Input from "../../../components/Input/Input";
-import TableEmpty from "../../../components/TableEmpty";
-import { ActionSystemLogEnum, ISystemLog } from "../system.type";
-import Select from "../../../components/Select/Select";
-import ModalRemove from "../../../components/ModalRemove/ModalRemove";
-import PaginationCustom from "../../../components/PaginationCustom";
-import UserActivityLogApi from "../../../services/user-activity-logs";
-import { useDebounce } from "usehooks-ts";
-import { get } from "lodash";
-import { handleDirect, isArray, onCoppy } from "../../../utils/utils";
-import { ModuleLogAction } from "../../../enums/enums";
-import { RangePickerProps } from "antd/lib/date-picker";
-import DateRangePickerCustom from "../../../components/DateRangePicker/DateRangePickerCustom";
-import queryString from "query-string";
-import { uuid } from "uuidv4";
-import OrderApi from "../../../services/orders";
-import ItemApi from "../../../services/items";
-
-const SystemLogList: React.FC = (props) => {
-  const locationSearch = queryString.parse(location.search);
-
+const SystemLogList = () => {
   const defaultPagination = {
     page: 1,
     total: 0,
     pageSize: 10,
   };
+
+  const router = useRouter();
+  let locationSearch: any;
+  useEffect(() => {
+    locationSearch = queryString.parse(location.search);
+    console.log('location', locationSearch);
+  });
 
   const [systemLogs, setSystemLogList] = useState<ISystemLog[]>([]);
   const [loading, setLoading] = useState(false);
@@ -44,31 +49,31 @@ const SystemLogList: React.FC = (props) => {
     pageSize: number;
   }>(defaultPagination);
   const [filter, setFilter] = useState<any>({});
-  const [searchKey, setSearchKey] = useState("");
+  const [searchKey, setSearchKey] = useState('');
   const debouncedSearchTerm = useDebounce(searchKey, 1000);
   const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(10);
   const [totalItems, setTotalItems] = useState<number>(0);
-  const [searchUser, setSearchUser] = useState("");
+  const [searchUser, setSearchUser] = useState('');
   const debouncedSearchUser = useDebounce(searchUser, 1000);
   const [module, setModule] = useState<string | undefined>(undefined);
   const [action, setAction] = useState<string | undefined>(undefined);
-  const [dateFrom, setDateFrom] = useState<string>("");
-  const [dateTo, setDateTo] = useState<string>("");
-  const [isChangePage, setIsChangePage] = useState<string>("");
+  const [dateFrom, setDateFrom] = useState<string>('');
+  const [dateTo, setDateTo] = useState<string>('');
+  const [isChangePage, setIsChangePage] = useState<string>('');
   const [record, setRecord] = useState<any>({});
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [isShowModalReturnSystemLog, setIsShowModalReturnSystemLog] =
     useState(false);
 
   useEffect(() => {
-    setSearchKey(String(locationSearch?.order_id || ""));
+    setSearchKey(String(locationSearch?.order_id || ''));
     getData({
       paramsUrl: [
-        String(locationSearch?.user || ""),
-        String(locationSearch?.moduleType ? "Đơn hàng" : ""),
+        String(locationSearch?.user || ''),
+        String(locationSearch?.moduleType ? 'Đơn hàng' : ''),
       ],
-      searchKey: String(locationSearch?.order_id || ""),
+      searchKey: String(locationSearch?.order_id || ''),
     });
   }, []);
 
@@ -82,17 +87,17 @@ const SystemLogList: React.FC = (props) => {
       module
     ) {
       let params = [
-        String(locationSearch?.user || ""),
-        String(locationSearch?.moduleType ? "Đơn hàng" : ""),
+        String(locationSearch?.user || ''),
+        String(locationSearch?.moduleType ? 'Đơn hàng' : ''),
       ];
       if (debouncedSearchUser) {
         params = [
           searchUser,
-          String(locationSearch?.moduleType ? "Đơn hàng" : ""),
+          String(locationSearch?.moduleType ? 'Đơn hàng' : ''),
         ];
       }
       if (module) {
-        params = [searchUser || String(locationSearch?.user || ""), module];
+        params = [searchUser || String(locationSearch?.user || ''), module];
       }
       getData({
         searchKey,
@@ -118,34 +123,53 @@ const SystemLogList: React.FC = (props) => {
     setLoading(true);
     const data = await UserActivityLogApi.getList(params);
     setSystemLogList(data.data);
+    console.log('system', systemLogList);
     setTotalItems(data.totalLogs);
     setLoading(false);
   };
 
+  const colData: ISystemLog[] = Array(10)
+    .fill({
+      action: 'CREATED',
+      title: 'Thu',
+      user: {
+        name: 'Trean Huyen',
+      },
+      created_at: Date.now(),
+      description: {
+        text: 'Xóa sản phẩm',
+        id: 'BHV001 | Bàn chải đánh răng điện',
+      },
+      module: "Đơn hàng",
+      name: 'Ngọc Linh',
+      updatedAt: Date.now(),
+    })
+    .map((item, index) => ({ ...item, id: index++ }));
+
   const columns: ColumnsType<ISystemLog> = [
     {
-      title: "Nhân viên",
+      title: 'Nhân viên',
       width: 150,
-      dataIndex: "name",
-      key: "name",
-      align: "left",
-      render: (_, record) => (
+      dataIndex: 'name',
+      key: 'name',
+      align: 'left',
+      render: (_, record: any) => (
         <span
           className="text-medium text-[#384ADC] font-semibold"
           onClick={(e) => {
-            get(record, "user.name") && onCoppy(e, get(record, "user.name"));
+            get(record, 'user.name') && onCoppy(e, get(record, 'user.name'));
           }}
         >
-          {get(record, "user.name")}
+          {get(record, 'user.name')}
         </span>
       ),
     },
     {
-      title: "Module",
+      title: 'Module',
       width: 130,
-      dataIndex: "module",
-      key: "module",
-      align: "center",
+      dataIndex: 'module',
+      key: 'module',
+      align: 'center',
       render: (_, record) => (
         <span
           className="text-medium text-[#1D1C2D] font-medium"
@@ -153,16 +177,16 @@ const SystemLogList: React.FC = (props) => {
             record.module && onCoppy(e, record.module);
           }}
         >
-          {record.module || "--"}
+          {record.module || '--'}
         </span>
       ),
     },
     {
-      title: "Tác vụ",
+      title: 'Tác vụ',
       width: 250,
-      dataIndex: "action",
-      key: "action",
-      align: "left",
+      dataIndex: 'action',
+      key: 'action',
+      align: 'left',
       render: (_, record) => (
         <span
           className="text-medium font-medium text-[#8B5CF6]"
@@ -170,16 +194,16 @@ const SystemLogList: React.FC = (props) => {
             record.action && onCoppy(e, record.action);
           }}
         >
-          {record.action ? ModuleLogAction[record.action] : "--"}
+          {record.action ? ModuleLogAction[record.action] : '--'}
         </span>
       ),
     },
     {
-      title: "Nội dung",
+      title: 'Nội dung',
       width: 250,
-      dataIndex: "content",
-      key: "content",
-      align: "left",
+      dataIndex: 'content',
+      key: 'content',
+      align: 'left',
       render: (_, record) => {
         const description =
           record.description && isArray(record.description)
@@ -187,13 +211,13 @@ const SystemLogList: React.FC = (props) => {
             : [];
         const ContentLog = description ? (
           <div className="td_items_skus">
-            {description.map((item: any, index) => (
+            {description.map((item: any, index: any) => (
               <div key={index}>
-                {item.title}:{" "}
+                {item.title}:{' '}
                 <span className="text-[#EF4444]">
                   {item.oldValue && item.oldValue}
-                </span>{" "}
-                <span>{item.oldValue && " -> "}</span>
+                </span>{' '}
+                <span>{item.oldValue && ' -> '}</span>
                 <span className="text-[#10B981]">
                   {item.newValue && item.newValue}
                 </span>
@@ -234,11 +258,11 @@ const SystemLogList: React.FC = (props) => {
       },
     },
     {
-      title: "Thời gian",
+      title: 'Thời gian',
       width: 200,
-      dataIndex: "created_at",
-      key: "created_at",
-      align: "center",
+      dataIndex: 'created_at',
+      key: 'created_at',
+      align: 'center',
       render: (_, record) => (
         <span
           className="text-medium text-[#1D1C2D]"
@@ -247,24 +271,24 @@ const SystemLogList: React.FC = (props) => {
               onCoppy(
                 e,
                 format(
-                  new Date(get(record, "created_at")),
-                  "dd/MM/yyyy - HH:mm"
+                  new Date(get(record, 'created_at')),
+                  'dd/MM/yyyy - HH:mm'
                 )
               );
           }}
         >
-          {get(record, "created_at")
-            ? format(new Date(get(record, "created_at")), "dd/MM/yyyy - HH:mm")
-            : ""}
+          {get(record, 'created_at')
+            ? format(new Date(get(record, 'created_at')), 'dd/MM/yyyy - HH:mm')
+            : ''}
         </span>
       ),
     },
     {
-      title: "Thao tác",
+      title: 'Thao tác',
       width: 100,
-      dataIndex: "action",
-      key: "action",
-      align: "center",
+      dataIndex: 'action',
+      key: 'action',
+      align: 'center',
       render: (_, record) =>
         record.action === ActionSystemLogEnum.DELETED && (
           <span
@@ -280,13 +304,13 @@ const SystemLogList: React.FC = (props) => {
     },
   ];
 
-  const onDateChange: RangePickerProps["onChange"] = (dates, dateStrings) => {
+  const onDateChange: RangePickerProps['onChange'] = (dates, dateStrings) => {
     if (dates) {
       setDateFrom(dateStrings?.[0]);
       setDateTo(dateStrings?.[1]);
     } else {
-      setDateFrom("");
-      setDateTo("");
+      setDateFrom('');
+      setDateTo('');
     }
   };
 
@@ -300,7 +324,7 @@ const SystemLogList: React.FC = (props) => {
           is_revert: true,
         });
         notification.success({
-          message: "Hoàn tác thành công",
+          message: 'Hoàn tác thành công',
         });
       }
     }
@@ -310,7 +334,7 @@ const SystemLogList: React.FC = (props) => {
           is_revert: true,
         });
         notification.success({
-          message: "Hoàn tác thành công",
+          message: 'Hoàn tác thành công',
         });
       }
     }
@@ -361,7 +385,7 @@ const SystemLogList: React.FC = (props) => {
             width="100%"
             prefix={<Icon icon="personalcard" size={24} />}
             placeholder="Nhập tên nhân viên"
-            value={searchUser || String(locationSearch?.user || "")}
+            value={searchUser || String(locationSearch?.user || '')}
             onChange={(e) => setSearchUser(e.target.value)}
           />
         </div>
@@ -373,7 +397,7 @@ const SystemLogList: React.FC = (props) => {
             options={moduleList}
             onChange={(val) => setModule(val)}
             value={
-              module || (locationSearch?.moduleType ? "Đơn hàng" : undefined)
+              module || (locationSearch?.moduleType ? 'Đơn hàng' : undefined)
             }
           />
         </div>
@@ -398,7 +422,8 @@ const SystemLogList: React.FC = (props) => {
         }}
         loading={loading}
         columns={columns}
-        dataSource={systemLogs}
+        // dataSource={systemLogs}
+        dataSource={colData}
         pagination={false}
         scroll={{ x: 50 }}
         onRow={(record) => {
@@ -437,4 +462,4 @@ const SystemLogList: React.FC = (props) => {
   );
 };
 
-ReactDOM.render(<SystemLogList />, document.getElementById("root"));
+export default SystemLogList;
