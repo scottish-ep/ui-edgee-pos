@@ -1,26 +1,28 @@
-import React, { useEffect, useState } from "react";
-import ReactDOM from "react-dom";
-import TitlePage from "../../components/TitlePage/Titlepage";
-import Button from "../../components/Button/Button";
-import Icon from "../../components/Icon/Icon";
+import React, { useEffect, useState, useRef } from 'react';
+import ReactDOM from 'react-dom';
+import TitlePage from '../../components/TitlePage/Titlepage';
+import Button from '../../components/Button/Button';
+import Icon from '../../components/Icon/Icon';
 import {
   IPermissionDetail,
   permissionCheckboxList,
-} from "../../types/permission";
-import TogglePermission from "./components/TogglePermission";
-import Input from "../../components/Input/Input";
-import TextArea from "../../components/TextArea";
-import { Checkbox, Form } from "antd";
-import { notification } from "antd";
-import { CheckboxChangeEvent } from "antd/lib/checkbox";
-import PermissionApi from "../../services/permission";
-import type { CheckboxValueType } from "antd/es/checkbox/Group";
+} from '../../types/permission';
+import TogglePermission from './components/TogglePermission';
+import Input from '../../components/Input/Input';
+import TextArea from '../../components/TextArea';
+import { Checkbox, Form } from 'antd';
+import { notification } from 'antd';
+import { CheckboxChangeEvent } from 'antd/lib/checkbox';
+import PermissionApi from '../../services/permission';
+import type { CheckboxValueType } from 'antd/es/checkbox/Group';
 
 const PermissionDetail = () => {
   const [detail, setDetail] = useState<any>(null);
-  const pathNameArr = window.location.pathname.split("/");
+  let pathNameArr = [''];
+  useRef(() => {
+    pathNameArr = window.location.pathname.split('/');
+  });
   const id = pathNameArr[pathNameArr.length - 1];
-
   const [form] = Form.useForm();
   const [checkedList, setCheckedList] = useState<CheckboxValueType[]>([]);
   const [loading, setLoading] = useState(false);
@@ -39,7 +41,7 @@ const PermissionDetail = () => {
     setDetail(data);
   };
 
-  const handleNewCheckedList = (newCheckedList) => {
+  const handleNewCheckedList = (newCheckedList: any) => {
     setCheckedList(newCheckedList);
     setCheckAll(isCheckedChecboxCheckAll(newCheckedList));
   };
@@ -92,7 +94,7 @@ const PermissionDetail = () => {
           });
           if (success) {
             notification.success({
-              message: "Cập nhật phân quyền thành công!",
+              message: 'Cập nhật phân quyền thành công!',
             });
           } else {
             notification.error({
@@ -106,7 +108,7 @@ const PermissionDetail = () => {
           });
           if (success) {
             notification.success({
-              message: "Tạo phân quyền thành công!",
+              message: 'Tạo phân quyền thành công!',
             });
           } else {
             notification.error({
@@ -127,7 +129,7 @@ const PermissionDetail = () => {
     <div className="w-full">
       <div className="flex items-center justify-between mb-[26px] flex-wrap">
         <div className="flex gap-[16px]">
-          <div onClick={() => (window.location.href = "/permission")}>
+          <div className='cursor-pointer' onClick={() => (window.location.href = '/permission')}>
             <Icon icon="back1" size={36} />
           </div>
           <div>
@@ -168,7 +170,7 @@ const PermissionDetail = () => {
                 rules={[
                   {
                     required: true,
-                    message: "Tên chức vụ là bắt buộc!",
+                    message: 'Tên chức vụ là bắt buộc!',
                   },
                 ]}
               >
@@ -215,4 +217,4 @@ const PermissionDetail = () => {
   );
 };
 
-ReactDOM.render(<PermissionDetail />, document.getElementById("root"));
+export default PermissionDetail;

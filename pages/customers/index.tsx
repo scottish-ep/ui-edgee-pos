@@ -673,7 +673,7 @@ const ListCustomer = () => {
   return (
     <div className="w-full list-customer">
       <div className="flex items-center justify-between mb-[12px] flex-wrap ">
-        <TitlePage title="Khách hàng" />
+        <TitlePage title="Danh sách khách hàng" />
         <div className="flex gap-[8px] flex-wrap">
           <div className="flex items-center">
             <div className="font-medium mr-[12px] text-medium">Chọn nguồn</div>

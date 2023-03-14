@@ -985,7 +985,7 @@ export default function App({ Component, pageProps }: AppProps) {
   };
 
   return (
-    <div className="flex justify-between">
+    <div className="flex justify-start">
       <div className="flex flex-col !bg-[#1e1e2d]">
         <div className="logo_wrapper">
           <span>
@@ -1000,7 +1000,7 @@ export default function App({ Component, pageProps }: AppProps) {
               />
             )}
           </span>
-          <Button className="" onClick={toggleCollapsed}>
+          <Button className="!border-0" onClick={toggleCollapsed}>
             {collapsed ? <UnfoldButton /> : <FoldButton />}
           </Button>
         </div>
@@ -1024,7 +1024,7 @@ export default function App({ Component, pageProps }: AppProps) {
           }}
         />
       </div>
-      <div className="px-[16px] py-[32px]">
+      <div className="px-[16px] py-[32px] w-full">
         <Component {...pageProps} />
       </div>
     </div>

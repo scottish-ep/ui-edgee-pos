@@ -1083,7 +1083,7 @@ const ListOrderOnline = () => {
       }}
     >
       <div className="flex flex-wrap items-center gap-x-[24px] mb-[12px] flex-wrap gap-y-[12px]">
-        <TitlePage title="Đơn hàng" />
+        <TitlePage title="Đơn hàng online" />
         <div className="flex justify-center gap-[8px]">
           <Button
             variant="primary"

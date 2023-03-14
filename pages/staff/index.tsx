@@ -42,7 +42,7 @@ const StaffList = () => {
       {
         name: 'CEO',
       },
-    ],
+    ],  
     staff_group: {
       name: 'FE Team',
     },

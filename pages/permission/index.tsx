@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from "react";
-import ReactDOM from "react-dom";
-import moment from "moment";
+import React, { useEffect, useState } from 'react';
+import ReactDOM from 'react-dom';
+import moment from 'moment';
 
-import { notification, Table } from "antd";
-import type { ColumnsType } from "antd/es/table";
-import TitlePage from "../../components/TitlePage/Titlepage";
-import Button from "../../components/Button/Button";
-import Icon from "../../components/Icon/Icon";
-import NoData from "../../assets/no-data.svg";
-import PaginationCustom from "../../components/PaginationCustom";
-import { IPermission } from "../../types/permission";
-import PermissionModal from "./components/PermissionModal";
-import PermissionApi from "../../services/permission";
-import ModalRemove from "../../components/ModalRemove/ModalRemove";
+import { notification, Table } from 'antd';
+import type { ColumnsType } from 'antd/es/table';
+import TitlePage from '../../components/TitlePage/Titlepage';
+import Button from '../../components/Button/Button';
+import Icon from '../../components/Icon/Icon';
+import NoData from '../../assets/no-data.svg';
+import PaginationCustom from '../../components/PaginationCustom';
+import { IPermission } from '../../types/permission';
+import PermissionModal from './components/PermissionModal';
+import PermissionApi from '../../services/permission';
+import ModalRemove from '../../components/ModalRemove/ModalRemove';
 
 const ListPermission = () => {
   const [permission, setPermission] = useState<IPermission[]>();
@@ -23,12 +23,16 @@ const ListPermission = () => {
   const [isShowModalRemove, setIsShowModalRemove] = useState(false);
   const [selectedId, setSelectedId] = useState<string | number>(0);
 
+  useEffect(() => {
+    document.title = "Danh sách phân quyền hệ thống"
+  })
+
   const handleDelete = async () => {
     setIsShowModalRemove(false);
     const { data, success, message } = await PermissionApi.deleteId(selectedId);
     if (data) {
       notification.success({
-        message: "Xóa phân quyền thành công!",
+        message: 'Xóa phân quyền thành công!',
       });
       window.location.reload();
     } else if (!success && message) {
@@ -38,57 +42,64 @@ const ListPermission = () => {
     }
   };
 
+  const colData: IPermission[] = Array(20)
+    .fill({
+      name: 'Tester',
+      number_of_member: 20,
+      updated_at: Date.now(),
+      note: 'khong',
+    })
+    .map((item, index) => ({ ...item, id: index++ }));
+
   const columns: ColumnsType<IPermission> = [
     {
-      title: "Tên chức vụ",
-      width: "20%",
-      key: "name",
-      align: "left",
+      title: 'Tên chức vụ',
+      width: '20%',
+      key: 'name',
+      align: 'left',
       render: (_, record) => <div className="font-medium">{record?.name}</div>,
     },
     {
-      title: "Số thành viên",
+      title: 'Số thành viên',
       width: 200,
-      dataIndex: "number_of_member",
-      key: "number_of_member",
-      align: "center",
+      dataIndex: 'number_of_member',
+      key: 'number_of_member',
+      align: 'center',
       render: (_, record) => (
         <div className="font-semibold">{record?.number_of_member || 0}</div>
       ),
     },
     {
-      title: "Cập nhật lần cuối",
-      dataIndex: "updated_at",
+      title: 'Cập nhật lần cuối',
+      dataIndex: 'updated_at',
       width: 300,
-      key: "updated_at",
-      align: "center",
+      key: 'updated_at',
+      align: 'center',
       render: (_, record) => (
         <div className="font-medium">
-          {moment(record?.updated_at).format("YYYY-MM-DD")}
+          {moment(record?.updated_at).format('YYYY-MM-DD')}
         </div>
       ),
     },
     {
-      title: "Ghi chú",
-      dataIndex: "note",
-      key: "note",
-      align: "left",
+      title: 'Ghi chú',
+      dataIndex: 'note',
+      key: 'note',
+      align: 'left',
       render: (_, record) => (
-        <div className="font-medium">{record?.note || "--"}</div>
+        <div className="font-medium">{record?.note || '--'}</div>
       ),
     },
     {
-      title: "Thao tác",
-      dataIndex: "action",
-      key: "action",
-      align: "right",
+      title: 'Thao tác',
+      dataIndex: 'action',
+      key: 'action',
+      align: 'right',
       render: (_, record) => (
         <div className="flex items-center justify-end gap-[16px]">
           <div
             className="pointer"
-            onClick={() =>
-              (window.location.href = `/permission/detail/${record.id}`)
-            }
+            onClick={() => (window.location.href = `/permission/${record.id}`)}
           >
             <Icon icon="edit-1" size={24} color="#4B4B59" />
           </div>
@@ -135,7 +146,7 @@ const ListPermission = () => {
             width={151}
             color="white"
             suffixIcon={<Icon icon="add" size={24} />}
-            onClick={() => (window.location.href = "/permission/create")}
+            onClick={() => (window.location.href = '/permission/create')}
           >
             Thêm mới
           </Button>
@@ -158,7 +169,8 @@ const ListPermission = () => {
       <Table
         loading={loading}
         columns={columns}
-        dataSource={permission}
+        // dataSource={permission}
+        dataSource={colData}
         pagination={false}
         scroll={{ x: 50 }}
         rowKey={(record) => record.id}
@@ -196,4 +208,4 @@ const ListPermission = () => {
   );
 };
 
-ReactDOM.render(<ListPermission />, document.getElementById("root"));
+export default ListPermission;

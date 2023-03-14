@@ -38,6 +38,7 @@
     "next": "13.1.6",
     "prettier": "^2.8.4",
     "qs": "^6.11.0",
+    "query-string": "^8.1.0",
     "react": "18.2.0",
     "react-csv": "^2.2.2",
     "react-currency-input-field": "^3.6.10",

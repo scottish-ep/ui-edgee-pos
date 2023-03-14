@@ -227,7 +227,7 @@ const OrderOfflineDetail = (props: OrderOfflineDetailProps) => {
   return (
     <div className="w-full">
       <div className="flex justify-between items-center mb-[24px]">
-        <TitlePage title="Tạo đơn hàng" />
+        <TitlePage title="Chi tiết đơn hàng" />
         <Button
           variant="primary"
           width={173}
